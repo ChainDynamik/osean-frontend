@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  height: 100vh;
+  font-family: Inconsolata, monospace;
+
+  @apply bg-gray-900;
+}
+
+*::selection {
+  @apply bg-purple/40;
+}
+
+#__next {
+  height: 100vh;
+}
+
+@layer base {
+  a {
+    @apply no-underline;
+  }
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  opacity: 1;
+}
