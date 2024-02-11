@@ -27,6 +27,21 @@ export default function BridgeVault() {
   const { contract: socket } = useContract("0xf6a53DC23497046623e6cfA5C6632D2f066E35f2");
   const { mutateAsync: bridge, isLoading } = useContractWrite(vault, "bridge");
   const { mutateAsync: approve } = useContractWrite(osean, "approve");
+  const address = useAddress();
+  const toast = useToast();
+
+  //@dev get allowance
+  const allowed = useContractRead(osean, "allowance", [address, "0x1812238eA601067342e73542AF0B86951347682A"]);
+
+  useEffect(() => {
+    if (allowed && allowed.data) {
+  const allowData = allowed.data;
+        const hexAllowed = allowData._hex;
+        const allowBig = ethers.BigNumber.from(hexAllowed);
+        const allowValue = allowBig.toString();
+        console.log("your current allowance is:", allowValue)
+    }
+  }, [allowed])
    
   //@dev get current gas prices and fees required for Bridge
   const web3 = new Web3(window.ethereum);
@@ -37,9 +52,6 @@ export default function BridgeVault() {
   const roundedFeeValue = fees.data ? (Math.ceil(Number(feeValue) * 100000) / 100000).toFixed(3) : "N/A";
   
   console.log("Current fees in Ether (rounded up to 5 decimal places):", roundedFeeValue);
-  
-  const address = useAddress();
-  const toast = useToast();
   
   //@dev set values from form
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
@@ -97,13 +109,23 @@ export default function BridgeVault() {
   //@dev execute Bridge function
   const bridgeFunction = async (contract: any) => {
     try {
-      
-      const allowance = await approve({ args: [
-        "0x1812238eA601067342e73542AF0B86951347682A",
-        amount_
-    ]}); 
-      console.info("Contract call success", allowance);
+      const allowData = allowed.data;
+        const hexAllowed = allowData._hex;
+        const allowBig = ethers.BigNumber.from(hexAllowed);
+        const allowValue = allowBig.toString();
+        console.log("your current allowance is:", allowValue)
 
+        // Check if the allowance is sufficient for the amountIn
+        if (allowBig.gte(amount_)) {
+            console.log("Allowance is sufficient. Proceeding with the swap directly.");
+        } else {
+      
+          const allowance = await approve({ args: [
+            "0x1812238eA601067342e73542AF0B86951347682A",
+            amount_
+        ]}); 
+          console.info("Contract call success", allowance);
+        }
       const data = await bridge({
         args: [receiver_, siblingChainSlug_, amount_, msgGasLimit_, payload_, options_], 
         overrides: { value: ethers.utils.parseEther(nativeTokenValue) },

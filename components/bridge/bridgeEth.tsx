@@ -29,6 +29,19 @@ export default function BridgeEth() {
   const address = useAddress();
   const toast = useToast();
 
+  //@dev get allowance
+  const allowed = useContractRead(osean, "allowance", [address, address]);
+
+  useEffect(() => {
+    if (allowed && allowed.data) {
+  const allowData = allowed.data;
+        const hexAllowed = allowData._hex;
+        const allowBig = ethers.BigNumber.from(hexAllowed);
+        const allowValue = allowBig.toString();
+        console.log("your current allowance is:", allowValue)
+    }
+  }, [allowed])
+
   //@dev get current gas prices and fees required for Bridge
   const web3 = new Web3(window.ethereum);
 
@@ -96,12 +109,22 @@ export default function BridgeEth() {
   //@dev execute Bridge function
   const bridgeFunction = async (contract: any) => {
     try {
-      
+      const allowData = allowed.data;
+        const hexAllowed = allowData._hex;
+        const allowBig = ethers.BigNumber.from(hexAllowed);
+        const allowValue = allowBig.toString();
+        console.log("your current allowance is:", allowValue)
+
+        // Check if the allowance is sufficient for the amountIn
+        if (allowBig.gte(amount_)) {
+            console.log("Allowance is sufficient. Proceeding with the swap directly.");
+        } else {
       const allowance = await approve({ args: [
         address,
         amount_
     ]}); 
       console.info("Contract call success", allowance);
+  }
 
       const data = await bridge({
         args: [receiver_, siblingChainSlug_, amount_, msgGasLimit_, payload_, options_], 
