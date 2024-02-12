@@ -23,7 +23,7 @@ import { faGasPump, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons'
 
 export default function SwapBNBForOSEAN() {
 
-  //@dev get current gas prices and fees required for Bridge
+  //@dev connect to contracts and get functions
   const address = useAddress();
   const { contract: osean } = useContract("0x722cb8e411d40942c0f581b919ecce3e4d759602");
   const { contract: wbnb } = useContract("0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", );
@@ -33,7 +33,7 @@ export default function SwapBNBForOSEAN() {
   const allowed = useContractRead(osean, "allowance", [address, "0x10ED43C718714eb63d5aA57B78B54704E256024E"]);
   const toast = useToast();
   
-  //@dev set values from form
+  //@dev set values from form and functions
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
   
   const [amount, setAmount] = useState("");
@@ -41,9 +41,10 @@ export default function SwapBNBForOSEAN() {
   const [gasCost, setGasCost] = useState<{ ether: string; wei: ethers.BigNumber } | undefined>(undefined);
   const [ethBalance, setETHbalance] = useState("");
   
+  //@dev uncomment in case you want to allow users to set slippage
   // const [slippagePercentage, setSlippagePercentage] = useState(10);
   
-  //@dev set values in swap
+  //@dev get wallets osean balance
   const to = address;
   const balanceAddress = useContractRead(osean, "balanceOf", [address]);
   const addressBalanceData = balanceAddress.data;
@@ -66,6 +67,7 @@ export default function SwapBNBForOSEAN() {
     addressBalanceReadable = "0";
   }
 
+  //set values for swap
   const path = ["0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", "0x722cb8e411d40942c0f581b919ecce3e4d759602"] 
   const deadline = Math.floor(Date.now() / 1000) + (1*60);
   const amountIn = ethers.utils.parseUnits(amount.toString() || "0", 18);
@@ -73,7 +75,7 @@ export default function SwapBNBForOSEAN() {
   const slippagePercentage = 10;
   const slippagePercentage2 = 6;
 
-
+  // Get amount that user will get after swap after taxes
   useEffect(() => {
     // Fetch amountsData
     if (amountsData && amountsData.data) {
@@ -116,8 +118,10 @@ export default function SwapBNBForOSEAN() {
     }
 };
 
+//web3 window
 const web3 = new Web3(window.ethereum);
-  
+
+//get wallet BNB balance
 useEffect(() => {
       
     const getBNBBalance = async (address: string) => {
@@ -141,6 +145,7 @@ useEffect(() => {
     }  
   }, [address, web3.utils, web3.eth])
   
+  //simulate swap to get gas costs
   useEffect(() => {
     const estimateGasCost = async () => {
         const weiToEther = (wei: ethers.BigNumber): string => {
