@@ -12,13 +12,13 @@ import {
   useToast,
   ChakraProvider,
   Image,
-  Center, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, useDisclosure
+  Center, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, useDisclosure, Button, HStack, Link
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import React from "react";
 import Web3 from "web3";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGasPump, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons'
+import { faGasPump, faArrowCircleDown, faWallet } from '@fortawesome/free-solid-svg-icons'
 
 export default function SwapOSEANForBNB() {
 
@@ -197,6 +197,39 @@ useEffect(() => {
   }, [ethBalance, address, univ2, deadline, to, gasCost]);
 
 
+  //add token to metamask
+
+  const tokenAddress = '0x722cb8e411d40942c0f581b919ecce3e4d759602';
+  const tokenSymbol = 'OSEAN';
+  const tokenDecimals = 18;
+  const tokenImage = '/img/osean200.png';
+
+  const addToMetamask = async () => {
+  try {
+    // 'wasAdded' is a boolean. Like any RPC method, an error can be thrown.
+    const wasAdded = await window.ethereum.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: tokenAddress, // The address of the token.
+          symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 characters.
+          decimals: tokenDecimals, // The number of decimals in the token.
+          image: tokenImage, // A string URL of the token logo.
+        },
+      },
+    });
+
+    if (wasAdded) {
+      console.log('Thanks for your interest!');
+    } else {
+      console.log('Your loss!');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  }
+
   return (
     
 
@@ -213,9 +246,19 @@ useEffect(() => {
         </div>
           
           <FormControl mt={5}>
-          <Flex alignItems="flex-start">
-            <Image src="/img/osean200.png" width={"25px"} height={"25px"} alt="osean" mr={2} />
-            <FormLabel mt={0} mb={1} fontSize={18}><strong>OSEAN</strong></FormLabel>
+          <Flex alignItems="center" justifyContent="space-between">
+            <Flex alignItems="flex-start">
+              <Image src="/img/osean200.png" width={"25px"} height={"25px"} alt="osean" mr={2} />
+              <FormLabel mt={0} mb={1} fontSize={18}><strong>OSEAN</strong></FormLabel>
+            </Flex>
+            <Box
+              display="flex"
+              alignItems="center"
+              _hover={{ cursor: "pointer", textDecoration: "underline" }}
+            >
+              <Image src="/images/metamask.png" alt="metamask" width="20px" height="20px" onClick={addToMetamask} marginRight="10px" marginTop="3px" />
+              
+            </Box>
           </Flex>
             <Text fontSize='xs' as='cite'>Enter OSEAN amount</Text>
             <Input
