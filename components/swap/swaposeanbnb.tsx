@@ -282,8 +282,8 @@ useEffect(() => {
               alignItems="center"
               _hover={{ cursor: "pointer", textDecoration: "underline" }}
             >
-              <FontAwesomeIcon icon={faCopy} style={{ marginRight: '10px', marginTop: '3px' }} size="lg" onClick={handleCopyClick} />
-              <Image src="/images/metamask.png" alt="metamask" width="20px" height="20px" onClick={addToMetamask} marginRight="10px" marginTop="3px" />
+              <FontAwesomeIcon icon={faCopy} style={{ marginRight: '10px', marginTop: '-6px' }} size="lg" onClick={handleCopyClick} />
+              <Image src="/images/metamask.png" alt="metamask" width="28px" height="28px" onClick={addToMetamask} marginRight="10px" marginTop="-4px" />
               
             </Box>
           </Flex>
