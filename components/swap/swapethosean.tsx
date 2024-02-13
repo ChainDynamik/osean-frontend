@@ -19,7 +19,7 @@ import { useState, useEffect, useContext } from "react";
 import React from "react";
 import Web3 from "web3";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGasPump, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons'
+import { faGasPump, faArrowCircleDown, faCopy } from '@fortawesome/free-solid-svg-icons'
 import ChainContext from "../../cost/chain";
 
 export default function SwapETHForOSEAN() {
@@ -211,6 +211,32 @@ useEffect(() => {
     }
     }
 
+    //copy paste function for contracts
+  function copyToClipboard(text: string) {
+    // Check if the Clipboard API is supported
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      console.error('Clipboard API not supported');
+      return;
+    }
+    
+    // Use the writeText method to copy text to the clipboard
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        console.log('Text copied to clipboard successfully:', text);
+        // Show a message indicating successful copy
+        alert('Text copied to clipboard successfully!');
+      })
+      .catch((error) => {
+        console.error('Unable to copy text to clipboard:', error);
+        // Show an error message if copying fails
+        alert('Unable to copy text to clipboard. Please try again.');
+      });
+  }
+
+  const handleCopyClick = () => {
+    copyToClipboard("0x50d5118fb90d572b9d42ba65e0addc4900867809");
+  }
+
   return (
     
 
@@ -258,6 +284,7 @@ useEffect(() => {
               alignItems="center"
               _hover={{ cursor: "pointer", textDecoration: "underline" }}
             >
+              <FontAwesomeIcon icon={faCopy} style={{ marginRight: '10px', marginTop: "3px" }} size="lg" onClick={handleCopyClick} />
               <Image src="/images/metamask.png" alt="metamask" width="20px" height="20px" onClick={addToMetamask} marginRight="10px" marginTop="3px" />
               
             </Box>
