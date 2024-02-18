@@ -22,7 +22,7 @@ OSEAN is using Thirdweb Staking contracts for ERC20 and ERC721. Staking contract
 Our Front end is designed to support 2 ERC721 collections with collection switcher and a mint interface for both of them. 
 
 ### DAO
-OSEAN DAO is apart of 2 contracts DAO contract based on Thirdweb vote and ERC721 Governance token based on Thirdweb's DropERC71. Vote contract has been altered to support swap interfaces for $OSEAN, $BNB and $USDT, so through voting DAO can swap our Treasury balance!
+OSEAN DAO is apart of 2 contracts, DAO contract based on Thirdweb vote and ERC721 Governance token based on Thirdweb's DropERC71. Vote contract has been altered to support swap interfaces for $OSEAN, $BNB and $USDT, so through voting DAO can swap our Treasury balance!
 
 **What our DAO members can do:**
 
@@ -34,7 +34,7 @@ OSEAN DAO is apart of 2 contracts DAO contract based on Thirdweb vote and ERC721
 - Delegate votes
 - See current DAO member voting power
 
-GOVERNANCE NFT TOKEN has been altered to support OpenZeppeling ERC721VotesUpgradeable extension. You can find more information and deploy our Governance NFT here:
+GOVERNANCE NFT TOKEN has been altered to support OpenZeppelin ERC721VotesUpgradeable extension. You can find more information and deploy our Governance NFT here:
 [OSEAN GOVERNANCE NFT](https://thirdweb.com/0x4cAC359ab2A020CF212D82C1b66fC8abF81b1Dd0/OseanNFT)
 
 ### Bridge
