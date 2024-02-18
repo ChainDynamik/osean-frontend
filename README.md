@@ -13,7 +13,7 @@ Launched on both BSC and ETH, the project aims to offer a low entry point into t
 Our front end is built with Next JS and typescript. We are using Thirdweb hooks and pass all our on-chain calls through Thirdweb Provider wrap. 
 
 ### Swap
-Our swap is connected directly to Pancakeswap and Uniswap routers using Thirdweb wallet connect and [Thirdweb](https://thirdweb.com) hooks. Chain selector is also available and you can switch to your favorite chain to trade $OSEAN from your favorite liquidity pool.
+Our swap is connected directly to Pancakeswap and Uniswap routers using Thirdweb wallet connect and [Thirdweb](https://thirdweb.com) hooks. Chain selector is also available and you can switch to your favorite chain to trade $OSEAN from your selected liquidity pool.
 
 ### Stake
 OSEAN is using Thirdweb Staking contracts for ERC20 and ERC721. Staking contracts have been altered so only holders of our project can stake.
