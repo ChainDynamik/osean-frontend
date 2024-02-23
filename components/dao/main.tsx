@@ -1,4 +1,5 @@
-import { Stack, Flex, SimpleGrid, Card, Box, Divider, Text, FormControl, Input, FormLabel, useToast } from "@chakra-ui/react";
+import { Stack, Flex, SimpleGrid, Card, Box, Divider, Text, FormControl, Input, FormLabel, useToast, Link } from "@chakra-ui/react";
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 import {
     useAddress,
     useContract,
@@ -713,7 +714,7 @@ function addThousandSeparators(input: number | string) {
     return (
       <Flex justify="center" alignItems="center" flexDirection="column">
   <h1>OSEAN DAO Member area</h1>
-  <p>This page is accessible only to our Governance NFT Holders</p>
+  <p>This page is accessible only to our Governance NFT Holders. Get yours <Link href="https://dapp.osean.online/govmint" rel="governance" color="#0056B3">here <ExternalLinkIcon mx='1px' mb="4px" />.</Link></p>
   <Flex  justify="space-between"
     alignItems="flex-start"
     flexDirection={{ base: "column", md: "row" }}
