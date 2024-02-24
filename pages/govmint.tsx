@@ -78,7 +78,6 @@ const Home: NextPage = () => {
   console.log("totalClaimSupply:", totalClaimSupply);
 
   console.log("Claim Ineligibility Reasons:", claimIneligibilityReasons);
-
   
   const [selectedOption, setSelectedOption] = useState('');
 
@@ -199,7 +198,7 @@ const Home: NextPage = () => {
                       >+</button>
                     </div>
                     <Web3Button style={{width: "150px"}}
-                      className="btn btn-round btn-sign-in my-2 my-sm-4 mr-sm-4 fadeInDown animated btn-gradient-blue"
+                      className="btn btn-round btn-sign-in my-2 my-sm-4 mr-sm-2 ml-2 fadeInDown animated btn-gradient-blue"
                       contractAddress={GOV_NFT}
                       action={(contract) => contract.erc721.claim(claimQuantity)}
                       onSuccess={() => {
@@ -239,7 +238,7 @@ const Home: NextPage = () => {
     
   )}
 </div>
-<p style={{ textAlign: 'center' }}> <br />
+        <p style={{ textAlign: 'center' }}> <br />
           NFT Governance contract on{' '}
           <a
             target="_blank"
@@ -273,7 +272,6 @@ const Home: NextPage = () => {
             </span>
           </a>
         </p>
-
       </main>
     </div>
     </Container>

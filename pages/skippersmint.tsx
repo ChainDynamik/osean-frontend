@@ -21,7 +21,6 @@ import toastStyle from "../util/toastConfig";
 import { getCurrencyName } from "../util/currencyUtils";
 import Link from "next/link";
 import Container from "../components/Container/Container";
-import { NFT_COLLECTION_ADDRESS } from "../const/contractAddresses";
 
 const Home: NextPage = () => {
   const address = useAddress();
@@ -111,7 +110,6 @@ const Home: NextPage = () => {
         <Link href="/buy">Buy NFTs &nbsp;</Link> /&nbsp;
         <Link href="/sell">Sell NFTs</Link>
       </div>
-      
       <div style={{ marginLeft: 'auto' }}>
         {/* Dropdown Selector */}
         <select value={selectedOption} onChange={handleOptionChange} style={{height:"30px", color: "#1E90FF"}}>
@@ -200,7 +198,7 @@ const Home: NextPage = () => {
                       >+</button>
                     </div>
                     <Web3Button style={{width: "150px"}}
-                      className="btn btn-round btn-sign-in my-2 my-sm-4 mr-sm-4 fadeInDown animated btn-gradient-blue"
+                      className="btn btn-round btn-sign-in my-2 my-sm-4 mr-sm-2 ml-2 fadeInDown animated btn-gradient-blue"
                       contractAddress={CONTRACT_ADDRESS}
                       action={(contract) => contract.erc721.claim(claimQuantity)}
                       onSuccess={() => {
@@ -246,7 +244,7 @@ const Home: NextPage = () => {
             target="_blank"
             rel="noopener"
             className="chakra-link chakra-button css-1c0d5xu"
-            href={`https://bscscan.com/address/${NFT_COLLECTION_ADDRESS}`}
+            href={`https://bscscan.com/address/${CONTRACT_ADDRESS}`}
           >
             bscscan{' '}
             <span
