@@ -13,7 +13,7 @@ import {
 } from "@thirdweb-dev/react";
 import Image from "next/image";
 import { CONTRACT_ADDRESS } from "../const/addresses";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -98,6 +98,11 @@ const Home: NextPage = () => {
     }
   };
 
+  const formatPrice = (price: BigNumber): string => {
+    const formattedPrice = ethers.utils.formatUnits(price.toString());
+    return formattedPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
   return (
     <>
     <Toaster position="bottom-center" reverseOrder={false} /> 
@@ -158,7 +163,7 @@ const Home: NextPage = () => {
               <p>Claim Phase: {activeClaimPhase ? activeClaimPhase.metadata?.name : 'N/A'}</p>
               {activeClaimPhase && activeClaimPhase.price !== undefined ? (
                 <p>
-                  Price: {activeClaimPhase.price.eq(0) ? '[FREE MINT]' : `${ethers.utils.formatUnits(activeClaimPhase.price)} ${getCurrencyName(activeClaimPhase.currencyAddress)}`}
+                  Price: {activeClaimPhase.price.eq(0) ? '[FREE MINT]' : `${formatPrice(activeClaimPhase.price)} ${getCurrencyName(activeClaimPhase.currencyAddress)}`}
                 </p>
               ) : (
                 <p>Price: N/A</p>
