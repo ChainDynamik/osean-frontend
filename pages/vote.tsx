@@ -7,6 +7,7 @@ import { Loading } from "./loading";
 import Main from "../components/dao/main";
 import Link from "next/link";
 import { DAO_ADDRESS } from "../cost/addresses";
+import Image from "next/image";
 
 const VotePage: NextPage = () => {
   const address = useAddress();
@@ -66,6 +67,17 @@ const VotePage: NextPage = () => {
         <Link href="/decoder">Decode proposal Data</Link>
       </div>
       <div style={{marginTop:"70px", marginBottom:"50px"}}>
+      <div className="mt-5 mb-5">
+      <Link href="/govmint" rel="noopener noreferrer">
+    <Image src="https://osean.online/assets/govbannervote.jpg" 
+      alt="Gov Banner"
+      width={1280}
+      height={189}
+      layout="responsive"
+      objectFit="cover" 
+      />
+      </Link>
+      </div>
       
       <Main />
       <div style={{marginTop:"50px", marginBottom:"50px"}}>
