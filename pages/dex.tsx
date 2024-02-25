@@ -1,18 +1,13 @@
 import { Container, Button, Flex, SimpleGrid, ChakraProvider, Card, FormControl, Box, Input, FormLabel, Text, Select, Image } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
-import type { NextPage } from "next";
-import React, {useContext} from "react";
+import React, {useContext, useRef, useEffect} from "react";
 import { OseanHeaderLinks } from "../components/oseanHeader";
 import ChainContext from "../cost/chain";
 import { Loading } from "./loading"
-import Link from "next/link";
 import SwapBNBforOSEAN from "../components/swap/swapbnbosean";
 import SwapOSEANForBNB from "../components/swap/swaposeanbnb";
 import SwapETHForOSEAN from "../components/swap/swapethosean";
 import SwapOSEANForETH from "../components/swap/swaposeaneth";
-import BridgeEth from "../components/bridge/bridgeEth";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { useSwapContext  } from "../cost/SwapContextBNB";
 import { useSwapContextETH } from "../cost/SwapContextETH";
 
@@ -44,7 +39,7 @@ const SwapPage = () => {
       </div> 
     );
   }
-  
+
   return (
     <div>
       <main>
@@ -104,9 +99,12 @@ const SwapPage = () => {
                   </div>
                   
                   <div className="row mb-5 bg-color">
-                  <div className="col-md-12 col-lg-6 col-xl-5">
+                  <div style={{ position: "relative", backgroundColor: "#1F86FF", overflow: "hidden", color: "#fff" }} className="col-md-12 col-lg-6 col-xl-6">
+                  <div className="bg-ripple-animation d-none d-md-block" style={{ position: "absolute", bottom: "-200px", right: "120px", zIndex: "0" }}>
+                        <div className="ripples" style={{ position: "absolute", bottom: "-200px", right: "120px", width: "800px", height: "800px", zIndex: "-1" }}></div>
+                    </div>
                   <div className="heading text-center mt-5">
-                  <h2 className="title animated" data-animation="fadeInUpShorter" data-animation-delay="0.3s">
+                  <h2 style={{ color: "#fff" }} className="title animated" data-animation="fadeInUpShorter" data-animation-delay="0.3s">
                       <strong>Select your</strong> Chain
                     </h2>
                     <div className="separator animated" data-animation="fadeInUpShorter" data-animation-delay="0.3s">
@@ -114,20 +112,31 @@ const SwapPage = () => {
                       <span className="medium"></span>
                       <span className="small"></span>
                     </div>
-                    <p className="content-desc animated" data-animation="fadeInUpShorter" data-animation-delay="0.4s">
-                      Use the selector next to trade OSEAN token on your favorite Chain. Osean token is availble only at BINANCE and ETHEREUM Chains.
+                    <p style={{ color: "#fff" }} className="content-desc animated" data-animation="fadeInUpShorter" data-animation-delay="0.4s">
+                      Use the selector to trade OSEAN token on your favorite Chain. Osean token is availble only on BINANCE and ETHEREUM Chains.
                       
                     </p>
                   </div> 
                   </div>
-                  <div className="col-md-12 col-lg-6 col-xl-7">
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", marginTop: "90px", marginBottom: "90px" }}>
-                        <Card style={{ maxWidth: "600px" }}>
+                  <div style={{ position: "relative", backgroundColor: "#1F86FF", overflow: "hidden" }} className="col-md-12 col-lg-6 col-xl-6 ">
+                    <div className="bg-ripple-animation d-none d-md-block" style={{ position: "absolute", bottom: "-200px", left: "120px", zIndex: "0" }}>
+                        <div className="ripples" style={{ position: "absolute", bottom: "-200px", left: "120px", width: "800px", height: "800px", zIndex: "-1" }}></div>
+                    </div>
+                    <div className="heading text-center mt-5">
+                  <h2 style={{ color: "#fff" }} className="title animated" data-animation="fadeInUpShorter" data-animation-delay="0.3s">
+                      <strong>Selector</strong>
+                    </h2>
+                   
+                    
+                  </div> 
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", marginTop: "-80px",  marginBottom: "80px", zIndex: "1" }}>
+                   
+                        <Card style={{ maxWidth: "600px", zIndex: "1" }}>
                           <Flex justify="space-between" alignItems="flex-start" width="100%">
                             <Box flex="1" m={4}>
                               <form>
                                 <h4>Select your Chain</h4>
-                                <Select style={{ maxWidth: "600px", }}
+                                <Select style={{ maxWidth: "600px", zIndex: "1" }}
                                   value={String(selectedChain)}
                                   onChange={(e) => setSelectedChain(e.target.value)}
                                 >

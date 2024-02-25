@@ -13,7 +13,7 @@ import {
 } from "@thirdweb-dev/react";
 import Image from "next/image";
 import { GOV_NFT } from "../const/contractAddresses";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -78,7 +78,6 @@ const Home: NextPage = () => {
   console.log("totalClaimSupply:", totalClaimSupply);
 
   console.log("Claim Ineligibility Reasons:", claimIneligibilityReasons);
-
   
   const [selectedOption, setSelectedOption] = useState('');
 
@@ -98,6 +97,12 @@ const Home: NextPage = () => {
         break;
     }
   };
+
+  const formatPrice = (price: BigNumber): string => {
+    const formattedPrice = ethers.utils.formatUnits(price.toString());
+    return formattedPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 
   return (
     <>
@@ -159,7 +164,7 @@ const Home: NextPage = () => {
               <p>Claim Phase: {activeClaimPhase ? activeClaimPhase.metadata?.name : 'N/A'}</p>
               {activeClaimPhase && activeClaimPhase.price !== undefined ? (
                 <p>
-                  Price: {activeClaimPhase.price.eq(0) ? '[FREE MINT]' : `${ethers.utils.formatUnits(activeClaimPhase.price)} ${getCurrencyName(activeClaimPhase.currencyAddress)}`}
+                  Price: {activeClaimPhase.price.eq(0) ? '[FREE MINT]' : `${formatPrice(activeClaimPhase.price)} ${getCurrencyName(activeClaimPhase.currencyAddress)}`}
                 </p>
               ) : (
                 <p>Price: N/A</p>
@@ -199,7 +204,7 @@ const Home: NextPage = () => {
                       >+</button>
                     </div>
                     <Web3Button style={{width: "150px"}}
-                      className="btn btn-round btn-sign-in my-2 my-sm-4 mr-sm-4 fadeInDown animated btn-gradient-blue"
+                      className="btn btn-round btn-sign-in my-2 my-sm-4 mr-sm-2 ml-2 fadeInDown animated btn-gradient-blue"
                       contractAddress={GOV_NFT}
                       action={(contract) => contract.erc721.claim(claimQuantity)}
                       onSuccess={() => {
@@ -239,7 +244,7 @@ const Home: NextPage = () => {
     
   )}
 </div>
-<p style={{ textAlign: 'center' }}> <br />
+        <p style={{ textAlign: 'center' }}> <br />
           NFT Governance contract on{' '}
           <a
             target="_blank"
@@ -273,7 +278,6 @@ const Home: NextPage = () => {
             </span>
           </a>
         </p>
-
       </main>
     </div>
     </Container>

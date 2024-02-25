@@ -13,7 +13,7 @@ import {
 } from "@thirdweb-dev/react";
 import Image from "next/image";
 import { CONTRACT_ADDRESS } from "../const/addresses";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -21,7 +21,6 @@ import toastStyle from "../util/toastConfig";
 import { getCurrencyName } from "../util/currencyUtils";
 import Link from "next/link";
 import Container from "../components/Container/Container";
-import { NFT_COLLECTION_ADDRESS } from "../const/contractAddresses";
 
 const Home: NextPage = () => {
   const address = useAddress();
@@ -99,6 +98,11 @@ const Home: NextPage = () => {
     }
   };
 
+  const formatPrice = (price: BigNumber): string => {
+    const formattedPrice = ethers.utils.formatUnits(price.toString());
+    return formattedPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
   return (
     <>
     <Toaster position="bottom-center" reverseOrder={false} /> 
@@ -111,7 +115,6 @@ const Home: NextPage = () => {
         <Link href="/buy">Buy NFTs &nbsp;</Link> /&nbsp;
         <Link href="/sell">Sell NFTs</Link>
       </div>
-      
       <div style={{ marginLeft: 'auto' }}>
         {/* Dropdown Selector */}
         <select value={selectedOption} onChange={handleOptionChange} style={{height:"30px", color: "#1E90FF"}}>
@@ -160,7 +163,7 @@ const Home: NextPage = () => {
               <p>Claim Phase: {activeClaimPhase ? activeClaimPhase.metadata?.name : 'N/A'}</p>
               {activeClaimPhase && activeClaimPhase.price !== undefined ? (
                 <p>
-                  Price: {activeClaimPhase.price.eq(0) ? '[FREE MINT]' : `${ethers.utils.formatUnits(activeClaimPhase.price)} ${getCurrencyName(activeClaimPhase.currencyAddress)}`}
+                  Price: {activeClaimPhase.price.eq(0) ? '[FREE MINT]' : `${formatPrice(activeClaimPhase.price)} ${getCurrencyName(activeClaimPhase.currencyAddress)}`}
                 </p>
               ) : (
                 <p>Price: N/A</p>
@@ -200,7 +203,7 @@ const Home: NextPage = () => {
                       >+</button>
                     </div>
                     <Web3Button style={{width: "150px"}}
-                      className="btn btn-round btn-sign-in my-2 my-sm-4 mr-sm-4 fadeInDown animated btn-gradient-blue"
+                      className="btn btn-round btn-sign-in my-2 my-sm-4 mr-sm-2 ml-2 fadeInDown animated btn-gradient-blue"
                       contractAddress={CONTRACT_ADDRESS}
                       action={(contract) => contract.erc721.claim(claimQuantity)}
                       onSuccess={() => {
@@ -246,7 +249,7 @@ const Home: NextPage = () => {
             target="_blank"
             rel="noopener"
             className="chakra-link chakra-button css-1c0d5xu"
-            href={`https://bscscan.com/address/${NFT_COLLECTION_ADDRESS}`}
+            href={`https://bscscan.com/address/${CONTRACT_ADDRESS}`}
           >
             bscscan{' '}
             <span
