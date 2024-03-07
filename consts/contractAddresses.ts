@@ -4,6 +4,9 @@ export const tokenContractAddress =
   "0x722cB8e411D40942C0f581B919ecCE3E4D759602";
 export const stakingContractAddress =
   "0x5d12488896cF2c6176BE00e9A1bB8911A7e06e28";
+export const stakingGovAddress = "0x5F622A583b17dffd5C2170540c6a4ed7f67cc1D3";
+export const govNFTAddress= "0xcb054F55C2C91865843200908240F5932af29f3b"
+
 
   //Deprecated
 

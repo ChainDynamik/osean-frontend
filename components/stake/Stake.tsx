@@ -7,7 +7,7 @@ import {
     Skeleton,
     Stack,
     Text,
-    useToast,
+    useToast
   } from "@chakra-ui/react";
   import {
     Web3Button,
@@ -20,7 +20,7 @@ import {
     REWARD_TOKEN_ADDRESSES,
     STAKE_CONTRACT_ADDRESSES,
     STAKE_TOKEN_ADDRESSES,
-  } from "../../cost/addressesStake";
+  } from "../../cost/addressesStakeNew";
   import React, { useEffect, useState } from "react";
   import { ethers } from "ethers";
   
@@ -70,8 +70,8 @@ import {
   
     return (
       <Card /*style={{backgroundColor: "#00a8ff"}}*/ p={5} mt={10} className="card__earn" >
-        <h3>Stake Osean for BNB rewards.</h3>
-        <br />Governance Stake tab - Base APR 15%.
+        <h3>Stake Osean for Osean rewards.</h3>
+        <br />Osean Stake tab - Base APY 6%.
         <SimpleGrid columns={2} className="card-block-wrapper">
           <Card p={5} m={5} className="card__stake">
             <Box textAlign={"center"} mb={5}>
@@ -188,14 +188,14 @@ import {
                 {stakeInfo && stakeInfo[0] ? (
                   <Box>
                     <Text fontSize={"xl"} fontWeight={"bold"}>
-                    <img src="theme-assets/images/wbnb200.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>&nbsp;
+                    <img src="theme-assets/images/oseantoken.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>&nbsp;
                       {ethers.utils.formatEther(stakeInfo[1])}
                     </Text>
                     <Text>{" $" + rewardTokenBalance?.symbol}</Text>
                   </Box>
                 ) : (
                   <Text>
-                    <img src="theme-assets/images/wbnb200.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>
+                    <img src="theme-assets/images/oseantoken.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>
                     &nbsp;0
                   </Text>
                 )}
@@ -239,7 +239,7 @@ import {
             target="_blank"
             rel="noopener"
             className="chakra-link chakra-button css-1c0d5xu"
-            href="https://bscscan.com/address/0xa3C6B0F0EE560E191614859f9790b99FBBf8fdd2"
+            href={`https://bscscan.com/address/${STAKE_CONTRACT_ADDRESSES}`}
           >
             bscscan{' '}
             <span
