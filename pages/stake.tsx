@@ -1,4 +1,11 @@
-import { Container, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Container, 
+  Flex, 
+  SimpleGrid, 
+  Tabs,
+  Tab,
+  TabList,
+  TabPanels,
+  TabPanel } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import type { NextPage } from "next";
 import React from "react";
@@ -29,7 +36,7 @@ const Home: NextPage = () => {
     )
   }
 
-  if (!address) {
+  /* if (!address) {
     return (
       <Container maxW={"1200px"}>
         <Flex h={"50vh"} justifyContent={"center"} alignItems={"center"}>
@@ -39,25 +46,29 @@ const Home: NextPage = () => {
         </Flex>
       </Container>
     );
-  }
+  }*/
 
   return (
     <Container maxW={"1200px"}>
-      <>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
+         <br />
+         <br />
+      <Tabs mt={20} size='md' variant='enclosed'>
+        <TabList>
+          <Tab>Stake Osean</Tab>
+          <Tab>Stake Skipper NFTs</Tab>
+          <Tab>Governance Rewards</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
       
       
-        <img
+        <img 
           src="https://osean.online/theme-assets/images/bannerapy.png"
           alt="bannerapy"
-          className="bannerapy"
+          className="bannerapy mt-3"
         />
         
-      </>
+      
 
       <SimpleGrid
         columns={2}
@@ -69,14 +80,29 @@ const Home: NextPage = () => {
         <RewardToken />
       </SimpleGrid>
       <Stake />
-      <Link href="/skippersmint" rel="skippers">
+      </TabPanel>
+      
+      {/*<Link href="/skippersmint" rel="skippers">
       <img 
           src="https://osean.online/theme-assets/images/bannerapy2.png"
           alt="bannerapy"
           className="bannerapy"
         /></Link>
-      <Stake2 />
+      <Stake2 />*/}
+      <TabPanel>
+      <Link href="/skippersmint" rel="skippers">
+      <img 
+          src="https://osean.online/theme-assets/images/bannerapy2.png"
+          alt="bannerapy"
+          className="bannerapy mt-3"
+        /></Link>
       <Stake3 />
+      </TabPanel>
+      <TabPanel>
+        <h3 className="mt-3">Coming Soon...</h3>
+      </TabPanel>
+      </TabPanels>
+      </Tabs>
     </Container>
   );
 };

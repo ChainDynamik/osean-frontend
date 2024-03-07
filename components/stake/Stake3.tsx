@@ -100,7 +100,7 @@ useEffect(() => {
   return (
     <Card /*style={{backgroundColor: "#f9f8ff"}}*/ p={5} mt={10} className="card__earn" >
       <h3 className={styles.h3}>Stake Your NFTs</h3>
-      <br />Stake Osean Skipper NFTs for Osean rewards!
+      <br />Stake Osean Skipper NFTs for Osean rewards! <br />Current APY is 8%!
       <hr className={`${styles.divider} ${styles.spacerTop}`} />
         <h3>Reward Zone</h3>
         <br />Claim your available rewards!
@@ -186,7 +186,7 @@ useEffect(() => {
             target="_blank"
             rel="noopener"
             className="chakra-link chakra-button css-1c0d5xu"
-            href="https://markt.osean.online/skippersmint"
+            href="https://dapp.osean.online/skippersmint"
           >
             here{' '}
             <span
@@ -218,7 +218,7 @@ useEffect(() => {
             target="_blank"
             rel="noopener"
             className="chakra-link chakra-button css-1c0d5xu"
-            href="https://markt.osean.online/buy"
+            href="https://dapp.osean.online/buy"
           >
             Marketplace{' '}
             <span
@@ -248,13 +248,13 @@ useEffect(() => {
           </div>
           <div className={styles.nftBoxGrid}>
             {ownedNfts?.map((nft) => (
-              <div className={styles.nftBox} key={nft.metadata.id.toString()}>
+              <div className={styles.nftBox} key={nft.metadata.id.toString()} style={{marginBottom: "10px"}}>
                 <ThirdwebNftMedia
                   
                   metadata={nft.metadata}
                   className={styles.nftMedia}
                 />
-                <h3 style={{marginTop: "20px"}}>{nft.metadata.name}</h3>
+                <h5 style={{marginTop: "20px"}}>{nft.metadata.name}</h5>
                 <div style={{alignItems: "center", alignContent: "center", textAlign: "center"}}>
                 <Web3Button style={{alignContent: "center"}}  className="btn btn-lg btn-round mt-4 btn-gradient-purple animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
                   contractAddress={stakingContractAddress}
