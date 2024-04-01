@@ -19,22 +19,24 @@ export const OseanFooter :React.FC = () =>{
         Stay updated with us
       </div>
       <form
-        action="https://online.us14.list-manage.com/subscribe/post?u=414cf38f024a76464290f5cc3&id=e4ee683459"
+        action="https://online.us18.list-manage.com/subscribe/post?u=6a09cdbd942d1c910551ee97b&amp;id=590feb4b2d&amp;f_id=00ffc2e1f0"
         method="post"
         id="mc-embedded-subscribe-form"
         className="subscribe mb-3 animated validate"
         name="mc-embedded-subscribe-form"
         data-animation="fadeInUpShorter"
         data-animation-delay="0.3s"
-        acceptCharset="utf-8"
+        target="_self"
       >
         <input
-          type="text"
-          name="subscribe"
-          className="subscribe-text"
+          type="email"
+          name="EMAIL"
+          id="mce-EMAIL"
+          className="mc-field-group subscribe-text required email"
           placeholder="Enter your email address"
         />
         <button
+          id="mc-embedded-subscribe"
           type="submit"
           className="btn btn-gradient-blue btn-glow rounded-circle subscribe-btn"
         >
