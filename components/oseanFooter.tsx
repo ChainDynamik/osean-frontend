@@ -69,7 +69,7 @@ export const OseanFooter :React.FC = () =>{
           data-animation-delay="0.5s"
         >
           <a
-            href="https://t.me/+b-mDUF4fPe42ZDM0"
+            href="https://t.me/oseandao"
             title="Telegram"
             className="btn btn-outline-twitter rounded-circle"
           >
@@ -97,7 +97,7 @@ export const OseanFooter :React.FC = () =>{
           data-animation-delay="0.7s"
         >
           <a
-            href="https://twitter.com/token_yacht"
+            href="https://twitter.com/oseandao"
             title="Twitter"
             className="btn btn-outline-linkedin rounded-circle"
           >
@@ -118,8 +118,8 @@ export const OseanFooter :React.FC = () =>{
         <br />
         <p style={{ color: "#7D7D7D", marginBottom: "5px", fontSize: "12px" }}>Powered By</p>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Image width="100px" height="25px" src="/theme-assets/images/OpenZeppelin-Logo.png" alt="OZ" /><span style={{ fontSize: "14px", color: "#7D7D7D" }}>&nbsp; &amp; &nbsp; </span>
-          <Image width="100px" height="25px" alt="TW" src="/theme-assets/images/download.png" />
+          <Image width="100px" height="22px" src="/theme-assets/images/OpenZeppelin-Logo.png" alt="OZ" /><span style={{ fontSize: "14px", color: "#7D7D7D" }}>&nbsp; &amp; &nbsp; </span>
+          <Image width="90px" height="23px" alt="TW" src="/theme-assets/images/download.png" />
         </div>
         <br />
         <span className="copyright animated" data-animation="fadeInUpShorter" data-animation-delay="0.7s">Copyright &copy; 2024, Osean Dao</span>
