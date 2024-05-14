@@ -239,9 +239,9 @@ import {
             target="_blank"
             rel="noopener"
             className="chakra-link chakra-button css-1c0d5xu"
-            href={`https://bscscan.com/address/${STAKEETH_CONTRACT_ADDRESSES}`}
+            href={`https://etherscan.io/address/${STAKEETH_CONTRACT_ADDRESSES}`}
           >
-            bscscan{' '}
+            etherscan{' '}
             <span
               style={{ display: 'inline-block' }}
               className="chakra-button__icon css-1hzyiq5"
