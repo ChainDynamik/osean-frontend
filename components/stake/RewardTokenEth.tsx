@@ -38,13 +38,13 @@ export default function ETHStakingContractBalance() {
     return (
         <Card p={5} className="card__reward-token">
             <Stack>
-                <h3><img src="theme-assets/images/oseantoken.png" alt="WBNB" width="40" height="40" className='token-icon pb-1'/>&nbsp;Total Rewards Avail.</h3>
+                <h3><img src="theme-assets/images/oseantokeneth.png" alt="WBNB" width="40" height="40" className='token-icon pb-1'/>&nbsp;Total Rewards Avail.</h3>
                 <Skeleton h={4} w={"50%"} isLoaded={!loadingnewTokenBalance && !loadingContractTokenBalance}>
                     <Text fontSize={"large"} fontWeight={"bold"}>${newtokenBalance?.symbol}</Text>
                 </Skeleton>
                 <Skeleton h={4} w={"100%"} isLoaded={!loadingStakeContract && !loadingContractTokenBalance}>
                     <Text>
-                        <img src="theme-assets/images/oseantoken.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>
+                        <img src="theme-assets/images/oseantokeneth.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>
                         &nbsp;Available:&nbsp;{formattedBalance}
                     </Text>
                 </Skeleton>

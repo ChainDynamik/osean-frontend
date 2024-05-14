@@ -81,7 +81,7 @@ import {
               <Skeleton isLoaded={!loadingStakeInfo && !loadingStakeTokenBalance}>
                 {stakeInfo && stakeInfo[0] ? (
                   <Text>
-                    <img src="theme-assets/images/oseantoken.png" alt="OSEAN" width="18" height="18" className='token-icon pb-1'/>&nbsp;
+                    <img src="theme-assets/images/oseantokeneth.png" alt="OSEAN" width="18" height="18" className='token-icon pb-1'/>&nbsp;
                     {ethers.utils.formatEther(stakeInfo[0])}
                     {" $" + stakeTokenBalance?.symbol}
                   </Text>
@@ -188,14 +188,14 @@ import {
                 {stakeInfo && stakeInfo[0] ? (
                   <Box>
                     <Text fontSize={"xl"} fontWeight={"bold"}>
-                    <img src="theme-assets/images/oseantoken.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>&nbsp;
+                    <img src="theme-assets/images/oseantokeneth.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>&nbsp;
                       {ethers.utils.formatEther(stakeInfo[1])}
                     </Text>
                     <Text>{" $" + rewardTokenBalance?.symbol}</Text>
                   </Box>
                 ) : (
                   <Text>
-                    <img src="theme-assets/images/oseantoken.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>
+                    <img src="theme-assets/images/oseantokeneth.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>
                     &nbsp;0
                   </Text>
                 )}
