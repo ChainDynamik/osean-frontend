@@ -274,7 +274,7 @@ useEffect(() => {
           <FormControl mt={5}>
           <Flex alignItems="center" justifyContent="space-between">
             <Flex alignItems="flex-start">
-              <Image src="/img/osean200.png" width={"25px"} height={"25px"} alt="osean" mr={2} />
+              <Image src="/theme-assets/images/oseantokenbsc.png" width={"25px"} height={"25px"} alt="osean" mr={2} />
               <FormLabel mt={0} mb={1} fontSize={18}><strong>OSEAN</strong></FormLabel>
             </Flex>
             <Box
