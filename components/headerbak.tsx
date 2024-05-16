@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from "./Navbar/Navbar.module.css";
 import { ConnectWallet, useAddress, lightTheme } from '@thirdweb-dev/react';
+import { walletConnect } from 'thirdweb/wallets';
 import { Text, Stack } from '@chakra-ui/react';
 
 

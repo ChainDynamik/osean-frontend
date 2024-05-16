@@ -46,6 +46,7 @@
     "react-dom": "^18.2",
     "react-hook-form": "^7.50.1",
     "react-hot-toast": "^2.4.1",
+    "thirdweb": "^5.19.1",
     "ts-essentials": "^9.4.1",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.7.0",

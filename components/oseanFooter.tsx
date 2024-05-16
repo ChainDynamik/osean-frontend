@@ -19,22 +19,24 @@ export const OseanFooter :React.FC = () =>{
         Stay updated with us
       </div>
       <form
-        action="https://online.us14.list-manage.com/subscribe/post?u=414cf38f024a76464290f5cc3&id=e4ee683459"
+        action="https://online.us18.list-manage.com/subscribe/post?u=6a09cdbd942d1c910551ee97b&amp;id=590feb4b2d&amp;f_id=00ffc2e1f0"
         method="post"
         id="mc-embedded-subscribe-form"
         className="subscribe mb-3 animated validate"
         name="mc-embedded-subscribe-form"
         data-animation="fadeInUpShorter"
         data-animation-delay="0.3s"
-        acceptCharset="utf-8"
+        target="_self"
       >
         <input
-          type="text"
-          name="subscribe"
-          className="subscribe-text"
+          type="email"
+          name="EMAIL"
+          id="mce-EMAIL"
+          className="mc-field-group subscribe-text required email"
           placeholder="Enter your email address"
         />
         <button
+          id="mc-embedded-subscribe"
           type="submit"
           className="btn btn-gradient-blue btn-glow rounded-circle subscribe-btn"
         >
@@ -67,7 +69,7 @@ export const OseanFooter :React.FC = () =>{
           data-animation-delay="0.5s"
         >
           <a
-            href="https://t.me/+b-mDUF4fPe42ZDM0"
+            href="https://t.me/oseandao"
             title="Telegram"
             className="btn btn-outline-twitter rounded-circle"
           >
@@ -95,7 +97,7 @@ export const OseanFooter :React.FC = () =>{
           data-animation-delay="0.7s"
         >
           <a
-            href="https://twitter.com/token_yacht"
+            href="https://twitter.com/oseandao"
             title="Twitter"
             className="btn btn-outline-linkedin rounded-circle"
           >
@@ -116,8 +118,8 @@ export const OseanFooter :React.FC = () =>{
         <br />
         <p style={{ color: "#7D7D7D", marginBottom: "5px", fontSize: "12px" }}>Powered By</p>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Image width="100px" height="25px" src="/theme-assets/images/OpenZeppelin-Logo.png" alt="OZ" /><span style={{ fontSize: "14px", color: "#7D7D7D" }}>&nbsp; &amp; &nbsp; </span>
-          <Image width="100px" height="25px" alt="TW" src="/theme-assets/images/download.png" />
+          <Image width="100px" height="22px" src="/theme-assets/images/OpenZeppelin-Logo.png" alt="OZ" /><span style={{ fontSize: "14px", color: "#7D7D7D" }}>&nbsp; &amp; &nbsp; </span>
+          <Image width="90px" height="23px" alt="TW" src="/theme-assets/images/download.png" />
         </div>
         <br />
         <span className="copyright animated" data-animation="fadeInUpShorter" data-animation-delay="0.7s">Copyright &copy; 2024, Osean Dao</span>

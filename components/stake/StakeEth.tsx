@@ -17,26 +17,26 @@ import {
     useTokenBalance,
   } from "@thirdweb-dev/react";
   import {
-    REWARD_TOKEN_ADDRESSES,
-    STAKE_CONTRACT_ADDRESSES,
-    STAKE_TOKEN_ADDRESSES,
+    REWARDETH_TOKEN_ADDRESSES,
+    STAKEETH_CONTRACT_ADDRESSES,
+    STAKEETH_TOKEN_ADDRESSES,
   } from "../../cost/addressesStakeNew";
   import React, { useEffect, useState } from "react";
   import { ethers } from "ethers";
   
-  export default function Stake() {
+  export default function StakeEth() {
     const address = useAddress();
   
     const { contract: stakeTokenContract } = useContract(
-      STAKE_TOKEN_ADDRESSES,
+      STAKEETH_TOKEN_ADDRESSES,
       "token"
     );
     const { contract: rewardTokenContract } = useContract(
-      REWARD_TOKEN_ADDRESSES,
+      REWARDETH_TOKEN_ADDRESSES,
       "token"
     );
     const { contract: stakeContract } = useContract(
-      STAKE_CONTRACT_ADDRESSES,
+      STAKEETH_CONTRACT_ADDRESSES,
       "custom"
     );
   
@@ -81,7 +81,7 @@ import {
               <Skeleton isLoaded={!loadingStakeInfo && !loadingStakeTokenBalance}>
                 {stakeInfo && stakeInfo[0] ? (
                   <Text>
-                    <img src="theme-assets/images/oseantokenbsc.png" alt="OSEAN" width="18" height="18" className='token-icon pb-1'/>&nbsp;
+                    <img src="theme-assets/images/oseantokeneth.png" alt="OSEAN" width="18" height="18" className='token-icon pb-1'/>&nbsp;
                     {ethers.utils.formatEther(stakeInfo[0])}
                     {" $" + stakeTokenBalance?.symbol}
                   </Text>
@@ -99,10 +99,10 @@ import {
                   onChange={(e) => setStakeAmount(e.target.value)}
                 />
                 <Web3Button className="btn btn-lg btn-round mt-0 btn-gradient-blue animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
-                  contractAddress={STAKE_CONTRACT_ADDRESSES}
+                  contractAddress={STAKEETH_CONTRACT_ADDRESSES}
                   action={async (contract) => {
                     await stakeTokenContract?.erc20.setAllowance(
-                      STAKE_CONTRACT_ADDRESSES,
+                      STAKEETH_CONTRACT_ADDRESSES,
                       stakeAmount
                     );
   
@@ -141,7 +141,7 @@ import {
                   onChange={(e) => setUnstakeAmount(e.target.value)}
                 />
                 <Web3Button className="btn btn-lg btn-round mt-0 btn-gradient-blue animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
-                  contractAddress={STAKE_CONTRACT_ADDRESSES}
+                  contractAddress={STAKEETH_CONTRACT_ADDRESSES}
                   action={async (contract) => {
                     await contract.call("withdraw", [
                       ethers.utils.parseEther(unstakeAmount),
@@ -188,21 +188,21 @@ import {
                 {stakeInfo && stakeInfo[0] ? (
                   <Box>
                     <Text fontSize={"xl"} fontWeight={"bold"}>
-                    <img src="theme-assets/images/oseantokenbsc.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>&nbsp;
+                    <img src="theme-assets/images/oseantokeneth.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>&nbsp;
                       {ethers.utils.formatEther(stakeInfo[1])}
                     </Text>
                     <Text>{" $" + rewardTokenBalance?.symbol}</Text>
                   </Box>
                 ) : (
                   <Text>
-                    <img src="theme-assets/images/oseantokenbsc.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>
+                    <img src="theme-assets/images/oseantokeneth.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>
                     &nbsp;0
                   </Text>
                 )}
               </Skeleton>
               <div style={{textAlign:"center"}}>
               <Web3Button style={{width: "fit-content", textAlign: "center"}} className="btn btn-lg btn-round mt-0 btn-gradient-blue animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
-                contractAddress={STAKE_CONTRACT_ADDRESSES}
+                contractAddress={STAKEETH_CONTRACT_ADDRESSES}
                 action={async (contract) => {
                   await contract.call("claimRewards");
                   resetValue();
@@ -239,9 +239,9 @@ import {
             target="_blank"
             rel="noopener"
             className="chakra-link chakra-button css-1c0d5xu"
-            href={`https://bscscan.com/address/${STAKE_CONTRACT_ADDRESSES}`}
+            href={`https://etherscan.io/address/${STAKEETH_CONTRACT_ADDRESSES}`}
           >
-            bscscan{' '}
+            etherscan{' '}
             <span
               style={{ display: 'inline-block' }}
               className="chakra-button__icon css-1hzyiq5"

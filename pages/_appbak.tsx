@@ -39,6 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           auth: {
             options: ["email", "google", "facebook", "apple"],
           },
+          recommended: true,
         }),
       ]}
       sdkOptions={{

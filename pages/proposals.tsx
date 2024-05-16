@@ -180,7 +180,21 @@ const ProposalPage: NextPage = () => {
             </div>
           </Box>
       </Card>
-      
+      </Flex>
+      <Flex justify="center" alignItems="flex-start" flexDirection={{ base: "column", md: "row" }} width="100%">
+      <Card style={{ maxWidth: '500px', margin: '10px 10px' }}>
+      <Box m={4}>
+            <FormControl>
+              <h3>Text Only Proposal</h3>
+              <h6>This is a prebuilt proposal to submit a text only for DAO members to vote.</h6>
+            </FormControl>
+            <div style={{ textAlign: "center" }}>
+              <Link href='/textproposal' className="btn btn-lg btn-round mt-4 btn-gradient-blue animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s">
+                Create Proposal
+              </Link>
+            </div>
+          </Box>
+      </Card>
       </Flex>
 
     <div style={{ marginTop: "50px", marginBottom: "50px" }}>
