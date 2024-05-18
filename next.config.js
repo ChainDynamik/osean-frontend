@@ -5,6 +5,7 @@ const nextConfig = {
   images: {
     domains: ['osean.online'],
   },
+  staticPageGenerationTimeout: 1000,
 };
 
 module.exports = nextConfig;
