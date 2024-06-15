@@ -1,9 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiscord, faTelegram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { Image } from '@chakra-ui/react';
+
+declare global {
+  interface Window {
+    Tawk_API: any;
+    Tawk_LoadStart: Date;
+  }
+}
+
 export const OseanFooter :React.FC = () =>{
-    return(
+
+  useEffect(() => {
+    // Tawk.to script
+    window.Tawk_API = window.Tawk_API || {};
+    window.Tawk_LoadStart = new Date();
+    (function () {
+      const s1 = document.createElement('script');
+      const s0 = document.getElementsByTagName('script')[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/66543e83981b6c564774fbfa/1hush8d5v';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      if (s0.parentNode) {
+        s0.parentNode.insertBefore(s1, s0);
+      }
+    })();
+  }, []);
+
+return(
     
 <footer
   className="footer static-bottom footer-light footer-custom-class"
