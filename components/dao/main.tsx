@@ -1,4 +1,4 @@
-import { Stack, Flex, SimpleGrid, Card, Box, Divider, Text, FormControl, Input, FormLabel, useToast, Link } from "@chakra-ui/react";
+import { Stack, Flex, SimpleGrid, Card, Box, Divider, Text, FormControl, Input, FormLabel, useToast, Link, Select } from "@chakra-ui/react";
 import { ExternalLinkIcon } from '@chakra-ui/icons'
 import {
     useAddress,
@@ -6,11 +6,12 @@ import {
     useContractWrite,
   } from '@thirdweb-dev/react';
 import { NFT_ADDRESS, OSEAN_ADDRESS, DAO_ADDRESS, USDT_ADDRESS } from '../../cost/addresses';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useContext } from 'react';
 import { Proposal } from "@thirdweb-dev/sdk";
 import  styles from "../../styles/Main.module.css";
 import { utils, BigNumber } from "ethers";
 import Web3, { BlockNumberOrTag } from 'web3';
+import ChainContext from "../../cost/chain";
 
 interface ProposalVotes {
   [proposalId: string]: {
@@ -71,6 +72,7 @@ export default function Main(): React.ReactElement | null {
   const [proposalVotes, setProposalVotes] = useState<ProposalVotes>({});
   const [userMessage, setUserMessage] = useState('');
   const [messages, setMessages] = useState<string[]>([]);
+  const { selectedChain, setSelectedChain } = useContext(ChainContext);
 
   const toast = useToast();
 
@@ -719,15 +721,15 @@ function addThousandSeparators(input: number | string) {
     alignItems="flex-start"
     flexDirection={{ base: "column", md: "row" }}
     width="100%">
-  <Box flex="1" m={4} width={"auto"}>
+  <Box flex="1" mr={4} width={"100%"}>
   <div style={{ textAlign: "center", marginTop: "10px", marginBottom: "10px" }}>
     <h2>Active Proposals</h2>
     <hr className={`${styles.divider} ${styles.spacerTop}`} />
     <form>
       {proposals.map((proposal) => (
-        <div key={proposal.proposalId.toString()} style={{ marginBottom: "20px" }}>
-          <Card style={{ flex: 1, flexWrap: "wrap" }}>
-            <div style={{ padding: "10px" }}>
+        <div key={proposal.proposalId.toString()} style={{ marginBottom: "20px", width: "100%" }}>
+          <Card style={{ flex: 1, flexWrap: "wrap", width: "100%" }}>
+            <div style={{ padding: "10px", width: "100%" }}>
               <h4>Proposal Title and Desc</h4>
               <Text><h6>{proposal.description}</h6></Text>
               <Divider my={2} />
@@ -793,7 +795,7 @@ function addThousandSeparators(input: number | string) {
                     </span>
                   </div>
                 ))}
-                <button
+                <button style={{width: "60%", textAlign: "center", textWrap: "wrap"}}
                   className="btn btn-lg btn-round mt-4 mb-3 btn-gradient-blue animated"
                   data-animation="fadeInUpShorter"
                   data-animation-delay="1.7s"
@@ -837,7 +839,30 @@ function addThousandSeparators(input: number | string) {
             </Text>
           </div>
         </Card>
-      
+
+        <Card mb={6}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", marginTop: "10px", marginBottom: "10px" }}>
+            <h2>Check your chain</h2>
+            <div style={{width:"100%", textAlign: "left" }}>
+                <hr style={{ marginLeft: 0 }} className={`${styles.divider} ${styles.spacerTop}`} />
+            </div>
+            <Card style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", maxWidth: "80%", zIndex: "1" }}>
+              <Box m={4}>
+                <form>
+                  <Text>OSEAN DAO operates on BSC chain. Use selector below and make sure you have Binance chain active.</Text>
+                  <Select style={{ maxWidth: "600px", zIndex: "1" }}
+                    value={String(selectedChain)}
+                    onChange={(e) => setSelectedChain(e.target.value)}
+                  >
+                    <option value="binance">BINANCE</option>
+                    <option value="ethereum">ETHEREUM</option>
+                  </Select>
+                </form>
+              </Box>
+            </Card>
+          </div>
+        </Card>
+
        <Card mb={6}>
         <div style={{ textAlign: "center", marginTop: "10px", marginBottom: "10px" }}>
           <h2>Delegate Votes</h2>

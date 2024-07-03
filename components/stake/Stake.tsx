@@ -98,7 +98,7 @@ import {
                   value={stakeAmount}
                   onChange={(e) => setStakeAmount(e.target.value)}
                 />
-                <Web3Button className="btn btn-lg btn-round mt-0 btn-gradient-blue animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
+                <Web3Button style={{maxWidth: "100%", textWrap: "wrap"}} className="btn btn-lg btn-round mt-0 btn-gradient-blue animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
                   contractAddress={STAKE_CONTRACT_ADDRESSES}
                   action={async (contract) => {
                     await stakeTokenContract?.erc20.setAllowance(
@@ -140,7 +140,7 @@ import {
                   value={unstakeAmount}
                   onChange={(e) => setUnstakeAmount(e.target.value)}
                 />
-                <Web3Button className="btn btn-lg btn-round mt-0 btn-gradient-blue animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
+                <Web3Button style={{maxWidth: "100%", textWrap: "wrap"}} className="btn btn-lg btn-round mt-0 btn-gradient-blue animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
                   contractAddress={STAKE_CONTRACT_ADDRESSES}
                   action={async (contract) => {
                     await contract.call("withdraw", [
@@ -189,7 +189,7 @@ import {
                   <Box>
                     <Text fontSize={"xl"} fontWeight={"bold"}>
                     <img src="theme-assets/images/oseantokenbsc.png" alt="WBNB" width="18" height="18" className='token-icon pb-1'/>&nbsp;
-                      {ethers.utils.formatEther(stakeInfo[1])}
+                      {parseFloat(ethers.utils.formatEther(stakeInfo[1])).toFixed(6)}
                     </Text>
                     <Text>{" $" + rewardTokenBalance?.symbol}</Text>
                   </Box>
@@ -201,7 +201,7 @@ import {
                 )}
               </Skeleton>
               <div style={{textAlign:"center"}}>
-              <Web3Button style={{width: "fit-content", textAlign: "center"}} className="btn btn-lg btn-round mt-0 btn-gradient-blue animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
+              <Web3Button style={{maxWidth: "100%", textWrap: "wrap"}} className="btn btn-lg btn-round mt-0 btn-gradient-blue animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
                 contractAddress={STAKE_CONTRACT_ADDRESSES}
                 action={async (contract) => {
                   await contract.call("claimRewards");

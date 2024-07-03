@@ -148,7 +148,7 @@ return(
           <Image width="90px" height="23px" alt="TW" src="/theme-assets/images/download.png" />
         </div>
         <br />
-        <span className="copyright animated" data-animation="fadeInUpShorter" data-animation-delay="0.7s">Copyright &copy; 2024, Osean Dao</span>
+        <span className="copyright animated" data-animation="fadeInUpShorter" data-animation-delay="0.7s">Copyright &copy; 2024 - OSEAN DAO LLC, P.O. Box 852, Long Island Rd, Majuro, MH, 96960. Reg. No: 10118-24</span>
       </div>
 
 
