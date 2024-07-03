@@ -34,14 +34,14 @@ import {
     return (
       <>
         {nft && (
-          <div className={styles.nftBox}>
+          <div style={{textAlign: "center"}} className={styles.nftBox}>
             {nft.metadata && (
               <ThirdwebNftMedia
                 metadata={nft.metadata}
                 className={styles.nftMedia}
               />
             )}
-            <h3>{nft.metadata.name}</h3>
+            <h5 style={{marginTop: "20px"}}>{nft.metadata.name}</h5>
             <div style={{alignItems: "center", alignContent: "center", textAlign: "center"}}>
             <Web3Button className="btn btn-lg btn-round mt-4 btn-gradient-purple animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
               action={(contract) => contract?.call("withdraw", [[nft.metadata.id]])}

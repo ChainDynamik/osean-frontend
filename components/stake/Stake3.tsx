@@ -48,7 +48,7 @@ export default function Stake3() {
   ]);
   const { data: contractTokenBalance , refetch: refetchContractTokenBalance , isLoading: loadingContractTokenBalance } = useContractRead(contract, "getRewardTokenBalance");
   const formattedBalance = contractTokenBalance
-    ? ethers.utils.formatUnits(contractTokenBalance, 18) // 18 is the number of decimals for the unit you want to convert to
+    ? parseFloat(ethers.utils.formatUnits(contractTokenBalance, 18)).toFixed(6) // 18 is the number of decimals for the unit you want to convert to
     : '';
   const toast = useToast();
 
@@ -127,7 +127,7 @@ useEffect(() => {
                     <b>
                       {!claimableRewards
                         ? "Loading..."
-                        : ethers.utils.formatUnits(claimableRewards, 18)}
+                        : parseFloat(ethers.utils.formatUnits(claimableRewards, 18)).toFixed(6)}
                     </b>{" "}
                     
                     {tokenBalance?.symbol}
@@ -135,7 +135,7 @@ useEffect(() => {
                     
              
                  
-                    <Web3Button className="btn btn-lg btn-round mt-4 btn-gradient-purple animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
+                    <Web3Button style={{maxWidth: "100%", textWrap: "wrap"}} className="btn btn-lg btn-round mt-4 btn-gradient-purple animated" data-animation="fadeInUpShorter" data-animation-delay="1.7s"
                       action={(contract) => contract.call("claimRewards")}
                       contractAddress={stakingContractAddress}
                       onSuccess={() =>
@@ -248,7 +248,7 @@ useEffect(() => {
           </div>
           <div className={styles.nftBoxGrid}>
             {ownedNfts?.map((nft) => (
-              <div className={styles.nftBox} key={nft.metadata.id.toString()} style={{marginBottom: "10px"}}>
+              <div className={styles.nftBox} key={nft.metadata.id.toString()} style={{marginBottom: "10px", textAlign: "center"}}>
                 <ThirdwebNftMedia
                   
                   metadata={nft.metadata}

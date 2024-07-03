@@ -16,7 +16,7 @@ export default function BNBStakingContractBalance() {
     const { data: newtokenBalance, isLoading: loadingnewTokenBalance } = useBalance("0x722cB8e411D40942C0f581B919ecCE3E4D759602");
 
     const formattedBalance = contractTokenBalance
-    ? ethers.utils.formatUnits(contractTokenBalance, 18) // 18 is the number of decimals for the unit you want to convert to
+    ? parseFloat(ethers.utils.formatUnits(contractTokenBalance, 18)).toFixed(2) // Format to 2 decimals
     : '';
 
     const formattedBalance2 = contractTokenBalance2

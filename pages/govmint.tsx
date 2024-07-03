@@ -1,6 +1,14 @@
 import type { NextPage } from "next";
 import styles from "../styles/Skipper.module.css";
 import { 
+  Flex, 
+  SimpleGrid, 
+  Tabs,
+  Tab,
+  TabList,
+  TabPanels,
+  TabPanel, Box, Card, Select } from "@chakra-ui/react";
+import { 
   MediaRenderer, 
   Web3Button, 
   useActiveClaimConditionForWallet, 
@@ -15,17 +23,20 @@ import Image from "next/image";
 import { GOV_NFT } from "../const/contractAddresses";
 import { ethers, BigNumber } from "ethers";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import toastStyle from "../util/toastConfig";
 import { getCurrencyName } from "../util/currencyUtils";
 import Link from "next/link";
 import Container from "../components/Container/Container";
+import ChainContext from "../cost/chain";
 
 const Home: NextPage = () => {
   const address = useAddress();
   const router = useRouter();
   const maxClaimQuantity = 100;
+
+  const { selectedChain, setSelectedChain } = useContext(ChainContext);
 
   const {
     contract
@@ -136,6 +147,79 @@ const Home: NextPage = () => {
       />
       </Link>
       </div>
+
+      <div className="row bg-color mt-5">
+                  <div style={{ position: "relative", backgroundColor: "#1F86FF", overflow: "hidden", color: "#fff" }} className="col-md-12 col-lg-6 col-xl-6">
+                  <div className="bg-ripple-animation d-none d-md-block" style={{ position: "absolute", bottom: "-200px", right: "120px", zIndex: "0" }}>
+                        <div className="ripples" style={{ position: "absolute", bottom: "-200px", right: "120px", width: "800px", height: "800px", zIndex: "-1" }}></div>
+                    </div>
+                  <div className="heading text-center mt-5">
+                  <h2 style={{ color: "#fff" }} className="title animated" data-animation="fadeInUpShorter" data-animation-delay="0.3s">
+                      <strong>KYC</strong> whitelist
+                    </h2>
+                    <div className="separator animated" data-animation="fadeInUpShorter" data-animation-delay="0.3s">
+                      <span className="large"></span>
+                      <span className="medium"></span>
+                      <span className="small"></span>
+                    </div>
+                    <p style={{ color: "#fff" }} className="content-desc animated" data-animation="fadeInUpShorter" data-animation-delay="0.4s">
+                      Click the banner and fill the form in our KYC page to be eligible to Mint.
+                    </p>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", marginTop: "-80px",  marginBottom: "80px", zIndex: "1" }}>
+                   
+                        <Card style={{ maxWidth: "600px", zIndex: "1" }}>
+                          <Flex justify="space-between" alignItems="flex-start" width="100%">
+                            <Box flex="1" m={4}>
+                              <div><a href="https://forms.office.com/r/CZ6PzAxQbZ" target="_blank">
+                              <Image alt="kyc" width="150" height="116" src="https://osean.online/KYC.png"></Image>
+                              </a>
+                              </div>
+                              </Box>
+                              </Flex>
+                              </Card>
+                            </div>   
+                  </div>
+                  <div style={{ position: "relative", backgroundColor: "#1F86FF", overflow: "hidden" }} className="col-md-12 col-lg-6 col-xl-6 ">
+                    <div className="bg-ripple-animation d-none d-md-block" style={{ position: "absolute", bottom: "-200px", left: "120px", zIndex: "0" }}>
+                        <div className="ripples" style={{ position: "absolute", bottom: "-200px", left: "120px", width: "800px", height: "800px", zIndex: "-1" }}></div>
+                    </div>
+                    <div className="heading text-center mt-5">
+                  <h2 style={{ color: "#fff" }} className="title animated" data-animation="fadeInUpShorter" data-animation-delay="0.3s">
+                      <strong>Chain Selector</strong>
+                    </h2>
+                    <div className="separator animated" data-animation="fadeInUpShorter" data-animation-delay="0.3s">
+                      <span className="large"></span>
+                      <span className="medium"></span>
+                      <span className="small"></span>
+                    </div>
+                    <p style={{ color: "#fff" }} className="content-desc animated" data-animation="fadeInUpShorter" data-animation-delay="0.4s">
+                      Our Governance NFT exists only on Binance chain. Make sure you select Binance below.
+                      </p>
+                    
+                  </div> 
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "auto", marginTop: "-80px",  marginBottom: "80px", zIndex: "1" }}>
+                   
+                        <Card style={{ maxWidth: "600px", zIndex: "1" }}>
+                          <Flex justify="space-between" alignItems="flex-start" width="100%" height="148px">
+                            <Box flex="1" m={4} >
+                              <form>
+                                <h4>Select your Chain</h4>
+                                <Select style={{ maxWidth: "600px", zIndex: "1", marginTop: "10px" }}
+                                  value={String(selectedChain)}
+                                  onChange={(e) => setSelectedChain(e.target.value)}
+                                >
+                                  <option value="binance">BINANCE</option>
+                                  <option value="ethereum">ETHEREUM</option>
+                                </Select>
+                              </form>
+                            </Box>
+                          </Flex>
+                        </Card>
+                      </div>
+                    </div>
+                  </div>
+
       <div className={styles.containerSkippers}>      
       <main className={styles.mainSkippers}>
       <div>

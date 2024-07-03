@@ -16,7 +16,7 @@ export default function ETHStakingContractBalance() {
     const { data: newtokenBalance, isLoading: loadingnewTokenBalance } = useBalance("0x50d5118Fb90D572B9d42ba65E0addC4900867809");
 
     const formattedBalance = contractTokenBalance
-    ? ethers.utils.formatUnits(contractTokenBalance, 18) // 18 is the number of decimals for the unit you want to convert to
+    ? parseFloat(ethers.utils.formatUnits(contractTokenBalance, 18)).toFixed(2) // Format to 2 decimals
     : '';
 
     const formattedBalance2 = contractTokenBalance2
