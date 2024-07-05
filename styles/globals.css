@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   padding: 0;
@@ -15,7 +19,7 @@ html {
 
 body {
   color: #191c1f;
-  background: #FFF;
+  background: #fff;
   --color-primary: #fada3f;
   --color-secondary: #ff2136;
   --color-tertiary: #0294fe;
@@ -43,10 +47,9 @@ a {
   text-decoration: none;
 }
 
- /* COUNTDOWN */
+/* COUNTDOWN */
 
-
- .timer-wrapper {
+.timer-wrapper {
   background-color: rgba(255, 255, 255, 0.8);
   display: flex;
   flex-direction: column;
@@ -96,4 +99,3 @@ a {
     font-size: 1.2rem; /* Further decrease font size for very small screens */
   }
 }
-
