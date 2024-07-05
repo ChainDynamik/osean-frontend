@@ -7,6 +7,7 @@ import { vendorData } from "../../data/listing-details";
 import GallaryBlock from "../../components/GallaryBlock/GallaryBlock";
 import SubscriptionBlock from "../../components/SubscriptionBlock/SubscriptionBlock";
 import RelatedListingBlock from "../../components/RelatedListingBlock/RelatedListingBlock";
+import ListingDetails from "../../components/ListingDetails/ListindDetails";
 // import ListingDetails from "../../components/ListingDetails/ListindDetails";
 
 export default function ListingDetailsPage() {
@@ -14,9 +15,9 @@ export default function ListingDetailsPage() {
 
   return (
     <>
-      <div className="container-fluid pt-20 w-full 3xl:!px-12">
+      <div className="container-fluid relative !px-10 pt-20 w-full">
         <GallaryBlock images={vendorData.gallary} />
-        {/* <ListingDetails    /> */}
+        <ListingDetails />
         <RelatedListingBlock />
       </div>
       <SubscriptionBlock sectionClassName="3xl:!px-12 4xl:!px-12" />

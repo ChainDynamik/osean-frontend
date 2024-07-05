@@ -38,7 +38,7 @@ export default function TopBoatsPage() {
 
   return (
     <Section
-      className="group/section container-fluid pt-64 mt-12 overflow-hidden lg:mt-16"
+      className="group/section container-fluid pt-[4.5rem] mt-12 overflow-hidden lg:mt-16"
       title="Top boat rentals"
       description="Unsatiable it considered invitation he traveling insensible."
       headerClassName="items-end mb-4 md:mb-5 xl:mb-6 gap-5"
