@@ -9,30 +9,22 @@ import Image from "next/image";
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-import { create } from "zustand";
 import Button from "../Button/Button";
-
-// import create from 'zustand';
-
-export const useTransactionStore = create((set) => ({
-  transactionOpen: false,
-  toggleTransactionModal: (state) => set(() => ({ transactionOpen: state })),
-  oseanModalIsOpen: false,
-  setOseanModalIsOpen: (state) => set(() => ({ oseanModalIsOpen: state })),
-  paymentModalIsOpen: false,
-  setPaymentModal: (state) => set(() => ({ paymentModalIsOpen: state })),
-}));
-
-//
+import { useTransactionStore } from "../../util/store";
+import { cn } from "../../util";
 
 export default function TransactionOutcomeModal({
   children,
-  enrollId,
-  osean = false,
+  isLoading = true,
+  discount,
+  fee,
+  network,
 }: {
   children?: ReactNode;
-  enrollId?: string;
-  osean?: boolean;
+  network: string;
+  discount: number;
+  fee: number;
+  isLoading?: boolean | null;
 }) {
   const {
     transactionOpen,
@@ -40,6 +32,7 @@ export default function TransactionOutcomeModal({
     setOseanModalIsOpen,
     setPaymentModal,
   } = useTransactionStore();
+  console.log(network, "cur netw");
 
   return (
     <Modal.Root
@@ -52,7 +45,14 @@ export default function TransactionOutcomeModal({
     >
       <Modal.Trigger>{children}</Modal.Trigger>
 
-      <Modal.Content className="max-[500px]:w-[90%] max-[500px]:max-w-none w-fit max-w-fit !min-w-[500px] rounded-lg">
+      <Modal.Content
+        className={cn(
+          "max-[500px]:w-[90%] max-[500px]:max-w-none w-fit max-w-fit !min-w-[500px] rounded-lg",
+          {
+            // "!hidden": isLoading,
+          }
+        )}
+      >
         <div className="relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-full">
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16">
             <Lottie animationData={CheckAnimation} loop={false} />
@@ -88,14 +88,15 @@ export default function TransactionOutcomeModal({
                 alt="logo"
                 className="mr-2"
               />
-              <span>$561.6 $OSEAN</span>
+              <span>${fee} $OSEAN</span>
             </div>
             <p className="text-green-600 !mb-0 font-semibold">
-              Discount: $140.4
+              Discount: {discount}
             </p>
             <div className="mt-6 w-full">
               <div className="flex justify-between text-gray-700 mb-2">
                 <span>Network</span>
+                {/* <span>{network}</span> */}
                 <span>Polygon</span>
               </div>
               <div className="flex justify-between text-gray-700 mb-2">
@@ -119,14 +120,14 @@ export default function TransactionOutcomeModal({
                 <span className="text-indigo-600">0xk8h6...9865</span>
               </div>
             </div>
-            <div className="flex gap-4 mt-6">
+            {/* <div className="flex gap-4 mt-6">
               <button className="bg-gray-200 text-gray-700 rounded-md px-4 py-2">
                 Download invoice
               </button>
               <Button className=" text-white rounded-md px-4 py-2">
                 Download receipt
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
       </Modal.Content>

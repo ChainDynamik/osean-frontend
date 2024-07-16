@@ -5,7 +5,6 @@ import { forwardRef } from "react";
 // import FieldError from '@/components/ui/form-fields/field-error';
 // import FieldHelperText from '@/components/ui/form-fields/field-helper-text';
 import InputIconOnClear from "../ui/form-fields/field-clear-btn";
-import FieldError from "./FieldError";
 import FieldHelperText from "./FieldHelperText";
 // import InputIconOnClear from '@/components/ui/form-fields/field-clear-btn';
 
@@ -299,14 +298,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             )}
           </div>
         </label>
-        {!error && helperText && (
+        {/* {!error && helperText && (
           <FieldHelperText size={size} className={helperClassName}>
             {helperText}
           </FieldHelperText>
-        )}
-        {error && (
+        )} */}
+        {/* {error && (
           <FieldError size={size} error={error} className={errorClassName} />
-        )}
+        )} */}
       </div>
     );
   }

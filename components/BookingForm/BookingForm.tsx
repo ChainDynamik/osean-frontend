@@ -1,11 +1,8 @@
 "use client";
 
 import React, { Suspense, useState } from "react";
-import { z } from "zod";
 import clsx from "clsx";
 import DatePicker from "react-datepicker";
-// import "react-datepicker/dist/DatePicker.css";
-// import "react-calendar/dist/Calendar.css";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "../Button/Button";
 import { Staricon } from "../ui/icons/star-icon";
@@ -18,49 +15,6 @@ interface BookingFormProps {
   className?: string;
 }
 
-const list = [
-  {
-    title: "$215 * 3 nights",
-    money: 762,
-    type: "price",
-  },
-  {
-    title: "Weekly discount",
-    money: 117,
-    type: "discount",
-  },
-  {
-    title: "Cleaning fee",
-    money: 52,
-    type: "cleanfee",
-  },
-  {
-    title: "Service fee",
-    money: 65,
-    type: "servicefee",
-  },
-  {
-    title: "Total fee",
-    money: 702,
-    type: "total",
-  },
-];
-
-const BookingSchema = z
-  .object({
-    startDate: z.date().min(new Date(), { message: "Invalid Start Date!" }),
-    endDate: z.date().min(new Date(), { message: "Invalid End Date!" }),
-    selected: z.object({
-      adults: z.number().min(1, "Minimum 1 Adult required!"),
-      child: z.number(),
-      pets: z.boolean(),
-    }),
-  })
-  .refine(({ startDate, endDate }) => startDate < endDate, {
-    message: "End Date must be greater than Start Date.",
-    path: ["startDate"],
-  });
-
 export default function BookingForm({
   price,
   averageRating,
@@ -70,10 +24,24 @@ export default function BookingForm({
   const [focus, setFocus] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
+  const [nights, setNights] = useState<number>(3); // Initial number of nights
 
-  function handleBooking(data: any) {
-    console.log(data);
-  }
+  const handleIncreaseNights = () => {
+    setNights(nights + 1);
+  };
+  const handleReduceNights = () => {
+    if (nights > 1) setNights(nights - 1);
+  };
+
+  const getTotalPrice = (price: number, nights: number) => {
+    return price * nights;
+  };
+
+  const discount = 117; // Example value, update as needed
+  const cleaningFee = 52; // Example value, update as needed
+  const serviceFee = 65; // Example value, update as needed
+  const totalFee =
+    getTotalPrice(price, nights) - discount + cleaningFee + serviceFee;
 
   return (
     <form
@@ -83,7 +51,7 @@ export default function BookingForm({
         className
       )}
     >
-      <div className="flex items-center justify-between gap-3  ">
+      <div className="flex items-center justify-between gap-3">
         <p className="text-xl font-bold text-gray-dark xl:text-[22px]">
           ${price} <span className="text-base">/ night</span>
         </p>
@@ -136,8 +104,41 @@ export default function BookingForm({
         </div>
       </div>
 
+      <div className="flex justify-between items-center mt-4">
+        <p className="text-black mb-0">Nights: {nights}</p>
+        <div className="flex items-center gap-4">
+          <Button
+            size="sm"
+            rounded="lg"
+            type="button"
+            variant="outline"
+            className="hover:bg-gray-200"
+            onClick={handleIncreaseNights}
+          >
+            Increase
+          </Button>
+          <Button
+            size="sm"
+            rounded="lg"
+            type="button"
+            variant="outline"
+            className="hover:bg-gray-200"
+            onClick={handleReduceNights}
+          >
+            Reduce
+          </Button>
+        </div>
+      </div>
+
       <Suspense fallback={<p>loading...</p>}>
-        <PaymentModal>
+        <PaymentModal
+          price={price}
+          nights={nights}
+          discount={discount}
+          cleaningFee={cleaningFee}
+          serviceFee={serviceFee}
+          totalFee={totalFee}
+        >
           <Button
             size="xl"
             rounded="lg"
@@ -151,19 +152,28 @@ export default function BookingForm({
       </Suspense>
 
       <ul className="mt-3 xl:mt-5">
-        {list.map((item) => (
-          <li
-            key={item.title}
-            className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0"
-          >
-            <span className="font-normal">{item.title}</span>
-            {item.type === "discount" ? (
-              <span className="font-bold text-red">-${item.money}</span>
-            ) : (
-              <span className="font-bold">${item.money}</span>
-            )}
-          </li>
-        ))}
+        <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+          <span className="font-normal">
+            ${price} * {nights} Nights
+          </span>
+          <span className="font-bold">${getTotalPrice(price, nights)}</span>
+        </li>
+        <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+          <span className="font-normal">Weekly discount</span>
+          <span className="font-bold">${discount}</span>
+        </li>
+        <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+          <span className="font-normal">Cleaning fee</span>
+          <span className="font-bold">${cleaningFee}</span>
+        </li>
+        <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+          <span className="font-normal">Service fee</span>
+          <span className="font-bold">${serviceFee}</span>
+        </li>
+        <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+          <span className="font-normal">Total fee</span>
+          <span className="font-bold">${totalFee}</span>
+        </li>
       </ul>
     </form>
   );

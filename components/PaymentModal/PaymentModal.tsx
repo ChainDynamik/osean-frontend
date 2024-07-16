@@ -3,34 +3,38 @@
 import React, { ReactNode, useState } from "react";
 import Modal from "../Modal/Modal";
 import Button from "../Button/Button";
-import TransactionOutcomeModal, {
-  useTransactionStore,
-} from "../TransactionOutcomeModal/TransactionOutcomeModal";
 import Image from "next/image";
-// import Lottie from "lottie-react";
 import BlueCardAnimation from "../../assets/lottie/blue-coin.json";
 import OseanModal from "../OseanModal/OseanModal";
 import dynamic from "next/dynamic";
 import CardModal from "../CardModal/CardModal";
+import { useTransactionStore } from "../../util/store";
 
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
-// import Button from "@/components/Button/button";
-// import Modal from "@/components/Modal/Modal";
-// import Icon from "../Icon-selector/Icon-selector";
-// import { CardPayment } from "../CardPayment/CardPayment";
-// import useAppStore from "@/utils/store/useAppStore";
-// import InvoiceDetails from "../InvoiceDetails/InvoiceDetails";
+
+interface PaymentModalProps {
+  children?: ReactNode;
+  enrollId?: string;
+  price: number;
+  nights: number;
+  discount: number;
+  cleaningFee: number;
+  serviceFee: number;
+  totalFee: number;
+}
 
 export default function PaymentModal({
   children,
   enrollId,
-}: {
-  children?: ReactNode;
-  enrollId?: string;
-}) {
+  price,
+  nights,
+  discount,
+  cleaningFee,
+  serviceFee,
+  totalFee,
+}: PaymentModalProps) {
   type PaymentMethodType = "card" | "wire";
-  //   const { paymentModalIsOpen, setPaymentModalIsOpen } = useAppStore();
   const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(
     null
   );
@@ -46,14 +50,7 @@ export default function PaymentModal({
   } = useTransactionStore();
 
   return (
-    <Modal.Root
-      open={paymentModalIsOpen}
-      // onOpenChange={() => {
-      //   // setPaymentModalIsOpen(!paymentModalIsOpen);
-      //   setPaymentModal(!paymentModalIsOpen);
-      // }}
-      onOpenChange={setPaymentModal}
-    >
+    <Modal.Root open={paymentModalIsOpen} onOpenChange={setPaymentModal}>
       <Modal.Trigger>{children}</Modal.Trigger>
 
       <Modal.Content
@@ -63,7 +60,6 @@ export default function PaymentModal({
       >
         <div className="relative bg-white pt-4 pb-10 px-20 rounded-md shadow-lg w-full">
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">
-            {/* <Icon iconType="cancel" className="w-4" /> */}
             <svg
               width="100%"
               height="100%"
@@ -98,10 +94,6 @@ export default function PaymentModal({
                   fill="currentColor"
                 />
               </svg>
-              {/* <Icon
-                iconType="chevron"
-                className="w-2.5 text-secondary rotate-180"
-              /> */}
             </div>
           )}
           {!paymentMethod && (
@@ -115,20 +107,10 @@ export default function PaymentModal({
                   loop={false}
                   className="w-20 -translate-y-1"
                 />
-                {/* <Image
-                  src="/coin.svg"
-                  width={200}
-                  height={200}
-                  alt="coin img"
-                  className="w-10 -translate-y-0.5 "
-                /> */}
               </div>
               <div className="flex gap-4 flex-col">
-                <OseanModal>
-                  <Button
-                    // onClick={() => handlePaymentChoice("card")}
-                    className="mb-2 whitespace-nowrap font-bold"
-                  >
+                <OseanModal fee={totalFee}>
+                  <Button className="mb-2 whitespace-nowrap font-bold">
                     <span>
                       <Image
                         src="/logo.png"
@@ -146,19 +128,7 @@ export default function PaymentModal({
                 </OseanModal>
 
                 <CardModal>
-                  <Button
-                    // onClick={() => handlePaymentChoice("wire")}
-                    className="mb-2 !px-0 whitespace-nowrap font-bold"
-                  >
-                    {/* <span className="bg-white w-8 mr-2 h-fit"> */}
-                    {/* <Image
-                      src="/card-blue.png"
-                      height={50}
-                      width={50}
-                      alt="osean"
-                      className=" w-8 mr-2"
-                    /> */}
-                    {/* </span> */}
+                  <Button className="mb-2 !px-0 whitespace-nowrap font-bold">
                     CARD (0% DISCOUNT)
                   </Button>
                 </CardModal>
@@ -166,8 +136,37 @@ export default function PaymentModal({
             </div>
           )}
 
-          {/* {paymentMethod === "card" && <CardPayment className="w-full mt-0" />}
-          {paymentMethod === "wire" && <InvoiceDetails />} */}
+          <div className="mt-6">
+            <h4 className="text-lg font-bold text-gray-900 mb-2">
+              Booking Summary
+            </h4>
+            <ul>
+              <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
+                <span className="font-normal">Price per night</span>
+                <span className="font-bold">${price}</span>
+              </li>
+              <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
+                <span className="font-normal">Nights</span>
+                <span className="font-bold">{nights}</span>
+              </li>
+              <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
+                <span className="font-normal">Weekly discount</span>
+                <span className="font-bold">${discount}</span>
+              </li>
+              <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
+                <span className="font-normal">Cleaning fee</span>
+                <span className="font-bold">${cleaningFee}</span>
+              </li>
+              <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
+                <span className="font-normal">Service fee</span>
+                <span className="font-bold">${serviceFee}</span>
+              </li>
+              <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
+                <span className="font-normal">Total fee</span>
+                <span className="font-bold">${totalFee}</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </Modal.Content>
     </Modal.Root>

@@ -3,13 +3,9 @@
 import React, { ReactNode, useState } from "react";
 import Modal from "../Modal/Modal";
 import Button from "../Button/Button";
-import TransactionOutcomeModal, {
-  useTransactionStore,
-} from "../TransactionOutcomeModal/TransactionOutcomeModal";
 import Image from "next/image";
-import dynamic from "next/dynamic";
-
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+import { useTransactionStore } from "../../util/store";
+import TransactionOutcomeModal from "../TransactionOutcomeModal/TransactionOutcomeModal";
 
 const options = [
   {
@@ -32,22 +28,24 @@ const options = [
 export default function OseanModal({
   children,
   enrollId,
+  fee,
 }: {
   children?: ReactNode;
   enrollId?: string;
+  fee: number;
 }) {
   const [network, setNetwork] = useState(options[0]);
   const [coin, setCoin] = useState("$OSEAN");
-  const [taxInfo, setTaxInfo] = useState("");
   const [showNetworkDropdown, setShowNetworkDropdown] = useState(false);
   const [showCoinDropdown, setShowCoinDropdown] = useState(false);
-  const {
-    transactionOpen,
-    toggleTransactionModal,
-    setOseanModalIsOpen,
-    oseanModalIsOpen,
-  } = useTransactionStore();
-  const [isLoading, setIsLoading] = useState(false);
+  const { transactionOpen, setOseanModalIsOpen, oseanModalIsOpen } =
+    useTransactionStore();
+  // const [isLoading, setIsLoading] = useState<null | boolean>(null);
+  // console.log(options);
+
+  // Calculate the 20% discount and the amount to pay
+  const discount = fee * 0.2;
+  const discountedFee = fee - discount;
 
   return (
     <Modal.Root open={oseanModalIsOpen} onOpenChange={setOseanModalIsOpen}>
@@ -247,44 +245,39 @@ export default function OseanModal({
                 <label className="block text-sm font-medium text-gray-700">
                   Discounts:
                 </label>
-                <p className="te !font-bold text-green-500">
-                  20% Discount ($140.6)
+                <p className="text-sm !font-bold text-green-500">
+                  20% Discount (${discount.toFixed(2)})
                 </p>
               </div>
               <div className="flex flex-col gap-2">
                 <label className="block text-sm font-medium text-gray-700">
                   Amount to pay
                 </label>
-                <p className="text-sm text-gray-900">$561.6 $OSEAN</p>
+                <p className="text-sm text-gray-900">
+                  ${discountedFee.toFixed(2)} $OSEAN
+                </p>
               </div>
-              {/* <div className="flex flex-col gap-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Promo Code
-                </label>
-                <input
-                  type="text"
-                  value={taxInfo}
-                  onChange={(e) => setTaxInfo(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeholder="XXXXXX"
-                />
-              </div> */}
             </div>
             <div className="flex flex-col gap-4">
-              {/* <TransactionOutcomeModal> */}
-              <Button
-                onClick={() => {
-                  setTimeout(() => {
-                    toggleTransactionModal(true);
-                    console.log("clicked work", transactionOpen);
-                  }, 1500);
-                  setIsLoading(true);
-                  // console.log("clicked");
-                }}
-                className={`${isLoading && "opacity-50"}`}
+              <TransactionOutcomeModal
+                network={network.label}
+                fee={discountedFee}
+                discount={discount}
               >
-                {isLoading ? "Loading..." : "Pay $561.6"}
-                {!isLoading && (
+                <Button
+                // onClick={() => {
+                //   setIsLoading(true);
+                //   setTimeout(() => {
+                //     setIsLoading(false);
+                //     setTimeout(() => {
+                //       console.log(isLoading, "loading");
+                //     }, 1000);
+                //   }, 1000);
+                // }}
+                // className={`${isLoading && "opacity-50"}`}
+                >
+                  `Pay ${discountedFee.toFixed(2)}
+                  {/* {isLoading ? "Loading..." : `Pay ${discountedFee.toFixed(2)}`} */}
                   <div className="flex gap-1 ml-2 items-center">
                     <Image
                       src="/logo.png"
@@ -297,9 +290,8 @@ export default function OseanModal({
                       $OSEAN{" "}
                     </p>
                   </div>
-                )}
-              </Button>
-              {/* </TransactionOutcomeModal> */}
+                </Button>
+              </TransactionOutcomeModal>
             </div>
           </div>
         </div>
