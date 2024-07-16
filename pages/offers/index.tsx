@@ -83,6 +83,8 @@ export default function Offers() {
     setOffers(offersWithBoats);
   }
 
+  console.log(offers);
+
   useEffect(() => {
     if (yachts) fetchOffers();
   }, [yachts]);
