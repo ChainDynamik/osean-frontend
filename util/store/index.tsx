@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface TransactionStore {
+interface TransactionStoreType {
   transactionOpen: boolean;
   toggleTransactionModal: (state: boolean) => void;
   oseanModalIsOpen: boolean;
@@ -9,11 +9,22 @@ interface TransactionStore {
   setPaymentModal: (state: boolean) => void;
 }
 
-export const useTransactionStore = create<TransactionStore>((set) => ({
+interface GalleryStoreType {
+  isGalleryOpen: boolean;
+  toggleGalleryModal: () => void;
+}
+
+export const useTransactionStore = create<TransactionStoreType>((set) => ({
   transactionOpen: false,
   toggleTransactionModal: (state) => set({ transactionOpen: state }),
   oseanModalIsOpen: false,
   setOseanModalIsOpen: (state) => set({ oseanModalIsOpen: state }),
   paymentModalIsOpen: false,
   setPaymentModal: (state) => set({ paymentModalIsOpen: state }),
+}));
+
+export const useGalleryModalStore = create<GalleryStoreType>((set) => ({
+  isGalleryOpen: false,
+  toggleGalleryModal: () =>
+    set((state) => ({ isGalleryOpen: !state.isGalleryOpen })),
 }));

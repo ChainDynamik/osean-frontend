@@ -36,12 +36,12 @@ export default function TransactionOutcomeModal({
 
   return (
     <Modal.Root
-      open={transactionOpen}
-      onOpenChange={() => {
-        toggleTransactionModal(!transactionOpen);
-        setOseanModalIsOpen(false);
-        setPaymentModal(false);
-      }}
+    // open={transactionOpen}
+    // onOpenChange={() => {
+    //   toggleTransactionModal(!transactionOpen);
+    //   setOseanModalIsOpen(false);
+    //   setPaymentModal(false);
+    // }}
     >
       <Modal.Trigger>{children}</Modal.Trigger>
 

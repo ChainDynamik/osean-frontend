@@ -1,31 +1,16 @@
 "use client";
 
 import Image from "next/image";
-// import { useAtom } from 'jotai';
-// import { drawerStateAtom } from '@/components/drawers/view';
-// import { GridIcon } from '@/components/icons/grid';
-// import Button from '@/components/ui/button';
 import { GridIcon } from "../ui/icons/grid";
 import Button from "../Button/Button";
-import { useGalleryModalStore } from "../ui/drawers/photo-gallery";
+import { useGalleryModalStore } from "../../util/store";
 
 interface GallaryBlockProps {
   images: string[];
 }
 
 export default function GallaryBlock({ images }: GallaryBlockProps) {
-  //   const [drawerSate, setDrawerState] = useAtom(drawerStateAtom);
-
-  //   function handleClick() {
-  //     setDrawerState({
-  //       ...drawerSate,
-  //       isOpen: true,
-  //       placement: 'bottom',
-  //       view: 'PHOTO_GALLERY',
-  //       customSize: '100%',
-  //     });
-  //   }
-  const { isGalleryOpen, toggleGalleryModal } = useGalleryModalStore();
+  // const { isGalleryOpen, toggleGalleryModal } = useGalleryModalStore();
 
   return (
     <div className="relative -mx-4 mb-8 sm:-mx-6 md:-mx-0 md:mt-4 lg:mb-14 lg:mt-6">
@@ -33,7 +18,7 @@ export default function GallaryBlock({ images }: GallaryBlockProps) {
         <div
           className="relative row-start-1 row-end-3 h-full cursor-pointer"
           //   onClick={handleClick}
-          onClick={() => toggleGalleryModal(true)}
+          // onClick={() => toggleGalleryModal(true)}
         >
           <Image
             src={images[0]}

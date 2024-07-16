@@ -2,66 +2,17 @@
 
 // import { vendorData } from 'public/data/listing-details';
 import Image from "next/image";
-import { useAtom } from "jotai";
 import Text from "../typography/text";
 import { vendorData } from "../../../data/listing-details";
-// import { drawerStateAtom } from '@/components/drawers/view';
-// import { ChevronLeftIcon } from '@heroicons/react/24/solid';
-// import { ShareIcon } from '@/components/icons/share-icon';
-// import { useGallery } from '@/components/gallery/context';
-// import { useModal } from '@/components/modals/context';
-// import ActionIcon from '@/components/ui/action-icon';
-// import Text from '@/components/ui/typography/text';
-// import Button from '@/components/ui/button';
-import { create } from "zustand";
-
-export const useGalleryModalStore = create((set) => ({
-  isGalleryOpen: false,
-  toggleGalleryModal: () => set((state) => ({ isOpen: !state.isOpen })),
-}));
-
-// export  useModalStore;
+import { useGalleryModalStore } from "../../../util/store";
 
 export default function PhotoGallery() {
   const { gallary } = vendorData;
   const { isGalleryOpen, toggleGalleryModal } = useGalleryModalStore();
-  // const { openModal } = useModal();
-  // const { openGallery } = useGallery();
 
   return (
     <div className="fixed z-[99999999] top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
       <div className="min-h-full w-full bg-white">
-        {/* <div className="container-fluid sticky top-0 z-10 flex h-14 w-full items-center bg-white shadow-sm md:h-20">
-        <div className="flex w-full items-center justify-between">
-          <ActionIcon
-            variant="outline"
-            size="sm"
-            rounded="full"
-            className="border-none focus:ring-0 md:h-8 md:w-8"
-            onClick={() =>
-              toggleGalleryModal({
-                ...isGalleryOpen,
-                isOpen: false,
-              })
-            }
-          >
-            <ChevronLeftIcon className="h-auto w-6" />
-          </ActionIcon>
-          <div className="flex gap-10">
-            <Button
-              size="sm"
-              className="group flex items-center hover:text-red focus:!ring-0"
-              variant="text"
-              onClick={() => openModal('SHARE')}
-            >
-              <ShareIcon className="h-4 w-4" />
-              <span className="ml-3   text-sm font-normal text-gray-dark group-hover:text-red lg:text-base">
-                Share
-              </span>
-            </Button>
-          </div>
-        </div>
-      </div> */}
         <div className="m-auto w-full max-w-4xl px-4 py-4 pb-20 sm:py-6 md:py-10 lg:px-0 lg:py-16">
           <Text tag="h3" className="md:!text-xl">
             Photo Gallery
