@@ -276,7 +276,7 @@ export default function OseanModal({
                 // }}
                 // className={`${isLoading && "opacity-50"}`}
                 >
-                  `Pay ${discountedFee.toFixed(2)}
+                  Pay ${discountedFee.toFixed(2)}
                   {/* {isLoading ? "Loading..." : `Pay ${discountedFee.toFixed(2)}`} */}
                   <div className="flex gap-1 ml-2 items-center">
                     <Image

@@ -54,9 +54,7 @@ export default function PaymentModal({
       <Modal.Trigger>{children}</Modal.Trigger>
 
       <Modal.Content
-        className={`max-[500px]:w-[90%] max-[500px]:max-w-none max-md:w-4/5  w-fit max-w-fit !min-w-fit ${
-          transactionOpen && "!hidden"
-        }`}
+        className={`max-[500px]:w-[90%] max-[500px]:max-w-none max-md:w-4/5  w-fit max-w-fit !min-w-fit`}
       >
         <div className="relative bg-white pt-4 pb-10 px-20 rounded-md shadow-lg w-full">
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">

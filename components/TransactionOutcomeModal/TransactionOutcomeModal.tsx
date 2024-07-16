@@ -120,14 +120,14 @@ export default function TransactionOutcomeModal({
                 <span className="text-indigo-600">0xk8h6...9865</span>
               </div>
             </div>
-            {/* <div className="flex gap-4 mt-6">
+            <div className="flex gap-4 mt-6">
               <button className="bg-gray-200 text-gray-700 rounded-md px-4 py-2">
                 Download invoice
               </button>
               <Button className=" text-white rounded-md px-4 py-2">
                 Download receipt
               </Button>
-            </div> */}
+            </div>
           </div>
         </div>
       </Modal.Content>

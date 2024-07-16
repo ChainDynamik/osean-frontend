@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image";
-import ListingCard from "../../components/ListingCard/ListingCard";
 import Section from "../../components/Section/Section";
 import { topBoats } from "../../data/top-boats";
+import YachtCard from "../../components/YachtCard/YachtCard";
 
 function BoatGrid() {
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
       {topBoats.slice(0, 8).map((item, index) => (
-        <ListingCard
+        <YachtCard
           key={`top-boat-grid-${index}`}
           {...item}
           id={`top-boat-grid-${index}`}

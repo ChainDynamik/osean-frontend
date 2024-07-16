@@ -1,4 +1,4 @@
-// src/data/listingDetailsData.ts
+// src/data/YachtDetailsDataType.ts
 import { vendorData } from "../../data/listing-details";
 
 export interface Specification {
@@ -16,7 +16,7 @@ export interface OwnerInfo {
   responseTime: string;
 }
 
-export interface ListingDetailsData {
+export interface YachtDetailsDataType {
   title: string;
   guests: number;
   cabins: number;
@@ -35,11 +35,11 @@ import { reviewsData } from "../../data/reviews";
 import BookingForm from "../BookingForm/BookingForm";
 import Button from "../Button/Button";
 
-interface ListingDetailsProps {
-  details: ListingDetailsData;
+interface YachtDetailsProps {
+  details: YachtDetailsDataType;
 }
 
-const ListingDetails: FC<ListingDetailsProps> = ({ details }) => {
+const YachtDetails: FC<YachtDetailsProps> = ({ details }) => {
   const {
     guests,
     cabins,
@@ -141,4 +141,4 @@ const ListingDetails: FC<ListingDetailsProps> = ({ details }) => {
   );
 };
 
-export default ListingDetails;
+export default YachtDetails;

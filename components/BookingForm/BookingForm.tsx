@@ -24,7 +24,7 @@ export default function BookingForm({
   const [focus, setFocus] = useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date | null>(new Date());
   const [endDate, setEndDate] = useState<Date | null>(new Date());
-  const [nights, setNights] = useState<number>(3); // Initial number of nights
+  const [nights, setNights] = useState<number>(1); // Initial number of nights
 
   const handleIncreaseNights = () => {
     setNights(nights + 1);

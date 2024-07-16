@@ -2,14 +2,15 @@
 import { vendorData } from "../../data/listing-details";
 import GallaryBlock from "../../components/GallaryBlock/GallaryBlock";
 import SubscriptionBlock from "../../components/SubscriptionBlock/SubscriptionBlock";
-import RelatedListingBlock from "../../components/RelatedListingBlock/RelatedListingBlock";
-import ListingDetails, {
-  ListingDetailsData,
-} from "../../components/ListingDetails/ListindDetails";
+
 import { useRouter } from "next/router";
 import { FC } from "react";
+import YachtDetails, {
+  YachtDetailsDataType,
+} from "../../components/YachtDetails";
+import SimilarYacht from "../../components/SimilarYacht/SimilarYacht";
 
-export const listingDetailsData: ListingDetailsData[] = [
+export const YachtDetailsData: YachtDetailsDataType[] = [
   {
     title: "SPORT CRUISER — OCEANIS 35 (2017)",
     guests: 12,
@@ -128,10 +129,10 @@ const YachtDetailsPage: FC = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const listing = listingDetailsData[0];
+  const listing = YachtDetailsData[0];
 
   // Find the listing that matches the id when integrating
-  // const listing = listingDetailsData.find((listing) =>
+  // const listing = YachtDetailsData.find((listing) =>
   //   listing.title.toLowerCase().includes((slug as string).toLowerCase())
   // );
 
@@ -143,8 +144,8 @@ const YachtDetailsPage: FC = () => {
     <>
       <div className="container-fluid relative !px-10 pt-20 w-full">
         <GallaryBlock images={vendorData.gallary} />
-        <ListingDetails details={listing} />
-        <RelatedListingBlock />
+        <YachtDetails details={listing} />
+        <SimilarYacht />
       </div>
       {/* <SubscriptionBlock sectionClassName="3xl:!px-12 4xl:!px-12" /> */}
     </>

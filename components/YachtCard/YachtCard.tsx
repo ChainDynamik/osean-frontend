@@ -29,7 +29,7 @@ export type ListingItemTypes = {
   [key: string]: any;
 };
 
-export default function ListingCard({
+export default function YachtCard({
   id,
   slides,
   time,
