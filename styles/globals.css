@@ -99,3 +99,49 @@ a {
     font-size: 1.2rem; /* Further decrease font size for very small screens */
   }
 }
+
+.react-datepicker__input-container,
+.react-datepicker-wrapper {
+  outline: none !important;
+  border: none !important;
+}
+
+/* custom-date-picker.css */
+.react-date-picker__wrapper {
+  border: none !important;
+}
+
+.react-date-picker__inputGroup__input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.react-date-picker__inputGroup__input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.modal-content {
+  animation: scaleAnimation ease-in 0.3s;
+}
+
+.overlay {
+  animation: scaleAnimation ease-in 0.3s;
+  backdrop-filter: blur(5px); /* Adjust the blur radius */
+  -webkit-backdrop-filter: blur(5px);
+}
+
+@keyframes scaleAnimation {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* p {
+  margin-bottom: 0 !important;
+} */

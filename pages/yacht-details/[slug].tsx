@@ -1,3 +1,4 @@
+"use client";
 // import { vendorData } from "public/data/listing-details";
 // import RelatedListingBlock from "@/components/listing-details/related-listings/related-listings-block";
 // import ListingDetails from "@/components/listing-details/listing-details-block";

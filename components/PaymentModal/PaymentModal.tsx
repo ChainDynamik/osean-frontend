@@ -3,6 +3,18 @@
 import React, { ReactNode, useState } from "react";
 import Modal from "../Modal/Modal";
 import Button from "../Button/Button";
+import TransactionOutcomeModal, {
+  useTransactionStore,
+} from "../TransactionOutcomeModal/TransactionOutcomeModal";
+import Image from "next/image";
+// import Lottie from "lottie-react";
+import BlueCardAnimation from "../../assets/lottie/blue-coin.json";
+import OseanModal from "../OseanModal/OseanModal";
+import dynamic from "next/dynamic";
+import CardModal from "../CardModal/CardModal";
+
+// Dynamically import Lottie
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 // import Button from "@/components/Button/button";
 // import Modal from "@/components/Modal/Modal";
 // import Icon from "../Icon-selector/Icon-selector";
@@ -26,19 +38,30 @@ export default function PaymentModal({
   const handlePaymentChoice = (choice: PaymentMethodType) => {
     setPaymentMethod(choice);
   };
+  const {
+    transactionOpen,
+    toggleTransactionModal,
+    paymentModalIsOpen,
+    setPaymentModal,
+  } = useTransactionStore();
 
   return (
     <Modal.Root
-      //   open={paymentModalIsOpen}
-      onOpenChange={() => {
-        // setPaymentModalIsOpen(!paymentModalIsOpen);
-        setPaymentMethod(null);
-      }}
+      open={paymentModalIsOpen}
+      // onOpenChange={() => {
+      //   // setPaymentModalIsOpen(!paymentModalIsOpen);
+      //   setPaymentModal(!paymentModalIsOpen);
+      // }}
+      onOpenChange={setPaymentModal}
     >
       <Modal.Trigger>{children}</Modal.Trigger>
 
-      <Modal.Content className="max-[500px]:w-[90%] max-[500px]:max-w-none max-md:w-4/5  w-fit max-w-fit !min-w-fit">
-        <div className="relative bg-white pt-16 pb-10 px-6 rounded-md shadow-lg w[400px]">
+      <Modal.Content
+        className={`max-[500px]:w-[90%] max-[500px]:max-w-none max-md:w-4/5  w-fit max-w-fit !min-w-fit ${
+          transactionOpen && "!hidden"
+        }`}
+      >
+        <div className="relative bg-white pt-4 pb-10 px-20 rounded-md shadow-lg w-full">
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">
             {/* <Icon iconType="cancel" className="w-4" /> */}
             <svg
@@ -83,22 +106,62 @@ export default function PaymentModal({
           )}
           {!paymentMethod && (
             <div className="flex flex-col mt-4 items-center">
-              <h3 className="mb-4 text-xl font-bold text-gray-900">
-                Choose Payment Method
-              </h3>
-              <div className="flex gap-4">
-                <Button
-                  onClick={() => handlePaymentChoice("card")}
-                  className="mb-2"
-                >
-                  $OSEAN (20% DISCOUNT)
-                </Button>
-                <Button
-                  onClick={() => handlePaymentChoice("wire")}
-                  className="mb-2"
-                >
-                  CARD (0% DISCOUNT)
-                </Button>
+              <div className="flex gap-2 items-center mt-4 mb-4">
+                <h3 className="text-3xl !mb-0 font-bold text-gray-900">
+                  Payment Method
+                </h3>
+                <Lottie
+                  animationData={BlueCardAnimation}
+                  loop={false}
+                  className="w-20 -translate-y-1"
+                />
+                {/* <Image
+                  src="/coin.svg"
+                  width={200}
+                  height={200}
+                  alt="coin img"
+                  className="w-10 -translate-y-0.5 "
+                /> */}
+              </div>
+              <div className="flex gap-4 flex-col">
+                <OseanModal>
+                  <Button
+                    // onClick={() => handlePaymentChoice("card")}
+                    className="mb-2 whitespace-nowrap font-bold"
+                  >
+                    <span>
+                      <Image
+                        src="/logo.png"
+                        height={50}
+                        width={50}
+                        alt="osean"
+                        className="w-8 mr-2"
+                      />
+                    </span>
+                    <span className="font-bold inline-block mr-2">$OSEAN </span>{" "}
+                    <span className="text-green-400 !font-bold">
+                      (20% DISCOUNT)
+                    </span>
+                  </Button>
+                </OseanModal>
+
+                <CardModal>
+                  <Button
+                    // onClick={() => handlePaymentChoice("wire")}
+                    className="mb-2 !px-0 whitespace-nowrap font-bold"
+                  >
+                    {/* <span className="bg-white w-8 mr-2 h-fit"> */}
+                    {/* <Image
+                      src="/card-blue.png"
+                      height={50}
+                      width={50}
+                      alt="osean"
+                      className=" w-8 mr-2"
+                    /> */}
+                    {/* </span> */}
+                    CARD (0% DISCOUNT)
+                  </Button>
+                </CardModal>
               </div>
             </div>
           )}

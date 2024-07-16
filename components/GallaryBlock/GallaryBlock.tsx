@@ -7,6 +7,7 @@ import Image from "next/image";
 // import Button from '@/components/ui/button';
 import { GridIcon } from "../ui/icons/grid";
 import Button from "../Button/Button";
+import { useGalleryModalStore } from "../ui/drawers/photo-gallery";
 
 interface GallaryBlockProps {
   images: string[];
@@ -24,6 +25,7 @@ export default function GallaryBlock({ images }: GallaryBlockProps) {
   //       customSize: '100%',
   //     });
   //   }
+  const { isGalleryOpen, toggleGalleryModal } = useGalleryModalStore();
 
   return (
     <div className="relative -mx-4 mb-8 sm:-mx-6 md:-mx-0 md:mt-4 lg:mb-14 lg:mt-6">
@@ -31,6 +33,7 @@ export default function GallaryBlock({ images }: GallaryBlockProps) {
         <div
           className="relative row-start-1 row-end-3 h-full cursor-pointer"
           //   onClick={handleClick}
+          onClick={() => toggleGalleryModal(true)}
         >
           <Image
             src={images[0]}
@@ -68,7 +71,7 @@ export default function GallaryBlock({ images }: GallaryBlockProps) {
           />
         </div>
       </div>
-      <Button
+      {/* <Button
         size="sm"
         variant="outline"
         // onClick={handleClick}
@@ -76,7 +79,7 @@ export default function GallaryBlock({ images }: GallaryBlockProps) {
       >
         <GridIcon className="mr-2 h-3 w-3" />
         View <span className="hidden px-1 lg:block"> more </span> photos
-      </Button>
+      </Button> */}
     </div>
   );
 }

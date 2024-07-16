@@ -1,18 +1,15 @@
 "use client";
 
+import React, { Suspense, useState } from "react";
 import { z } from "zod";
 import clsx from "clsx";
-import { useState } from "react";
-// import { useForm, Controller } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import SelectBox from "@/components/listing-details/booking-form/select-box";
-// import DateTime from "@/components/ui/form-fields/date-time-picker";
-// import { Staricon } from '@/components/icons/star-icon';
+import DatePicker from "react-datepicker";
+// import "react-datepicker/dist/DatePicker.css";
+// import "react-calendar/dist/Calendar.css";
+import "react-datepicker/dist/react-datepicker.css";
 import Button from "../Button/Button";
 import { Staricon } from "../ui/icons/star-icon";
-import DateTime from "../ui/form-fields/date-time-picker";
 import PaymentModal from "../PaymentModal/PaymentModal";
-// import Button from '@/components/ui/button';
 
 interface BookingFormProps {
   price: number;
@@ -60,11 +57,9 @@ const BookingSchema = z
     }),
   })
   .refine(({ startDate, endDate }) => startDate < endDate, {
-    message: "End Date must be greater then Start Date.",
+    message: "End Date must be greater than Start Date.",
     path: ["startDate"],
   });
-
-type BookingSchemaType = z.infer<typeof BookingSchema>;
 
 export default function BookingForm({
   price,
@@ -72,24 +67,9 @@ export default function BookingForm({
   totalReviews,
   className,
 }: BookingFormProps) {
-  //   const {
-  //     control,
-  //     getValues,
-  //     handleSubmit,
-  //     formState: { errors },
-  //   } = useForm<BookingSchemaType>({
-  //     defaultValues: {
-  //       selected: {
-  //         adults: 0,
-  //         child: 0,
-  //         pets: false,
-  //       },
-  //     },
-  //     resolver: zodResolver(BookingSchema),
-  //   });
-
-  //   const [minEndDate, setMinEndDate] = useState(getValues("startDate"));
   const [focus, setFocus] = useState<boolean>(false);
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(new Date());
 
   function handleBooking(data: any) {
     console.log(data);
@@ -97,9 +77,7 @@ export default function BookingForm({
 
   return (
     <form
-      //   noValidate\
       onSubmit={(e) => e.preventDefault()}
-      //   onSubmit={handleSubmit((data) => handleBooking(data))}
       className={clsx(
         "rounded-xl border border-gray-lighter bg-white p-8 shadow-card",
         className
@@ -136,85 +114,41 @@ export default function BookingForm({
             focus && "!border-gray-dark"
           )}
         ></span>
-        {/* <span className="absolute left-4 top-3 inline-block -translate-x-3 scale-75 text-sm font-semibold uppercase text-gray-dark">
-          Trip Start
-        </span>
-        <span className="absolute right-4 top-3 inline-block translate-x-2 scale-75 text-sm font-semibold uppercase text-gray-dark">
-          Trip End
-        </span> */}
-        {/* <Controller
-          name="startDate"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <DateTime
-              onFocus={(e) => {
-                e.target.blur();
-                setFocus(true);
-              }}
-              onClickOutside={() => setFocus(false)}
-              placeholderText="Add date"
-              minDate={new Date()}
-              selected={value}
-              onChange={(date: Date) => {
-                setMinEndDate(date);
-                onChange(date);
-              }}
-              selectsStart
-              startDate={getValues("startDate")}
-              endDate={getValues("endDate")}
-              dateFormat="eee dd / LL / yy"
-              popperClassName="!translate-x-0 !right-0 !top-full booking-form-calendar"
-              inputClassName="border-0 !text-base text-gray-dark !h-16 pt-5"
-            />
-          )}
-        /> */}
-        {/* <Controller
-          name="endDate"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <DateTime
-              onFocus={(e) => {
-                e.target.blur();
-                setFocus(true);
-              }}
-              onClickOutside={() => setFocus(false)}
-              placeholderText="Add date"
-              selected={value}
-              onChange={onChange}
-              selectsEnd
-              minDate={minEndDate}
-              endDate={getValues("endDate")}
-              startDate={getValues("startDate")}
-              dateFormat="eee dd / LL / yy"
-              popperClassName="!translate-x-0 !right-0 !top-full booking-form-calendar booking-form-calendar-two"
-              inputClassName="border-0 !text-base text-gray-dark text-end !h-16 pt-5"
-            />
-          )}
-        /> */}
+        <div className="p-2">
+          <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
+            Trip Start
+          </span>
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            className="w-full !border-none focus:!outline-none focus:!border-none !outline-none"
+          />
+        </div>
+        <div className="p-2">
+          <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
+            Trip End
+          </span>
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            className="w-full !ring-offset-0 !border-none focus:!outline-none focus:!border-none !outline-none"
+          />
+        </div>
       </div>
-      {/* <Controller
-        name="selected"
-        control={control}
-        render={({ field: { onChange, value } }) => (
-          <SelectBox defaultSelected={value} onChange={onChange} />
-        )}
-      /> */}
-      {/* <p className="flex items-center justify-between text-xs text-red">
-        <span>{errors.startDate?.message}</span>
-        <span>{errors.endDate?.message}</span>
-        <span>{errors.selected?.adults?.message}</span>
-      </p> */}
-      <PaymentModal>
-        <Button
-          size="xl"
-          rounded="lg"
-          type="submit"
-          variant="solid"
-          className="mt-4 w-full hover:!bg-black !py-[14px] text-base !font-bold uppercase tracking-widest"
-        >
-          reserve
-        </Button>
-      </PaymentModal>
+
+      <Suspense fallback={<p>loading...</p>}>
+        <PaymentModal>
+          <Button
+            size="xl"
+            rounded="lg"
+            type="submit"
+            variant="solid"
+            className="mt-4 w-full hover:!bg-black !py-[14px] text-base !font-bold uppercase tracking-widest"
+          >
+            reserve
+          </Button>
+        </PaymentModal>
+      </Suspense>
 
       <ul className="mt-3 xl:mt-5">
         {list.map((item) => (

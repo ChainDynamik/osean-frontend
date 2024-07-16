@@ -38,7 +38,7 @@ const Content = forwardRef<ContentElement, ContentProps>((props, ref) => {
       />
       <Dialog.Content
         className={cn(
-          " min-w-[95%] !rounded-lg max-h-[95vh] max-md:max-w-[80%] modal-content md:min-w-[80%] overflow-auto scroll-container z-[99999] flex items-start justify-start flex-col outline-none !fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+          " min-w-[95%] !border-2 !border-black !rounded-lg max-h-[95vh] max-md:max-w-[80%] modal-content md:min-w-[80%] overflow-auto scroll-container z-[99999] flex items-start justify-start flex-col outline-none !fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
           className
         )}
         {...contentProps}

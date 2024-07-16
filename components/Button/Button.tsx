@@ -24,21 +24,21 @@ const classes = {
       base: "border border-transparent",
       color: {
         DEFAULT:
-          "bg-gray-900 text-white hov:bg-gray-1000 focus:ring-gray-900/30 text-gray-0",
+          "bg-gray-900 text-white hover:brightness-110 hover:shadow-lg hover:shadow-black/30 hov:bg-gray-1000 focus:ring-gray-900/30 text-gray-0",
       },
     },
     flat: {
       base: "border-transparent",
       color: {
         DEFAULT:
-          "bg-gray-200 hov:bg-gray-300/70 focus:ring-gray-900/30 text-gray-1000",
+          "bg-gray-200 hover:brightness-110 hover:shadow-lg hover:shadow-black/30 hov:bg-gray-300/70 focus:ring-gray-900/30 text-gray-1000",
       },
     },
     outline: {
       base: "bg-transparent border",
       color: {
         DEFAULT:
-          "border-gray-300 hov:border-gray-1000 focus:enabled:border-gray-1000 focus:ring-gray-900/30",
+          "border-gray-300 hover:brightness-110 hover:shadow-lg hover:shadow-black/30 hov:border-gray-1000 focus:enabled:border-gray-1000 focus:ring-gray-900/30",
       },
     },
     text: {
