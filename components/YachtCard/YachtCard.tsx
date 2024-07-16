@@ -5,41 +5,30 @@ import Link from "next/link";
 import Image from "next/image";
 import { ChevronRightIcon } from "../ui/icons/chevronRight";
 import { ChevronLeftIcon } from "../ui/icons/chevronLeft";
-import {
-  Swiper,
-  SwiperSlide,
-  Navigation,
-  Pagination,
-} from "../../util/libs/slider";
+import { Swiper, SwiperSlide, Navigation, Pagination } from "../../util/libs/slider";
 import AddToWishlist from "../ui/add-to-wishlist";
 import ActionIcon from "../ui/action-icon";
 import Rate from "../ui/rating";
 
 export type ListingItemTypes = {
+  id: string;
   slides: string[];
-  time: string;
   caption: string;
   title: string;
   slug: string;
   location: string;
   price: string;
-  rating?: number;
-  ratingCount?: string;
-  userAvatar?: string;
-  [key: string]: any;
+  boatManufacturingDate: string;
 };
 
 export default function YachtCard({
   id,
   slides,
-  time,
   caption,
   title,
-  slug,
   location,
   price,
-  rating,
-  ratingCount,
+  boatManufacturingDate,
 }: ListingItemTypes) {
   return (
     <div className="listing-card group/item relative inline-flex w-full flex-col">
@@ -103,31 +92,18 @@ export default function YachtCard({
       <Link href={"/"}>
         <div className="content pt-3 text-black">
           <div className="mb-1 flex items-center gap-5">
-            <span className="relative flex items-center font-bold text-gray-dark before:absolute before:-right-3 before:block before:h-1 before:w-1 before:rounded-full before:bg-gray-dark">
+            {/* <span className="relative flex items-center font-bold text-gray-dark before:absolute before:-right-3 before:block before:h-1 before:w-1 before:rounded-full before:bg-gray-dark">
               {time}
-            </span>
+            </span> */}
             <span className="font-bold">{caption}</span>
           </div>
-          <h4 className="text-ellipsis text-gray-dark !text-lg 2xl:mb-1.5">
-            {title}
-          </h4>
+          <h4 className="text-ellipsis text-gray-dark !text-lg 2xl:mb-1.5">{title}</h4>
           <p className="mb-3 text-gray-light xl:mb-3">{location}</p>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-gray-light">
-              <span className="font-bold text-gray-dark xl:text-[18px] 3xl:text-xl">
-                {price}
-              </span>{" "}
-              avg/day
+              <span className="font-bold text-gray-dark xl:text-[18px] 3xl:text-xl">{price}</span> avg/day
             </p>
-            <div className="flex items-center gap-3 leading-7">
-              <Rate
-                allowHalf
-                allowClear
-                defaultValue={rating}
-                characterClassName="h-[14px] w-[14px] 3xl:h-[18px] 3xl:w-[18px]"
-              />
-              ({ratingCount})
-            </div>
+            <div className="flex items-center gap-3 leading-7">(Boat Year: {boatManufacturingDate})</div>
           </div>
         </div>
       </Link>

@@ -3,17 +3,55 @@ import Image from "next/image";
 import Section from "../../components/Section/Section";
 import { topBoats } from "../../data/top-boats";
 import YachtCard from "../../components/YachtCard/YachtCard";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
+import { BookingManagerYacht } from "../../types/booking-manager/core";
 
 function BoatGrid() {
+  const [boats, setBoats] = useState<BookingManagerYacht[]>([]);
+
+  async function fetchChrisBoats() {
+    const request = await axios.get(`${BOOKING_MANAGER_API_ROOT}/yachts?companyId=2672&currency=EUR&inventory=EUR`, {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
+      },
+    });
+
+    const yachts: BookingManagerYacht[] = request.data;
+
+    setBoats(yachts);
+
+    console.log(yachts);
+  }
+
+  useEffect(() => {
+    fetchChrisBoats();
+  }, []);
+
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
-      {topBoats.slice(0, 8).map((item, index) => (
+      {boats.map((item, index) => (
+        <YachtCard
+          key={item.id.toString()}
+          id={"boat_" + item.id.toString()}
+          slides={item.images.map((image) => image.url)}
+          title={item.name}
+          caption={item.kind}
+          slug="slug"
+          location={item.homeBase}
+          price={item.deposit + "€"}
+          boatManufacturingDate={item.year.toString()}
+        />
+      ))}
+
+      {/* {topBoats.slice(0, 8).map((item, index) => (
         <YachtCard
           key={`top-boat-grid-${index}`}
           {...item}
           id={`top-boat-grid-${index}`}
         />
-      ))}
+      ))} */}
     </div>
   );
 }

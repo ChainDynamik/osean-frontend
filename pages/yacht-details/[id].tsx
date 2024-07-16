@@ -4,11 +4,11 @@ import GallaryBlock from "../../components/GallaryBlock/GallaryBlock";
 import SubscriptionBlock from "../../components/SubscriptionBlock/SubscriptionBlock";
 
 import { useRouter } from "next/router";
-import { FC } from "react";
-import YachtDetails, {
-  YachtDetailsDataType,
-} from "../../components/YachtDetails";
+import { FC, useEffect, useState } from "react";
+import YachtDetails, { YachtDetailsDataType } from "../../components/YachtDetails";
 import SimilarYacht from "../../components/SimilarYacht/SimilarYacht";
+import axios from "axios";
+import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 
 export const YachtDetailsData: YachtDetailsDataType[] = [
   {
@@ -32,14 +32,7 @@ export const YachtDetailsData: YachtDetailsDataType[] = [
   Furthermore, about 14 nautical miles from the tourist port of
   oristano, there is also mal di Ventre, in Sardinian Malu Etna, a
   small island facing the coast.`,
-    equipment: [
-      "Automatic Pilot",
-      "Deck Shower",
-      "Outboard Motor",
-      "Hot Water",
-      "GPS",
-      "Cockpit Table",
-    ],
+    equipment: ["Automatic Pilot", "Deck Shower", "Outboard Motor", "Hot Water", "GPS", "Cockpit Table"],
     specifications: [
       { label: "Engine Torque", value: "111 ft-lb" },
       { label: "Engine", value: "Milwaukee-Eight 107" },
@@ -87,14 +80,7 @@ export const YachtDetailsData: YachtDetailsDataType[] = [
   Furthermore, about 14 nautical miles from the tourist port of
   oristano, there is also mal di Ventre, in Sardinian Malu Etna, a
   small island facing the coast.`,
-    equipment: [
-      "Automatic Pilot",
-      "Deck Shower",
-      "Outboard Motor",
-      "Hot Water",
-      "GPS",
-      "Cockpit Table",
-    ],
+    equipment: ["Automatic Pilot", "Deck Shower", "Outboard Motor", "Hot Water", "GPS", "Cockpit Table"],
     specifications: [
       { label: "Engine Torque", value: "111 ft-lb" },
       { label: "Engine", value: "Milwaukee-Eight 107" },
@@ -139,6 +125,22 @@ const YachtDetailsPage: FC = () => {
   if (!listing) {
     return <p>Listing not found</p>;
   }
+
+  const [yachtDetails, setYachtDetails] = useState<YachtDetailsDataType | null>();
+
+  async function getYachtDetails() {
+    const request = await axios.get(`${BOOKING_MANAGER_API_ROOT}/yacht/${id}?currency=EUR`, {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
+      },
+    });
+
+    console.log(request.data);
+  }
+
+  useEffect(() => {
+    if (id) getYachtDetails();
+  }, [id]);
 
   return (
     <>
