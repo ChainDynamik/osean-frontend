@@ -1,4 +1,4 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, useFocusEffect } from "@chakra-ui/react";
 import {
   ThirdwebSDKProvider,
   ThirdwebProvider,
@@ -13,16 +13,24 @@ import Head from "next/head";
 import ChainContext from "../cost/chain";
 import { OseanFooter } from "../components/oseanFooter";
 import { OseanHeader, OseanHeaderLinks } from "../components/oseanHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { SwapContextProvider } from "../cost/SwapContextBNB";
 import { SwapContextProviderETH } from "../cost/SwapContextETH";
 import NextNProgress from "nextjs-progressbar";
 import "styles/globals.scss";
+import useYachts from "../hooks/useYachts";
 // import GallaryBlock from "../components/GallaryBlock/GallaryBlock";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [selectedChain, setSelectedChain] = useState("binance");
+
+  const { fetchChrisBoats } = useYachts();
+
+  useEffect(() => {
+    fetchChrisBoats();
+  }, []);
+
   return (
     <ChainContext.Provider value={{ selectedChain, setSelectedChain }}>
       <ThirdwebProvider
@@ -55,7 +63,10 @@ function MyApp({ Component, pageProps }: AppProps) {
               name="description"
               content="Osean is a crypto currency project designed to invest in Yachting industry"
             />
-            <meta name="theme-color" content="#1FC7D4" />
+            <meta
+              name="theme-color"
+              content="#1FC7D4"
+            />
             <meta
               name="twitter:image"
               content="https://osean.online/osean200.png"
@@ -64,7 +75,10 @@ function MyApp({ Component, pageProps }: AppProps) {
               name="twitter:description"
               content="Osean is a crypto currency project designed to invest in Yachting industry"
             />
-            <meta name="twitter:card" content="summary_large_image" />
+            <meta
+              name="twitter:card"
+              content="summary_large_image"
+            />
             <meta
               name="twitter:title"
               content="🌊 OSEAN DAO - Osean DAO dapp"

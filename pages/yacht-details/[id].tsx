@@ -9,6 +9,7 @@ import YachtDetails, { YachtDetailsDataType } from "../../components/YachtDetail
 import SimilarYacht from "../../components/SimilarYacht/SimilarYacht";
 import axios from "axios";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
+import useYachts from "../../hooks/useYachts";
 
 export const YachtDetailsData: YachtDetailsDataType[] = [
   {
@@ -117,6 +118,8 @@ const YachtDetailsPage: FC = () => {
 
   const listing = YachtDetailsData[0];
 
+  const [yacht, setYacht] = useState<any>();
+
   // Find the listing that matches the id when integrating
   // const listing = YachtDetailsData.find((listing) =>
   //   listing.title.toLowerCase().includes((slug as string).toLowerCase())
@@ -126,27 +129,26 @@ const YachtDetailsPage: FC = () => {
     return <p>Listing not found</p>;
   }
 
-  const [yachtDetails, setYachtDetails] = useState<YachtDetailsDataType | null>();
+  const { yachts } = useYachts();
 
   async function getYachtDetails() {
-    const request = await axios.get(`${BOOKING_MANAGER_API_ROOT}/yacht/${id}?currency=EUR`, {
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
-      },
-    });
-
-    console.log(request.data);
+    console.log(`Fetching yacht details for ${id}`);
+    console.log(yachts);
+    const yachtDetails = yachts.find((yacht) => yacht.id === Number(id));
+    setYacht(yachtDetails);
   }
 
+  console.log(yacht);
+
   useEffect(() => {
-    if (id) getYachtDetails();
-  }, [id]);
+    if (yachts && id) getYachtDetails();
+  }, [yachts, id]);
 
   return (
     <>
       <div className="container-fluid relative !px-10 pt-20 w-full">
         <GallaryBlock images={vendorData.gallary} />
-        <YachtDetails details={listing} />
+        {yacht && <YachtDetails details={yacht} />}
         <SimilarYacht />
       </div>
       {/* <SubscriptionBlock sectionClassName="3xl:!px-12 4xl:!px-12" /> */}
