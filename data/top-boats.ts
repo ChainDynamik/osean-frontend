@@ -1,6 +1,6 @@
 export const topBoats = [
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-twelve.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -22,7 +22,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-nine.png",
       "/images/top-boats/boat-six.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -44,7 +44,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-ten.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-one.jpg",
@@ -66,7 +66,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-eleven.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -88,7 +88,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-one.jpg",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -110,7 +110,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-thirteen.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -132,7 +132,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-forteen.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -154,7 +154,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-eight.jpg",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -176,7 +176,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-nine.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -198,7 +198,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-ten.png",
       "/images/top-boats/boat-six.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -220,7 +220,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-eleven.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-one.jpg",
@@ -242,7 +242,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-twelve.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -264,7 +264,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-thirteen.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -286,7 +286,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-forteen.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -308,7 +308,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-fifteen.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -330,7 +330,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-sixteen.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -352,7 +352,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-seventeen.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -374,7 +374,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-eighteen.png",
       "/images/top-boats/boat-six.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -396,7 +396,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-nineteen.png",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-one.jpg",
@@ -418,7 +418,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-four.jpg",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -440,7 +440,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-five.jpg",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -462,7 +462,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-six.jpg",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -484,7 +484,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-seven.jpg",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
@@ -506,7 +506,7 @@ export const topBoats = [
     },
   },
   {
-    thumbnail: [
+    slides: [
       "/images/top-boats/boat-eight.jpg",
       "/images/top-boats/boat-two.jpg",
       "/images/top-boats/boat-three.jpg",
