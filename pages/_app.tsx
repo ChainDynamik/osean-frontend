@@ -18,10 +18,8 @@ import { ethers } from "ethers";
 import { SwapContextProvider } from "../cost/SwapContextBNB";
 import { SwapContextProviderETH } from "../cost/SwapContextETH";
 import NextNProgress from "nextjs-progressbar";
-import "styles/globals.css";
+import "styles/globals.scss";
 // import GallaryBlock from "../components/GallaryBlock/GallaryBlock";
-import PhotoGallery from "../components/ui/drawers/photo-gallery";
-import TransactionOutcomeModal from "../components/TransactionOutcomeModal/TransactionOutcomeModal";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [selectedChain, setSelectedChain] = useState("binance");
@@ -74,7 +72,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             <title>Osean DAO</title>
           </Head>
           {/* <PhotoGallery /> */}
-          <TransactionOutcomeModal />
           <OseanHeaderLinks />
 
           <OseanHeader />

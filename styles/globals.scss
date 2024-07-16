@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Comfortaa, Inter, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  color: #191c1f;
+  background: #fff;
+  --color-primary: #fada3f;
+  --color-secondary: #ff2136;
+  --color-tertiary: #0294fe;
+  --color-quaternary: #9b4dff;
+  --card-background: #252133;
+  --highlighted-background: #202326;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+h3 {
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+  margin-bottom: 0px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* COUNTDOWN */
+
+.timer-wrapper {
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0rem; /* Decrease padding for a more compact look */
+  border: none;
+  border-radius: 5px;
+  max-width: 100%;
+}
+
+.timer-inner {
+  color: #333;
+  display: flex;
+  border: solid 2px #fff;
+  padding: 1rem; /* Decrease padding for a more compact look */
+  background-color: rgba(256, 256, 256, 0.6);
+  border-radius: 5px;
+}
+
+.timer-segment {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.divider,
+.time {
+  font-size: 4rem; /* Decrease font size for a more compact look */
+}
+
+.divider {
+  padding: 0 1rem; /* Decrease padding between segments */
+}
+
+.label {
+  font-size: 1.5rem; /* Decrease font size for a more compact look */
+}
+
+/* Media Query for Even Smaller Screens */
+@media (max-width: 480px) {
+  .divider,
+  .time {
+    font-size: 3rem; /* Further decrease font size for very small screens */
+  }
+
+  .label {
+    font-size: 1.2rem; /* Further decrease font size for very small screens */
+  }
+}
+
+.react-datepicker__input-container,
+.react-datepicker-wrapper {
+  outline: none !important;
+  border: none !important;
+}
+
+/* custom-date-picker.css */
+.react-date-picker__wrapper {
+  border: none !important;
+}
+
+.react-date-picker__inputGroup__input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.react-date-picker__inputGroup__input {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.modal-content {
+  animation: scaleAnimation ease-in 0.3s;
+}
+
+.overlay {
+  animation: scaleAnimation ease-in 0.3s;
+  backdrop-filter: blur(5px); /* Adjust the blur radius */
+  -webkit-backdrop-filter: blur(5px);
+}
+
+@keyframes scaleAnimation {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.yacht-page-header {
+  background-image: url("/images/banner/yacht.jpg");
+  background-size: 100% 100%;
+}
+
+/* p {
+  margin-bottom: 0 !important;
+} */

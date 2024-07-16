@@ -1,7 +1,7 @@
 "use client";
+import Image from "next/image";
 import ListingCard from "../../components/ListingCard/ListingCard";
 import Section from "../../components/Section/Section";
-import SeeMore from "../../components/ui/see-more";
 import { topBoats } from "../../data/top-boats";
 
 function BoatGrid() {
@@ -21,21 +21,17 @@ function BoatGrid() {
 export default function TopBoatsPage() {
   return (
     <main className="!px-10 mt-[7.5rem]">
-      <div className="sub-page">
-        <div className="page-header">
-          <div className="img"></div>
-          <div className="head-content container-fluid">
-            <div className="container">
-              <h1 className="page-title">Yachts</h1>
-
-              <div className="breadcrumb">
-                <a href="https://osean.online">Home</a> /
-                <a className="current">Yatch</a>
-              </div>
-            </div>
-          </div>
+      <div className="yacht-page-header relative h-[500px] w-full">
+        <div className="absolute right-0 bottom-0">
+          <Image
+            height={200}
+            width={400}
+            alt="discount banner"
+            src="/discounts.jpg"
+          />
         </div>
       </div>
+
       <Section
         className="group/section container-fluid pt-[2rem] !px-0 mt-4 overflow-hidden lg:mt-16"
         title="Top boat rentals"
