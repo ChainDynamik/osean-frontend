@@ -3,18 +3,9 @@
 import React, { ReactNode, useState } from "react";
 import Modal from "../Modal/Modal";
 import Button from "../Button/Button";
-import TransactionOutcomeModal from "../TransactionOutcomeModal/TransactionOutcomeModal";
 import Image from "next/image";
-// import Lottie from "lottie-react";
 import BlueCardAnimation from "../../assets/lottie/blue-coin.json";
 import dynamic from "next/dynamic";
-// import Button from "@/components/Button/button";
-// import Modal from "@/components/Modal/Modal";
-// import Icon from "../Icon-selector/Icon-selector";
-// import { CardPayment } from "../CardPayment/CardPayment";
-// import useAppStore from "@/utils/store/useAppStore";
-// import InvoiceDetails from "../InvoiceDetails/InvoiceDetails";
-const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 // components/PaymentForm.js
 
@@ -27,7 +18,7 @@ const PaymentForm = () => {
     expiry: "",
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setCardDetails((prevDetails) => ({
       ...prevDetails,
@@ -138,8 +129,6 @@ const PaymentForm = () => {
                 type="text"
                 name="expiry"
                 placeholder="Pin"
-                // value={cardDetails.expiry}
-                // onChange={handleInputChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -211,9 +200,6 @@ export default function CardModal({
             </svg>
           </Modal.Close>
           <PaymentForm />
-
-          {/* {paymentMethod === "card" && <CardPayment className="w-full mt-0" />}
-          {paymentMethod === "wire" && <InvoiceDetails />} */}
         </div>
       </Modal.Content>
     </Modal.Root>
