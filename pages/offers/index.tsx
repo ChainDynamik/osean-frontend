@@ -89,13 +89,6 @@ export default function Offers() {
     if (yachts) fetchOffers();
   }, [yachts]);
 
-  const calculateDiscountPercentage = (
-    startPrice: number,
-    price: number
-  ): number => {
-    return Math.round(((startPrice - price) / startPrice) * 100);
-  };
-
   const mapOfferToProps = (offer: Reservation): OffersCardProps => {
     return {
       id: offer.yachtId,
@@ -106,17 +99,13 @@ export default function Offers() {
       price: offer.price,
       startPrice: offer.startPrice,
       currency: offer.currency,
-      discountPercentage: calculateDiscountPercentage(
-        offer.startPrice,
-        offer.price
-      ),
       dateFrom: offer.dateFrom,
       dateTo: offer.dateTo,
     };
   };
 
   const filteredOffers = offers.filter(({ offer }) => {
-    if (!startDate || !endDate || filterAmount === null) {
+    if (!startDate || !endDate) {
       return true;
     }
 
@@ -130,9 +119,9 @@ export default function Offers() {
       offerEndDate >= filterEndDate &&
       filterEndDate >= offerStartDate;
 
-    const amountMatch = offer.price >= filterAmount;
+    // const amountMatch = offer.price >= filterAmount;
 
-    return dateMatch && amountMatch;
+    return dateMatch;
   });
 
   return (

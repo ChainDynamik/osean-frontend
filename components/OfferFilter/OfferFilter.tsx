@@ -90,7 +90,7 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
         </div>
       </div>
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
           Amount
         </span>
@@ -100,7 +100,7 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
           onChange={(e) => setStoreAmount(Number(e.target.value))}
           className="w-full border border-gray-300 rounded p-2"
         />
-      </div>
+      </div> */}
 
       <Button
         size="xl"

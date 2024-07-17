@@ -3,14 +3,13 @@ import Link from "next/link";
 export type OffersCardProps = {
   product: string;
   yacht: string;
-  id: string;
+  id: number;
   startBase: string;
   endBase: string;
   price: number;
   startPrice: number;
   currency: string;
-  discountPercentage: number;
-  imageUrl: string;
+  imageUrl?: string;
   dateFrom: string; // Added dateFrom
   dateTo: string; // Added dateTo
 };
@@ -23,12 +22,20 @@ const OffersCard: React.FC<OffersCardProps> = ({
   price,
   startPrice,
   currency,
-  discountPercentage,
   imageUrl,
   dateFrom, // Added dateFrom
   dateTo, // Added dateTo
   id,
 }) => {
+  const calculateDiscountPercentage = (
+    startPrice: number,
+    price: number
+  ): number => {
+    return Math.round(((startPrice - price) / startPrice) * 100);
+  };
+
+  const discountPercentage = calculateDiscountPercentage(startPrice, price);
+
   return (
     <div className="w-full flex items-center rounded overflow-hidden shadow-lg">
       <div className="relative max-w-[400px] min-w-[350px] w-[30%] h-full">

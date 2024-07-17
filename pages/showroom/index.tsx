@@ -1,19 +1,12 @@
 "use client";
 import Image from "next/image";
 import Section from "../../components/Section/Section";
-import { topBoats } from "../../data/top-boats";
 import YachtCard from "../../components/YachtCard/YachtCard";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
-import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
-import BookingForm from "../../components/BookingForm/BookingForm";
 import OfferFilter from "../../components/OfferFilter/OfferFilter";
 
 function BoatGrid() {
   const { yachts } = useYachts();
-  console.log(yachts, "all yachts");
 
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
