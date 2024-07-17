@@ -233,7 +233,7 @@ export default function Offers() {
         <div className="flex w-full justify-center items-center flex-col gap-8">
           {sortedOffers.length === 0 && (
             <p className="text-2xl text-black w-full text-center mx-auto">
-              No Filter results
+              No results, please configure filters
             </p>
           )}
           {sortedOffers.length !== 0 &&
