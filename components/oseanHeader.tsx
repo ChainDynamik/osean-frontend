@@ -77,6 +77,22 @@ export const OseanHeader: React.FC = () => {
         {/* Horizontal Menu Start*/}
         <nav className="main-menu static-top navbar-dark navbar navbar-expand-lg fixed-top mb-1 navbar-fixed navbar-shadow">
           <div className="container flex justify-between">
+            <a
+              className="navbar-brand animated"
+              data-animation="fadeInDown"
+              data-animation-delay="1s"
+              href="https://osean.online"
+              style={{ display: "flex" }}
+            >
+              <img
+                src="/theme-assets/images/logo-dark.png"
+                className="navbar-brand-logo-dark"
+                alt="OSEAN Logo"
+              />
+              <span className="brand-text">
+                <span className="font-weight-bold">Osean</span> DAO
+              </span>
+            </a>
             <button
               className="navbar-toggler"
               type="button"

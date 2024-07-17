@@ -196,6 +196,7 @@ export default function Offers() {
     const filterEndDate = endDate.getTime();
 
     const dateMatch =
+      filterStartDate >= offerStartDate &&
       offerStartDate <= filterStartDate &&
       offerEndDate >= filterEndDate &&
       filterEndDate >= offerStartDate;
