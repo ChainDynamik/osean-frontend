@@ -19,6 +19,7 @@ export type ListingItemTypes = {
   location: string;
   price: string;
   boatManufacturingDate: string;
+  yachtId: number;
 };
 
 export default function YachtCard({
@@ -27,6 +28,7 @@ export default function YachtCard({
   caption,
   title,
   location,
+  yachtId,
   price,
   boatManufacturingDate,
 }: ListingItemTypes) {
@@ -37,7 +39,7 @@ export default function YachtCard({
           isWishListed={false}
           onClick={(data) => console.log("Item added to Wishlist.", data)}
         /> */}
-        <Link href={`/yacht-details/${id}`}>
+        <Link href={`/yacht-details/${yachtId}`}>
           <div className="listing-item after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-1/4 after:w-full after:bg-gradient-to-t after:from-black/25">
             <Swiper
               className="!static"

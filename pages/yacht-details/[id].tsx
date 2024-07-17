@@ -138,7 +138,7 @@ const YachtDetailsPage: FC = () => {
     setYacht(yachtDetails);
   }
 
-  console.log(yacht);
+  // console.log(yacht);
 
   useEffect(() => {
     if (yachts && id) getYachtDetails();

@@ -121,6 +121,7 @@ export default function Offers() {
               location={offer.boat?.homeBase as string}
               price={offer.offer.price + "€"}
               boatManufacturingDate={offer.boat?.year.toString() as string}
+              yachtId={offer.offer.yachtId}
             />
           ))}
         </div>
