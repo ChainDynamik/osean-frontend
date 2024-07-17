@@ -76,114 +76,7 @@ export const OseanHeader: React.FC = () => {
       <header className="page-header">
         {/* Horizontal Menu Start*/}
         <nav className="main-menu static-top navbar-dark navbar navbar-expand-lg fixed-top mb-1 navbar-fixed navbar-shadow">
-          <div className="container">
-            <a
-              className="navbar-brand animated"
-              data-animation="fadeInDown"
-              data-animation-delay="1s"
-              href="https://osean.online"
-              style={{ display: "flex" }}
-            >
-              <img
-                src="/theme-assets/images/logo-dark.png"
-                className="navbar-brand-logo-dark"
-                alt="OSEAN Logo"
-              />
-              <span className="brand-text">
-                <span className="font-weight-bold">Osean</span> DAO
-              </span>
-            </a>
-            <a href="showroom" className="inline-block ml-auto">
-              Yachts Showroom
-            </a>
-            <ConnectWallet
-              theme={lightTheme({
-                colors: { primaryButtonBg: "#005ce6" },
-              })}
-              switchToActiveChain={true}
-              modalSize={"wide"}
-              termsOfServiceUrl={"https://osean.online/tos.html"}
-              privacyPolicyUrl={"https://osean.online/privacy.html"}
-              welcomeScreen={() => {
-                return (
-                  <div
-                    style={{
-                      flex: "55%",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      minHeight: "400px",
-                      minWidth: "350px",
-                      margin: "20px 10px",
-                      padding: "10px",
-                    }}
-                  >
-                    <Image
-                      src="/img/govnftbanner.png"
-                      layout="responsive"
-                      width={550}
-                      height={550}
-                      alt="Osean NFT, NFT marketplace"
-                      quality={100}
-                      style={{
-                        width: "100% !important",
-                        height: "100% !important",
-                        padding: "20px",
-                      }}
-                    />
-                    <div
-                      className="mt-1"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Link
-                        className="btn btn-lg btn-round btn-gradient-blue animated"
-                        data-animation="fadeInUpShorter"
-                        data-animation-delay="1.7s"
-                        href="https://markt.osean.online/govmint"
-                        style={{ margin: "0 10px" }}
-                      >
-                        Mint This Collection
-                      </Link>
-                    </div>
-                    <div
-                      className="mt-4"
-                      style={{
-                        justifyContent: "center",
-                        textAlign: "center",
-                      }}
-                    >
-                      <Stack spacing={0}>
-                        <Text
-                          style={{
-                            color: "#7D7D7D",
-                            marginBottom: "5px",
-                          }}
-                          fontSize="12px"
-                        >
-                          By connecting you agree to our
-                        </Text>
-                        <Text fontSize="13px">
-                          <Link href="https://osean.online/tos.html" rel="tos">
-                            Terms of Service
-                          </Link>{" "}
-                          &{" "}
-                          <Link
-                            href="https://osean.online/privacy.html"
-                            rel="tos"
-                          >
-                            Privacy Policy
-                          </Link>
-                        </Text>
-                      </Stack>
-                    </div>
-                  </div>
-                );
-              }}
-              modalTitleIconUrl={"https://osean.online/osean200.png"}
-            />
+          <div className="container flex justify-between">
             <button
               className="navbar-toggler"
               type="button"
@@ -200,7 +93,7 @@ export const OseanHeader: React.FC = () => {
             >
               <span className="navbar-toggler-icon" />
             </button>
-            <div className="collapse navbar-collapse" id="navbarCollapse">
+            <div className="navbar-collapse" id="navbarCollapse">
               <div id="navigation" className="navbar-nav ml-auto">
                 <ul className="navbar-nav mt-1">
                   <li
@@ -211,6 +104,15 @@ export const OseanHeader: React.FC = () => {
                     <a className="nav-link" href="https://osean.online">
                       Home
                     </a>
+                  </li>
+                  <li
+                    className="nav-item animated"
+                    data-animation="fadeInDown"
+                    data-animation-delay="1.2s"
+                  >
+                    <Link className="nav-link" href="/showroom">
+                      Yachts Showroom
+                    </Link>
                   </li>
                   <li
                     className="nav-item animated"

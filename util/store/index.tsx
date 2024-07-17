@@ -29,46 +29,24 @@ export const useGalleryModalStore = create<GalleryStoreType>((set) => ({
     set((state) => ({ isGalleryOpen: !state.isGalleryOpen })),
 }));
 
-interface YachtSearchStore {
-  startDate: Date | null;
-  endDate: Date | null;
-  setStartDate: (date: Date | null) => void;
-  setEndDate: (date: Date | null) => void;
-}
-
-const useYachtSearchStore = create<YachtSearchStore>((set) => ({
-  startDate: null,
-  endDate: null,
-  setStartDate: (date) => set({ startDate: date }),
-  setEndDate: (date) => set({ endDate: date }),
-}));
-
-export default useYachtSearchStore;
-
-// interface OfferFilterState {
-//   startDate: Date | null;
-//   endDate: Date | null;
-//   setStartDate: (date: Date | null) => void;
-//   setEndDate: (date: Date | null) => void;
-// }
-
-// export const useOfferFilterState = create<OfferFilterState>((set) => ({
-//   startDate: null,
-//   endDate: null,
-//   setStartDate: (date) => set({ startDate: date }),
-//   setEndDate: (date) => set({ endDate: date }),
-// }));
+// export default useYachtSearchStore;
 
 interface OfferFilterState {
   startDate: Date | null;
   endDate: Date | null;
+  amount: number | null; // Add the amount field
   setStartDate: (date: Date | null) => void;
   setEndDate: (date: Date | null) => void;
+  setAmount: (amount: number | null) => void; // Add the setAmount function
+  clearDates: () => void;
 }
 
 export const useOfferFilterState = create<OfferFilterState>((set) => ({
   startDate: null,
   endDate: null,
+  amount: null, // Initialize the amount field
   setStartDate: (date) => set({ startDate: date }),
   setEndDate: (date) => set({ endDate: date }),
+  setAmount: (amount) => set({ amount }), // Implement the setAmount function
+  clearDates: () => set({ startDate: null, endDate: null, amount: null }), // Reset the amount as well
 }));

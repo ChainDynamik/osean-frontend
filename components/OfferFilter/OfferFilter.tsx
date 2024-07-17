@@ -1,44 +1,43 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import Button from "../Button/Button";
-import useOfferFilterState from "../../util/store";
 import { useRouter } from "next/navigation";
 import { cn } from "../../util";
+import { useOfferFilterState } from "../../util/store";
 
 interface BookingFormProps {
   className?: string;
+  isRoute?: boolean;
 }
 
-export default function OfferFilter({ className }: BookingFormProps) {
-  const [focus, setFocus] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
-  const [nights, setNights] = useState<number>(1); // Initial number of nights
-
+export default function OfferFilter({ className, isRoute }: BookingFormProps) {
   const router = useRouter();
+
+  // Zustand state
+  const startDate = useOfferFilterState((state) => state.startDate);
+  const endDate = useOfferFilterState((state) => state.endDate);
+  const amount = useOfferFilterState((state) => state.amount);
+
+  // Zustand actions
   const setStoreStartDate = useOfferFilterState((state) => state.setStartDate);
   const setStoreEndDate = useOfferFilterState((state) => state.setEndDate);
-
-  const handleIncreaseNights = () => {
-    setNights(nights + 1);
-  };
-  const handleReduceNights = () => {
-    if (nights > 1) setNights(nights - 1);
-  };
+  const setStoreAmount = useOfferFilterState((state) => state.setAmount);
 
   const handleReserve = () => {
-    setStoreStartDate(startDate);
-    setStoreEndDate(endDate);
     // Add additional logic for reserving if needed
     console.log(
       "Reservation made:",
-      `${format(startDate, "dd/MM/yyyy")}`,
-      `${format(endDate, "dd/MM/yyyy")}`
+      startDate ? format(startDate, "dd/MM/yyyy") : "",
+      endDate ? format(endDate, "dd/MM/yyyy") : "",
+      amount
     );
+    if (isRoute) {
+      router.push("/offers");
+    }
   };
 
   return (
@@ -48,7 +47,7 @@ export default function OfferFilter({ className }: BookingFormProps) {
         handleReserve();
       }}
       className={cn(
-        " max-w-md rounded-xl border border-gray-lighter bg-white p-8 shadow-card",
+        "max-w-md rounded-xl border border-gray-lighter bg-white p-8 shadow-card",
         className
       )}
     >
@@ -58,15 +57,13 @@ export default function OfferFilter({ className }: BookingFormProps) {
       </h2>
       <div
         className={cn(
-          "relative mt-6 grid grid-cols-2 gap-3 rounded-t-lg border border-b-0 border-gray-lighter",
-          focus && "!border-b !border-gray-dark ring-[1px] ring-gray-900/20"
+          "relative mt-6 grid grid-cols-2 gap-3 rounded-t-lg border border-b-0 border-gray-lighter"
         )}
-        onBlur={() => setFocus(false)}
+        // onBlur={() => setFocus(false)}
       >
         <span
           className={cn(
-            "absolute inset-y-0 left-1/2 translate-x-1/2 border-r border-gray-lighter",
-            focus && "!border-gray-dark"
+            "absolute inset-y-0 left-1/2 translate-x-1/2 border-r border-gray-lighter"
           )}
         ></span>
         <div className="p-2">
@@ -75,7 +72,7 @@ export default function OfferFilter({ className }: BookingFormProps) {
           </span>
           <DatePicker
             selected={startDate}
-            onChange={(date) => setStartDate(date)}
+            onChange={(date) => setStoreStartDate(date)}
             dateFormat="dd/MM/yyyy"
             className="w-full !border-none focus:!outline-none focus:!border-none !outline-none"
           />
@@ -86,43 +83,26 @@ export default function OfferFilter({ className }: BookingFormProps) {
           </span>
           <DatePicker
             selected={endDate}
-            onChange={(date) => setEndDate(date)}
+            onChange={(date) => setStoreEndDate(date)}
             dateFormat="dd/MM/yyyy"
             className="w-full !ring-offset-0 !border-none focus:!outline-none focus:!border-none !outline-none"
           />
         </div>
       </div>
 
-      {/* <div className="flex justify-between items-center mt-4">
-        <p className="text-black mb-0">Nights: {nights}</p>
-        <div className="flex items-center gap-4">
-          <Button
-            size="sm"
-            rounded="lg"
-            type="button"
-            variant="outline"
-            className="hover:bg-gray-200"
-            onClick={handleIncreaseNights}
-          >
-            Increase
-          </Button>
-          <Button
-            size="sm"
-            rounded="lg"
-            type="button"
-            variant="outline"
-            className="hover:bg-gray-200"
-            onClick={handleReduceNights}
-          >
-            Reduce
-          </Button>
-        </div>
-      </div> */}
+      <div className="mt-4">
+        <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
+          Amount
+        </span>
+        <input
+          type="number"
+          value={amount || ""}
+          onChange={(e) => setStoreAmount(Number(e.target.value))}
+          className="w-full border border-gray-300 rounded p-2"
+        />
+      </div>
 
       <Button
-        // onClick={() => {
-        //   router.push("/offers");
-        // }}
         size="xl"
         rounded="lg"
         type="submit"

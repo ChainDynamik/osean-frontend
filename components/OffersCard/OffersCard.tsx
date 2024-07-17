@@ -1,6 +1,9 @@
+import Link from "next/link";
+
 export type OffersCardProps = {
   product: string;
   yacht: string;
+  id: string;
   startBase: string;
   endBase: string;
   price: number;
@@ -24,6 +27,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   imageUrl,
   dateFrom, // Added dateFrom
   dateTo, // Added dateTo
+  id,
 }) => {
   return (
     <div className="w-full flex items-center rounded overflow-hidden shadow-lg">
@@ -83,9 +87,11 @@ const OffersCard: React.FC<OffersCardProps> = ({
             </p>
           </div>
         </div>
-        <button className="mt-4 whitespace-nowrap flex-grow bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          View details
-        </button>
+        <Link href={`/yacht-details/${id}`}>
+          <button className="mt-4 whitespace-nowrap flex-grow bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            View details
+          </button>
+        </Link>
       </div>
     </div>
   );

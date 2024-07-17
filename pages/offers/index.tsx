@@ -8,7 +8,7 @@ import OffersCard, {
   OffersCardProps,
 } from "../../components/OffersCard/OffersCard";
 import OfferFilter from "../../components/OfferFilter/OfferFilter";
-import useOfferFilterState from "../../util/store";
+import { useOfferFilterState } from "../../util/store";
 
 type Extra = {
   id: number;
@@ -59,6 +59,7 @@ export default function Offers() {
 
   const startDate = useOfferFilterState((state) => state.startDate);
   const endDate = useOfferFilterState((state) => state.endDate);
+  const filterAmount = useOfferFilterState((state) => state.amount);
 
   async function fetchOffers() {
     const request = await axios.get(
@@ -97,6 +98,7 @@ export default function Offers() {
 
   const mapOfferToProps = (offer: Reservation): OffersCardProps => {
     return {
+      id: offer.yachtId,
       product: offer.product,
       yacht: offer.yacht,
       startBase: offer.startBase,
@@ -110,12 +112,11 @@ export default function Offers() {
       ),
       dateFrom: offer.dateFrom,
       dateTo: offer.dateTo,
-      // imageUrl: "YOUR_IMAGE_URL_HERE", // Replace this with the actual image URL
     };
   };
 
   const filteredOffers = offers.filter(({ offer }) => {
-    if (!startDate || !endDate) {
+    if (!startDate || !endDate || filterAmount === null) {
       return true;
     }
 
@@ -124,12 +125,14 @@ export default function Offers() {
     const filterStartDate = startDate.getTime();
     const filterEndDate = endDate.getTime();
 
-    // Correct filtering logic
-    return (
+    const dateMatch =
       offerStartDate <= filterStartDate &&
       offerEndDate >= filterEndDate &&
-      filterEndDate >= offerStartDate
-    );
+      filterEndDate >= offerStartDate;
+
+    const amountMatch = offer.price >= filterAmount;
+
+    return dateMatch && amountMatch;
   });
 
   return (
@@ -138,16 +141,26 @@ export default function Offers() {
         <div className="w-[30%] min-w-[30%]">
           <OfferFilter />
         </div>
-        <div className="flex justify-center items-center flex-col gap-8">
-          {filteredOffers.map((data, index) => {
-            const offerObject = mapOfferToProps(data.offer);
-            const image = data?.boat?.images[0]?.url;
-            console.log(image, "boats");
+        <div className="flex w-full justify-center items-center flex-col gap-8">
+          {filteredOffers.length === 0 && (
+            <p className="text-2xl text-black w-full text-center mx-auto">
+              No Filter results
+            </p>
+          )}
+          {filteredOffers.length !== 0 &&
+            filteredOffers.map((data, index) => {
+              const offerObject = mapOfferToProps(data.offer);
 
-            return (
-              <OffersCard key={index} {...offerObject} imageUrl={image || ""} />
-            );
-          })}
+              const image = data?.boat?.images[0]?.url;
+
+              return (
+                <OffersCard
+                  key={index}
+                  {...offerObject}
+                  imageUrl={image || ""}
+                />
+              );
+            })}
         </div>
       </div>
     </main>
