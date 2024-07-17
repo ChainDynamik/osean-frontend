@@ -28,3 +28,19 @@ export const useGalleryModalStore = create<GalleryStoreType>((set) => ({
   toggleGalleryModal: () =>
     set((state) => ({ isGalleryOpen: !state.isGalleryOpen })),
 }));
+
+interface YachtSearchStore {
+  startDate: Date | null;
+  endDate: Date | null;
+  setStartDate: (date: Date | null) => void;
+  setEndDate: (date: Date | null) => void;
+}
+
+const useYachtSearchStore = create<YachtSearchStore>((set) => ({
+  startDate: null,
+  endDate: null,
+  setStartDate: (date) => set({ startDate: date }),
+  setEndDate: (date) => set({ endDate: date }),
+}));
+
+export default useYachtSearchStore;

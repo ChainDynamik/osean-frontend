@@ -8,13 +8,16 @@ import { useEffect, useState } from "react";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
+import YachtSearch from "../../components/YachtSearch/YachtSearch";
+import BookingForm from "../../components/BookingForm/BookingForm";
 
 function BoatGrid() {
-  const { boats } = useYachts();
+  const { boats, yachts } = useYachts();
+  console.log(yachts, "all yachts");
 
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
-      {boats.map((item, index) => (
+      {yachts?.map((item, index) => (
         <YachtCard
           key={item.id.toString()}
           id={"boat_" + item.id.toString()}
@@ -34,7 +37,9 @@ function BoatGrid() {
 export default function TopBoatsPage() {
   return (
     <main className="!px-10 mt-[7.5rem]">
-      <div className="yacht-page-header relative h-[500px] w-full">
+      <div className="yacht-page-header flex items-center  relative h-[500px] w-full">
+        <YachtSearch />
+        {/* <BookingForm /> */}
         <div className="absolute right-0 bottom-0">
           <Image
             height={200}

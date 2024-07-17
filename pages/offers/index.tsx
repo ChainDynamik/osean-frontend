@@ -1,13 +1,12 @@
 "use client";
-import Image from "next/image";
-import Section from "../../components/Section/Section";
-import { topBoats } from "../../data/top-boats";
-import YachtCard from "../../components/YachtCard/YachtCard";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
+import OffersCard, {
+  OffersCardProps,
+} from "../../components/OffersCard/OffersCard";
 
 type Extra = {
   id: number;
@@ -69,8 +68,6 @@ export default function Offers() {
 
     const offers: Reservation[] = request.data;
 
-    // For all the offers, get the boat element for it
-
     const offersWithBoats = offers.map((offer) => {
       const boat = getBoatById(offer.yachtId);
 
@@ -83,49 +80,53 @@ export default function Offers() {
     setOffers(offersWithBoats);
   }
 
-  console.log(offers);
-
   useEffect(() => {
     if (yachts) fetchOffers();
   }, [yachts]);
 
+  const calculateDiscountPercentage = (
+    startPrice: number,
+    price: number
+  ): number => {
+    return Math.round(((startPrice - price) / startPrice) * 100);
+  };
+
+  const mapOfferToProps = (offer: Reservation): OffersCardProps => {
+    return {
+      product: offer.product,
+      yacht: offer.yacht,
+      startBase: offer.startBase,
+      endBase: offer.endBase,
+      price: offer.price,
+      startPrice: offer.startPrice,
+      currency: offer.currency,
+      discountPercentage: calculateDiscountPercentage(
+        offer.startPrice,
+        offer.price
+      ),
+      dateFrom: offer.dateFrom, // Added dateFrom
+      dateTo: offer.dateTo, // Added dateTo
+      imageUrl: "YOUR_IMAGE_URL_HERE", // Replace this with the actual image URL
+    };
+  };
+  console.log(yachts, "current");
+
   return (
     <main className="!px-10 mt-[7.5rem]">
-      <div className="yacht-page-header relative h-[500px] w-full">
-        <div className="absolute right-0 bottom-0">
-          <Image
-            height={200}
-            width={400}
-            alt="discount banner"
-            src="/discounts.jpg"
-          />
+      <div className="flex gap-8">
+        <div className="w-[30%] min-w-[30%]"></div>
+        <div className="flex justify-center items-center flex-col gap-8 py-8">
+          {offers.map((data, index) => {
+            const offerObject = mapOfferToProps(data.offer);
+            const image = data?.boat?.images[0]?.url;
+            console.log(image, "boats");
+
+            return (
+              <OffersCard key={index} {...offerObject} imageUrl={image || ""} />
+            );
+          })}
         </div>
       </div>
-
-      <Section
-        className="group/section container-fluid pt-[2rem] !px-0 mt-4 overflow-hidden lg:mt-16"
-        title="Planning your trip..."
-        description="Find the perfect boat for your next adventure"
-        headerClassName="items-end mb-4 md:mb-5 xl:mb-6 gap-5"
-        // rightElement={<SeeMore />}
-      >
-        <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
-          {offers.map((offer, index) => (
-            <YachtCard
-              key={offer.offer.myReservationId}
-              id={"offer_" + offer.offer.myReservationId}
-              slides={offer.boat?.images.map((image) => image.url) || []}
-              title={offer.boat?.name as string}
-              caption={offer.boat?.kind as string}
-              slug="slug"
-              location={offer.boat?.homeBase as string}
-              price={offer.offer.price + "€"}
-              boatManufacturingDate={offer.boat?.year.toString() as string}
-              yachtId={offer.offer.yachtId}
-            />
-          ))}
-        </div>
-      </Section>
     </main>
   );
 }

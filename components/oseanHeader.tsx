@@ -58,18 +58,16 @@ export const OseanHeaderLinks: React.FC = () => {
       />
       {/* END Page Level CSS*/}
       {/* BEGIN Custom CSS*/}
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="assets/css/style.css"
-      />
+      <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
     </>
   );
 };
 
 export const OseanHeader: React.FC = () => {
   function toggleNav() {
-    document.querySelectorAll("#navbarCollapse")[0].classList.toggle("collapse");
+    document
+      .querySelectorAll("#navbarCollapse")[0]
+      .classList.toggle("collapse");
   }
   const address = useAddress();
   return (
@@ -95,11 +93,8 @@ export const OseanHeader: React.FC = () => {
                 <span className="font-weight-bold">Osean</span> DAO
               </span>
             </a>
-            <a
-              href="yacht"
-              className="inline-block ml-auto"
-            >
-              Yachts
+            <a href="showroom" className="inline-block ml-auto">
+              Yachts Showroom
             </a>
             <ConnectWallet
               theme={lightTheme({
@@ -171,10 +166,7 @@ export const OseanHeader: React.FC = () => {
                           By connecting you agree to our
                         </Text>
                         <Text fontSize="13px">
-                          <Link
-                            href="https://osean.online/tos.html"
-                            rel="tos"
-                          >
+                          <Link href="https://osean.online/tos.html" rel="tos">
                             Terms of Service
                           </Link>{" "}
                           &{" "}
@@ -202,29 +194,21 @@ export const OseanHeader: React.FC = () => {
               aria-label="Toggle navigation"
               onClick={toggleNav}
               style={{
-                filter: "invert(52%) sepia(44%) saturate(4169%) hue-rotate(172deg) brightness(99%) contrast(110%)",
+                filter:
+                  "invert(52%) sepia(44%) saturate(4169%) hue-rotate(172deg) brightness(99%) contrast(110%)",
               }}
             >
               <span className="navbar-toggler-icon" />
             </button>
-            <div
-              className="collapse navbar-collapse"
-              id="navbarCollapse"
-            >
-              <div
-                id="navigation"
-                className="navbar-nav ml-auto"
-              >
+            <div className="collapse navbar-collapse" id="navbarCollapse">
+              <div id="navigation" className="navbar-nav ml-auto">
                 <ul className="navbar-nav mt-1">
                   <li
                     className="nav-item animated"
                     data-animation="fadeInDown"
                     data-animation-delay="1.0s"
                   >
-                    <a
-                      className="nav-link"
-                      href="https://osean.online"
-                    >
+                    <a className="nav-link" href="https://osean.online">
                       Home
                     </a>
                   </li>
@@ -233,10 +217,7 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.2s"
                   >
-                    <Link
-                      className="nav-link"
-                      href="/dex"
-                    >
+                    <Link className="nav-link" href="/dex">
                       Swap
                     </Link>
                   </li>
@@ -245,10 +226,7 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.4s"
                   >
-                    <Link
-                      className="nav-link"
-                      href="/stake"
-                    >
+                    <Link className="nav-link" href="/stake">
                       Stake
                     </Link>
                   </li>
@@ -257,10 +235,7 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.4s"
                   >
-                    <Link
-                      className="nav-link"
-                      href="/markt"
-                    >
+                    <Link className="nav-link" href="/markt">
                       NFTs
                     </Link>
                   </li>
@@ -269,10 +244,7 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.8s"
                   >
-                    <Link
-                      className="nav-link"
-                      href="/vote"
-                    >
+                    <Link className="nav-link" href="/vote">
                       DAO
                     </Link>
                   </li>
@@ -281,10 +253,7 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.4s"
                   >
-                    <Link
-                      className="nav-link"
-                      href="/bridge"
-                    >
+                    <Link className="nav-link" href="/bridge">
                       Bridge
                     </Link>
                   </li>
@@ -293,10 +262,7 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.4s"
                   >
-                    <a
-                      className="nav-link"
-                      href="https://club.osean.online"
-                    >
+                    <a className="nav-link" href="https://club.osean.online">
                       Club
                     </a>
                   </li>
