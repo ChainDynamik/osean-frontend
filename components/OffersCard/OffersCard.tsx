@@ -37,25 +37,43 @@ const OffersCard: React.FC<OffersCardProps> = ({
           {discountPercentage}% OFF
         </div>
       </div>
-      <div className="px-6 py-4">
+      <div className="px-6 py-4 flex flex-col gap-2">
         <div className="font-bold text-xl mb-2 flex justify-between items-center">
           {yacht}
         </div>
         <div>
-          <p className="text-gray-700 text-base mb-2">{product}</p>
-          <p className="text-gray-700 text-base mb-2">
-            {startBase} → {endBase}
+          <p className="text-gray-900 text-base mb-2">Product: {product}</p>
+          <div className="flex justify-between items-baseline">
+            <p className="mb-0">Start Base</p>
+            <p className="mb-0">End Base</p>
+          </div>
+          <p className="text-gray-900 text-base mb-2">
+            {startBase} {endBase}
           </p>
         </div>
-        <div className="text-gray-700 text-base mb-2">
-          <p>
-            {new Date(dateFrom).toLocaleDateString()} -{" "}
-            {new Date(dateTo).toLocaleDateString()}
-          </p>
+        {/* <div className="flex justify-between items-baseline">
+          <p>Start Base</p>
+          <p>End Base</p>
+        </div> */}
+        <div className="text-gray-900 text-base mb-2 flex gap-4 items-center">
+          {/* <p>{new Date(dateFrom).toLocaleDateString()} - </p> */}
+          {/* {new Date(dateTo).toLocaleDateString()} */}
+          <div className="flex flex-col gap-1">
+            <p className="mb-0">Start Date</p>
+            <p className="mb-0 text-black">
+              {new Date(dateFrom).toLocaleDateString()}{" "}
+            </p>
+          </div>
+          <div className="flex flex-col gap-1">
+            <p className="mb-0">End Date</p>
+            <p className="mb-0 text-black">
+              {new Date(dateTo).toLocaleDateString()}
+            </p>
+          </div>
         </div>
-        <div className="flex justify-between mt-4 items-start">
+        <div className="flex justify-between items-start">
           <div className="flex flex-col">
-            <p className="text-gray-700 text-base mb-2">
+            <p className="text-gray-900 text-base mb-2">
               <span className="line-through">
                 {startPrice} {currency}
               </span>{" "}

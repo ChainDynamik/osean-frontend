@@ -37,6 +37,7 @@
     "axios": "^1.7.2",
     "cbor": "^9.0.1",
     "cbor-js": "^0.1.0",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.0.3",
     "emotion-theming": "^11.0.0",
     "ethers": "^5",

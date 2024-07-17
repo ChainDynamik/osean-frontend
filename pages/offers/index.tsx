@@ -7,6 +7,8 @@ import useYachts from "../../hooks/useYachts";
 import OffersCard, {
   OffersCardProps,
 } from "../../components/OffersCard/OffersCard";
+import OfferFilter from "../../components/OfferFilter/OfferFilter";
+import useOfferFilterState from "../../util/store";
 
 type Extra = {
   id: number;
@@ -53,8 +55,10 @@ type OfferWithBoat = {
 
 export default function Offers() {
   const [offers, setOffers] = useState<OfferWithBoat[]>([]);
-
   const { yachts, fetchChrisBoats, getBoatById } = useYachts();
+
+  const startDate = useOfferFilterState((state) => state.startDate);
+  const endDate = useOfferFilterState((state) => state.endDate);
 
   async function fetchOffers() {
     const request = await axios.get(
@@ -104,19 +108,38 @@ export default function Offers() {
         offer.startPrice,
         offer.price
       ),
-      dateFrom: offer.dateFrom, // Added dateFrom
-      dateTo: offer.dateTo, // Added dateTo
-      imageUrl: "YOUR_IMAGE_URL_HERE", // Replace this with the actual image URL
+      dateFrom: offer.dateFrom,
+      dateTo: offer.dateTo,
+      // imageUrl: "YOUR_IMAGE_URL_HERE", // Replace this with the actual image URL
     };
   };
-  console.log(yachts, "current");
+
+  const filteredOffers = offers.filter(({ offer }) => {
+    if (!startDate || !endDate) {
+      return true;
+    }
+
+    const offerStartDate = new Date(offer.dateFrom).getTime();
+    const offerEndDate = new Date(offer.dateTo).getTime();
+    const filterStartDate = startDate.getTime();
+    const filterEndDate = endDate.getTime();
+
+    // Correct filtering logic
+    return (
+      offerStartDate <= filterStartDate &&
+      offerEndDate >= filterEndDate &&
+      filterEndDate >= offerStartDate
+    );
+  });
 
   return (
     <main className="!px-10 mt-[7.5rem]">
       <div className="flex gap-8">
-        <div className="w-[30%] min-w-[30%]"></div>
-        <div className="flex justify-center items-center flex-col gap-8 py-8">
-          {offers.map((data, index) => {
+        <div className="w-[30%] min-w-[30%]">
+          <OfferFilter />
+        </div>
+        <div className="flex justify-center items-center flex-col gap-8">
+          {filteredOffers.map((data, index) => {
             const offerObject = mapOfferToProps(data.offer);
             const image = data?.boat?.images[0]?.url;
             console.log(image, "boats");

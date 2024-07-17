@@ -44,3 +44,31 @@ const useYachtSearchStore = create<YachtSearchStore>((set) => ({
 }));
 
 export default useYachtSearchStore;
+
+// interface OfferFilterState {
+//   startDate: Date | null;
+//   endDate: Date | null;
+//   setStartDate: (date: Date | null) => void;
+//   setEndDate: (date: Date | null) => void;
+// }
+
+// export const useOfferFilterState = create<OfferFilterState>((set) => ({
+//   startDate: null,
+//   endDate: null,
+//   setStartDate: (date) => set({ startDate: date }),
+//   setEndDate: (date) => set({ endDate: date }),
+// }));
+
+interface OfferFilterState {
+  startDate: Date | null;
+  endDate: Date | null;
+  setStartDate: (date: Date | null) => void;
+  setEndDate: (date: Date | null) => void;
+}
+
+export const useOfferFilterState = create<OfferFilterState>((set) => ({
+  startDate: null,
+  endDate: null,
+  setStartDate: (date) => set({ startDate: date }),
+  setEndDate: (date) => set({ endDate: date }),
+}));
