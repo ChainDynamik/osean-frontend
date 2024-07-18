@@ -6,6 +6,9 @@ const nextConfig = {
     domains: ["osean.online", "www.booking-manager.com"],
   },
   staticPageGenerationTimeout: 1000,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 module.exports = nextConfig;

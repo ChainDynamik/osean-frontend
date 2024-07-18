@@ -120,16 +120,12 @@ const YachtDetailsPage: FC = () => {
 
   const [yacht, setYacht] = useState<any>();
 
+  const { yachts } = useYachts();
+
   // Find the listing that matches the id when integrating
   // const listing = YachtDetailsData.find((listing) =>
   //   listing.title.toLowerCase().includes((slug as string).toLowerCase())
   // );
-
-  if (!listing) {
-    return <p>Listing not found</p>;
-  }
-
-  const { yachts } = useYachts();
 
   async function getYachtDetails() {
     console.log(`Fetching yacht details for ${id}`);
@@ -145,6 +141,10 @@ const YachtDetailsPage: FC = () => {
   }, [yachts, id]);
 
   console.log(yacht);
+
+  if (!listing) {
+    return <p>Listing not found</p>;
+  }
 
   return (
     <>
