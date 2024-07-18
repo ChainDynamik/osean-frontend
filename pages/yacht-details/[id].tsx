@@ -5,9 +5,7 @@ import SubscriptionBlock from "../../components/SubscriptionBlock/SubscriptionBl
 
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
-import YachtDetails, {
-  YachtDetailsDataType,
-} from "../../components/YachtDetails";
+import YachtDetails, { YachtDetailsDataType } from "../../components/YachtDetails";
 import SimilarYacht from "../../components/SimilarYacht/SimilarYacht";
 import axios from "axios";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
@@ -35,14 +33,7 @@ export const YachtDetailsData: YachtDetailsDataType[] = [
   Furthermore, about 14 nautical miles from the tourist port of
   oristano, there is also mal di Ventre, in Sardinian Malu Etna, a
   small island facing the coast.`,
-    equipment: [
-      "Automatic Pilot",
-      "Deck Shower",
-      "Outboard Motor",
-      "Hot Water",
-      "GPS",
-      "Cockpit Table",
-    ],
+    equipment: ["Automatic Pilot", "Deck Shower", "Outboard Motor", "Hot Water", "GPS", "Cockpit Table"],
     specifications: [
       { label: "Engine Torque", value: "111 ft-lb" },
       { label: "Engine", value: "Milwaukee-Eight 107" },
@@ -90,14 +81,7 @@ export const YachtDetailsData: YachtDetailsDataType[] = [
   Furthermore, about 14 nautical miles from the tourist port of
   oristano, there is also mal di Ventre, in Sardinian Malu Etna, a
   small island facing the coast.`,
-    equipment: [
-      "Automatic Pilot",
-      "Deck Shower",
-      "Outboard Motor",
-      "Hot Water",
-      "GPS",
-      "Cockpit Table",
-    ],
+    equipment: ["Automatic Pilot", "Deck Shower", "Outboard Motor", "Hot Water", "GPS", "Cockpit Table"],
     specifications: [
       { label: "Engine Torque", value: "111 ft-lb" },
       { label: "Engine", value: "Milwaukee-Eight 107" },
@@ -160,10 +144,18 @@ const YachtDetailsPage: FC = () => {
     if (yachts && id) getYachtDetails();
   }, [yachts, id]);
 
+  console.log(yacht);
+
   return (
     <>
       <div className="container-fluid relative !px-10 pt-20 w-full">
-        <GallaryBlock images={vendorData.gallary} />
+        {yacht && (
+          <GallaryBlock
+            images={yacht.images.map((image: any) => {
+              return image.url;
+            })}
+          />
+        )}
         {yacht && <YachtDetails details={yacht} />}
         <SimilarYacht />
       </div>
