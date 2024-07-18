@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { useState } from "react";
-import { HeartIcon } from "./icons/heart-icon";
+import { HeartIcon } from "./heart-icon";
 
 type WishlistPropsType = {
   onClick: (data: boolean) => void;

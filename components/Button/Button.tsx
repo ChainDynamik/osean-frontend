@@ -2,7 +2,6 @@
 
 import clsx from "clsx";
 import { forwardRef } from "react";
-// import Loader from "@/components/ui/loader/loader";
 
 const classes = {
   base: "inline-flex font-medium items-center justify-center focus:outline-none transition duration-200 active:scale-90",

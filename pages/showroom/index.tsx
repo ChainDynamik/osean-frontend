@@ -1,20 +1,16 @@
 "use client";
 import Image from "next/image";
 import Section from "../../components/Section/Section";
-import { topBoats } from "../../data/top-boats";
 import YachtCard from "../../components/YachtCard/YachtCard";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
-import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
+import OfferFilter from "../../components/OfferFilter/OfferFilter";
 
 function BoatGrid() {
-  const { boats } = useYachts();
+  const { yachts } = useYachts();
 
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
-      {boats.map((item, index) => (
+      {yachts?.map((item, index) => (
         <YachtCard
           key={item.id.toString()}
           id={"boat_" + item.id.toString()}
@@ -34,7 +30,9 @@ function BoatGrid() {
 export default function TopBoatsPage() {
   return (
     <main className="!px-10 mt-[7.5rem]">
-      <div className="yacht-page-header relative h-[500px] w-full">
+      <div className="yacht-page-header flex items-center  relative h-[500px] w-full">
+        <OfferFilter isRoute className="absolute left-8 bottom-8" />
+        {/* <BookingForm /> */}
         <div className="absolute right-0 bottom-0">
           <Image
             height={200}

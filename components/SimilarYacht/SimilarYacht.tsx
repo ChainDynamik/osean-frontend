@@ -2,7 +2,6 @@
 
 import { topBoats } from "../../data/top-boats";
 import Section from "../Section/Section";
-import SeeMore from "../ui/see-more";
 import YachtCard from "../YachtCard/YachtCard";
 
 export default function SimilarYacht() {

@@ -1,9 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { GridIcon } from "../ui/icons/grid";
-import Button from "../Button/Button";
-import { useGalleryModalStore } from "../../util/store";
 
 interface GallaryBlockProps {
   images: string[];

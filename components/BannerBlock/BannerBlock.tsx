@@ -4,7 +4,6 @@ import clsx from "clsx";
 import React from "react";
 import Image from "next/image";
 import Section from "../Section/Section";
-// import Section from "@/components/ui/section";
 
 type BannerBlockProps = {
   bgImg: string;
