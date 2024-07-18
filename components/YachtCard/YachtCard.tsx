@@ -3,12 +3,17 @@
 import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRightIcon } from "../ui/icons/chevronRight";
-import { ChevronLeftIcon } from "../ui/icons/chevronLeft";
-import { Swiper, SwiperSlide, Navigation, Pagination } from "../../util/libs/slider";
-import AddToWishlist from "../ui/add-to-wishlist";
-import ActionIcon from "../ui/action-icon";
-import Rate from "../ui/rating";
+
+import {
+  Swiper,
+  SwiperSlide,
+  Navigation,
+  Pagination,
+} from "../../util/libs/slider";
+import AddToWishlist from "../../assets/icons-components/add-to-wishlist";
+import { ChevronLeftIcon } from "../../assets/icons-components/chevronLeft";
+import { ChevronRightIcon } from "../../assets/icons-components/chevronRight";
+import ActionIcon from "../../assets/icons-components/action-icon";
 
 export type ListingItemTypes = {
   id: string;
@@ -99,13 +104,20 @@ export default function YachtCard({
             </span> */}
             <span className="font-bold">{caption}</span>
           </div>
-          <h4 className="text-ellipsis text-gray-dark !text-lg 2xl:mb-1.5">{title}</h4>
+          <h4 className="text-ellipsis text-gray-dark !text-lg 2xl:mb-1.5">
+            {title}
+          </h4>
           <p className="mb-3 text-gray-light xl:mb-3">{location}</p>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-gray-light">
-              <span className="font-bold text-gray-dark xl:text-[18px] 3xl:text-xl">{price}</span> avg/day
+              <span className="font-bold text-gray-dark xl:text-[18px] 3xl:text-xl">
+                {price}
+              </span>{" "}
+              avg/day
             </p>
-            <div className="flex items-center gap-3 leading-7">(Boat Year: {boatManufacturingDate})</div>
+            <div className="flex items-center gap-3 leading-7">
+              (Boat Year: {boatManufacturingDate})
+            </div>
           </div>
         </div>
       </Link>

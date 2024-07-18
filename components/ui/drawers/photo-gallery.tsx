@@ -2,7 +2,7 @@
 
 // import { vendorData } from 'public/data/listing-details';
 import Image from "next/image";
-import Text from "../typography/text";
+import Text from "../../typography/text";
 import { vendorData } from "../../../data/listing-details";
 import { useGalleryModalStore } from "../../../util/store";
 

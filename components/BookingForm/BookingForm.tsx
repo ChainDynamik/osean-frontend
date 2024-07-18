@@ -5,7 +5,7 @@ import clsx from "clsx";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "../Button/Button";
-import { Staricon } from "../ui/icons/star-icon";
+import { Staricon } from "../../assets/icons-components/star-icon";
 import PaymentModal from "../PaymentModal/PaymentModal";
 
 interface BookingFormProps {

@@ -1,10 +1,8 @@
 "use client";
 
 import clsx from "clsx";
-// import Input from '@/components/ui/form-fields/input';
 import Button from "../Button/Button";
 import Input from "../Input/Input";
-// import Button from '@/components/ui/button';
 
 interface SubscriptionFormProps {
   className?: string;

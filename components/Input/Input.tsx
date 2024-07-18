@@ -2,11 +2,7 @@
 
 import clsx from "clsx";
 import { forwardRef } from "react";
-// import FieldError from '@/components/ui/form-fields/field-error';
-// import FieldHelperText from '@/components/ui/form-fields/field-helper-text';
-import InputIconOnClear from "../ui/form-fields/field-clear-btn";
 import FieldHelperText from "./FieldHelperText";
-// import InputIconOnClear from '@/components/ui/form-fields/field-clear-btn';
 
 const containerClasses = {
   base: "flex flex-col",
@@ -272,7 +268,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               )}
               {...inputProps}
             />
-            {clearable && (
+            {/* {clearable && (
               <InputIconOnClear
                 size="xl"
                 onClick={onClearClick}
@@ -282,7 +278,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                   inputClearableClasses
                 )}
               />
-            )}
+            )} */}
             {endIcon && (
               <div
                 className={clsx(

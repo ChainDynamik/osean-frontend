@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import Text from "../ui/typography/text";
+import Text from "../typography/text";
 
 type SectionProps = {
   className?: string;

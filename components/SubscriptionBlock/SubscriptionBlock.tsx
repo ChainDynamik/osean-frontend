@@ -1,7 +1,6 @@
 "use client";
 
 import BannerBlock from "../BannerBlock/BannerBlock";
-// import SubscriptionForm from '@/components/ui/form-fields/subscription-form';
 import SubscriptionForm from "../SubscriptionForm/SubscriptionForm";
 
 export default function SubscriptionBlock({
