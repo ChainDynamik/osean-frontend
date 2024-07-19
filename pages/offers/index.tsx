@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
-import OffersCard, { OffersCardProps } from "../../components/OffersCard/OffersCard";
+import OffersCard, {
+  OffersCardProps,
+} from "../../components/OffersCard/OffersCard";
 import OfferFilter from "../../components/OfferFilter/OfferFilter";
 import { useOfferFilterState } from "../../util/store";
 
@@ -16,7 +18,11 @@ interface CustomDropdownProps {
   onSelect: (value: string) => void;
 }
 
-const CustomDropdown: React.FC<CustomDropdownProps> = ({ options, selectedOption, onSelect }) => {
+const CustomDropdown: React.FC<CustomDropdownProps> = ({
+  options,
+  selectedOption,
+  onSelect,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (value: string) => {
@@ -35,7 +41,8 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ options, selectedOption
           aria-expanded="true"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {options.find((option) => option.value === selectedOption)?.label || "Sort by"}
+          {options.find((option) => option.value === selectedOption)?.label ||
+            "Sort by"}
           <svg
             className="-mr-1 ml-2 h-5 w-5"
             xmlns="http://www.w3.org/2000/svg"
@@ -210,7 +217,7 @@ export default function Offers() {
   });
 
   return (
-    <main className="!px-10 mt-[7.5rem]">
+    <main className="!px-10 pb-16 mt-[7.5rem]">
       <div className="flex w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center mb-4">
         <p className="text-lg font-semibold">{filteredOffers.length} boats</p>
         <div className="flex  gap-4 items-center">
@@ -228,7 +235,9 @@ export default function Offers() {
         </div>
         <div className="flex w-full justify-center items-center flex-col gap-8">
           {sortedOffers.length === 0 && (
-            <p className="text-2xl text-black w-full text-center mx-auto">No results, please configure filters</p>
+            <p className="text-2xl text-black w-full text-center mx-auto">
+              No results, please configure filters
+            </p>
           )}
           {sortedOffers.length !== 0 &&
             sortedOffers.map((data, index) => {

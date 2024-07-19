@@ -38,7 +38,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   const discountPercentage = calculateDiscountPercentage(startPrice, price);
 
   return (
-    <div className="w-full !text-black flex gap-3 flex-col rounded-lg p-4 shadow-card border border-black">
+    <div className="w-full !text-black flex gap-3 flex-col rounded-lg p-4 shadow-card border-[0.5px] border-black">
       <div className="w-full flex max-xl:flex-col">
         <p className="text-lg mb-0 text-red-500 ">
           {yacht} <span className="ml-2">({dateFrom} -</span>
@@ -51,7 +51,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
       </div>
       {/*  */}
       <div className="flex gap-4">
-        <div className="relative w-[350px] border-[1.5px] rounded-md border-black p-2 h-auto aspect-video">
+        <div className="relative w-[350px] max-h-[150px] h-[150px] border-[1.5px] rounded-md border-black p-2 aspect-video">
           <img
             className="w-full h-full object-cover aspect-video"
             src={imageUrl}
@@ -62,14 +62,108 @@ const OffersCard: React.FC<OffersCardProps> = ({
         </div> */}
         </div>
         <div className="w-full">
-          <div className="flex flex-col gap-0.5">
-            <div className="flex">
-              {/* <Icon iconType="location" className="w-4 text-black" /> */}
-              <p className="mb-0 text-black">
-                Base: Lavrion / Olympic Marina, Greece
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-0.5">
+              <div>
+                <Icon
+                  iconType="location"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">
+                <span className="font-bold">Base:</span> Lavrion / Olympic
+                Marina, Greece
               </p>
             </div>
-            <p className="mb-0 text-black">Company: South Sea Sail</p>
+            <div className="flex items-center gap-0.5">
+              <div>
+                <Icon
+                  iconType="company"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">
+                <span className="font-bold">Company:</span> South Sea Sail
+              </p>
+            </div>
+            {/* <p className="mb-0 text-black text-xs">Company: South Sea Sail</p> */}
+          </div>
+          {/*  */}
+          <div className="grid grid-cols-2 gap-y-1.5 gap-x-4 mt-3">
+            <div className="flex gap-1">
+              <div>
+                <Icon
+                  iconType="anchor"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">Catamaran</p>
+            </div>
+            <div className="flex gap-1">
+              <div>
+                <Icon
+                  iconType="calendar"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">2021</p>
+            </div>{" "}
+            <div className="flex gap-1">
+              <div>
+                <Icon
+                  iconType="gift"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">Bareboat</p>
+            </div>
+            <div className="flex gap-1">
+              <div>
+                <Icon
+                  iconType="location"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">38 ft</p>
+            </div>{" "}
+            <div className="flex gap-1">
+              <div>
+                <Icon
+                  iconType="bed"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">
+                8 + 2 (convertible salon table)
+              </p>
+            </div>
+            <div className="flex gap-1">
+              <div>
+                <Icon
+                  iconType="door"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">3 cab</p>
+            </div>{" "}
+            <div className="flex gap-1">
+              <div>
+                <Icon
+                  iconType="shower"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">3</p>
+            </div>
+            <div className="flex gap-1">
+              <div>
+                <Icon
+                  iconType="location"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">Full Batten</p>
+            </div>
           </div>
         </div>
       </div>
@@ -91,13 +185,13 @@ const OffersCard: React.FC<OffersCardProps> = ({
         <div className="text-gray-900 text-base mb-2 flex gap-4 items-center">
           <div className="flex flex-col gap-1">
             <p className="mb-0">Start Date</p>
-            <p className="mb-0 text-black">
+            <p className="mb-0 text-black text-xs">
               {new Date(dateFrom).toLocaleDateString()}{" "}
             </p>
           </div>
           <div className="flex flex-col gap-1">
             <p className="mb-0">End Date</p>
-            <p className="mb-0 text-black">
+            <p className="mb-0 text-black text-xs">
               {new Date(dateTo).toLocaleDateString()}
             </p>
           </div>

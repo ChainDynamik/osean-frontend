@@ -2,6 +2,8 @@ import {
   Anchor,
   Bed,
   Calendar,
+  Company,
+  Door,
   Feet,
   Gift,
   Location,
@@ -21,5 +23,7 @@ export const ICON_TYPE: {
     gift: Gift,
     location: Location,
     shower: Shower,
+    door: Door,
+    company: Company,
   },
 };
