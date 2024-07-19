@@ -31,12 +31,9 @@ function BoatGrid() {
 
 export default function TopBoatsPage() {
   return (
-    <main className="!px-10 mt-[7.5rem]">
-      <div className="yacht-page-header flex items-center  relative h-[500px] w-full">
-        <OfferFilter
-          isRoute
-          className="absolute left-8 bottom-8"
-        />
+    <main className="!px-10 mt-[5.5rem]">
+      <div className="yacht-page-header flex items-center  relative h-[calc(100vh-110px)] w-full">
+        <OfferFilter isRoute className="absolute left-8 bottom-8" />
         {/* <BookingForm /> */}
         <div className="absolute right-0 bottom-0">
           <Image

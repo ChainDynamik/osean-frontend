@@ -1,0 +1,7 @@
+export { default as Anchor } from "../../../../assets/svgs/anchor.svg";
+export { default as Bed } from "../../../../assets/svgs/bed.svg";
+export { default as Feet } from "../../../../assets/svgs/feet.svg";
+export { default as Gift } from "../../../../assets/svgs/gift.svg";
+export { default as Location } from "../../../../assets/svgs/location.svg";
+export { default as Shower } from "../../../../assets/svgs/shower.svg";
+export { default as Calendar } from "../../../../assets/svgs/calendar.svg";
