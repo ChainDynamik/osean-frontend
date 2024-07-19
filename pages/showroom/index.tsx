@@ -12,19 +12,23 @@ function BoatGrid() {
 
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
-      {yachts?.map((item, index) => (
-        <YachtCard
-          key={item.id.toString()}
-          id={"boat_" + item.id.toString()}
-          slides={item.images.map((image) => image.url)}
-          title={item.name}
-          caption={item.kind}
-          slug="slug"
-          location={item.homeBase}
-          price={item.deposit + "€"}
-          boatManufacturingDate={item.year.toString()}
-        />
-      ))}
+      {yachts?.map((item, index) => {
+        console.log(item, item.id, item.id.toString(), "items");
+
+        return (
+          <YachtCard
+            key={item.id.toString()}
+            id={item.id}
+            slides={item.images.map((image) => image.url)}
+            title={item.name}
+            caption={item.kind}
+            slug="slug"
+            location={item.homeBase}
+            price={item.deposit + "€"}
+            boatManufacturingDate={item.year.toString()}
+          />
+        );
+      })}
     </div>
   );
 }

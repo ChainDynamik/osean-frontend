@@ -16,7 +16,7 @@ import { ChevronRightIcon } from "../../assets/icons-components/chevronRight";
 import ActionIcon from "../../assets/icons-components/action-icon";
 
 export type ListingItemTypes = {
-  id: string;
+  id: number;
   slides: string[];
   caption: string;
   title: string;
@@ -37,6 +37,8 @@ export default function YachtCard({
   price,
   boatManufacturingDate,
 }: ListingItemTypes) {
+  console.log(yachtId, price, "id of yacht");
+
   return (
     <div className="listing-card group/item relative inline-flex w-full flex-col">
       <div className="relative w-full overflow-hidden rounded-xl">
@@ -44,7 +46,7 @@ export default function YachtCard({
           isWishListed={false}
           onClick={(data) => console.log("Item added to Wishlist.", data)}
         /> */}
-        <Link href={`/yacht-details/${yachtId}`}>
+        <Link href={`/yacht-details/${id}`}>
           <div className="listing-item after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-1/4 after:w-full after:bg-gradient-to-t after:from-black/25">
             <Swiper
               className="!static"
@@ -54,8 +56,8 @@ export default function YachtCard({
               }}
               slidesPerView={1}
               navigation={{
-                nextEl: `.${id}-listing-item-button-next`,
-                prevEl: `.${id}-listing-item-button-prev`,
+                nextEl: `.boat_${id}-listing-item-button-next`,
+                prevEl: `.boat_${id}-listing-item-button-prev`,
               }}
             >
               {slides?.map((slide, index) => (
