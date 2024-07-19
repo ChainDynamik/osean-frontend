@@ -7,6 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import Button from "../Button/Button";
 import { Staricon } from "../../assets/icons-components/star-icon";
 import PaymentModal from "../PaymentModal/PaymentModal";
+import { useSelectedExtrasStore } from "../../util/store";
+import Icon from "../icon-selector/icon-selector";
 
 interface BookingFormProps {
   price: number;
@@ -42,6 +44,9 @@ export default function BookingForm({
   const serviceFee = 65; // Example value, update as needed
   const totalFee =
     getTotalPrice(price, nights) - discount + cleaningFee + serviceFee;
+  const selectedExtras = useSelectedExtrasStore(
+    (state) => state.selectedExtras
+  );
 
   return (
     <form
@@ -175,6 +180,22 @@ export default function BookingForm({
           <span className="font-bold">${totalFee}</span>
         </li>
       </ul>
+
+      {selectedExtras.length > 0 && (
+        <ul className="flex flex-col gap-2 pt-4">
+          <p className="text-lg mb-2 font-bold text-black">EXTRAS</p>
+          {selectedExtras.map((extra, index) => {
+            return (
+              <li className="flex itemscenter gap-2" key={index}>
+                <div className="translate-y-1">
+                  <Icon iconType={"checkbox"} className="w-4  text-blue-500" />
+                </div>
+                <p className="mb-0">{extra.name}</p>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </form>
   );
 }

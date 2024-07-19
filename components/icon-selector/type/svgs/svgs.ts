@@ -7,3 +7,4 @@ export { default as Location } from "../../../../assets/svgs/location.svg";
 export { default as Shower } from "../../../../assets/svgs/shower.svg";
 export { default as Calendar } from "../../../../assets/svgs/calendar.svg";
 export { default as Company } from "../../../../assets/svgs/company.svg";
+export { default as Checkbox } from "../../../../assets/svgs/checkbox.svg";

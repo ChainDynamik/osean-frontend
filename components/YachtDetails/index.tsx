@@ -1,61 +1,27 @@
-// src/data/YachtDetailsDataType.ts
-import { vendorData } from "../../data/listing-details";
-
-export interface Specification {
-  label: string;
-  value: string;
-}
-
-export interface OwnerInfo {
-  name: string;
-  rating: string;
-  reviewsCount: number;
-  memberSince: string;
-  responseRate: string;
-  languages: string;
-  responseTime: string;
-}
-
-export interface YachtDetailsDataType {
-  title: string;
-  guests: number;
-  cabins: number;
-  bathrooms: number;
-  description: string;
-  equipment: string[];
-  specifications: Specification[];
-  owner: OwnerInfo;
-  totalReview: number;
-  averageRating: number;
-  price: number;
-}
-
-import { FC, useState } from "react";
-import { reviewsData } from "../../data/reviews";
-import BookingForm from "../BookingForm/BookingForm";
-import Button from "../Button/Button";
-import { BookingManagerYacht } from "../../types/booking-manager/core";
-import Rate from "rc-rate";
+import { useState } from "react";
 import { Box, Text, Checkbox, CheckboxGroup, Stack } from "@chakra-ui/react";
+import BookingForm from "../BookingForm/BookingForm";
+import { BookingManagerYacht } from "../../types/booking-manager/core";
+import { useSelectedExtrasStore } from "../../util/store";
+// import { useSelectedExtrasStore } from "../../store/selectedExtrasStore"; // Import the Zustand store
 
 interface YachtDetailsProps {
   details: BookingManagerYacht;
 }
 
-const YachtDetails: FC<YachtDetailsProps> = ({ details }) => {
+export default function YachtDetails({ details }: YachtDetailsProps) {
   const [isViewMore, setIsViewMore] = useState(false);
 
-  const [selectedExtras, setSelectedExtras] = useState<number[]>([]);
+  const selectedExtras = useSelectedExtrasStore(
+    (state) => state.selectedExtras
+  );
+  const toggleExtra = useSelectedExtrasStore((state) => state.toggleExtra);
 
-  const handleCheckboxChange = (extraId: number) => {
-    setSelectedExtras((prev) => {
-      if (prev.includes(extraId)) {
-        return prev.filter((id) => id !== extraId);
-      } else {
-        return [...prev, extraId];
-      }
-    });
+  const handleCheckboxChange = (extra: { id: number; name: string }) => {
+    toggleExtra(extra);
   };
+
+  console.log(selectedExtras, "extras");
 
   return (
     <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16">
@@ -70,10 +36,7 @@ const YachtDetails: FC<YachtDetailsProps> = ({ details }) => {
             <h2 className="text-2xl font-semibold mb-4">On Board Equipment</h2>
             <div className="grid grid-cols-2 gap-4">
               {details.equipment.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-center space-x-2"
-                >
+                <div key={index} className="flex items-center space-x-2">
                   <span className="inline-block w-6 h-6 bg-gray-200"></span>
                   <span>{item}</span>
                 </div>
@@ -145,7 +108,9 @@ const YachtDetails: FC<YachtDetailsProps> = ({ details }) => {
               </tr>
               <tr className={isViewMore ? "visible" : "hidden"}>
                 <td className="py-2">Required Skipper License</td>
-                <td className="py-2">{details.requiredSkipperLicense ? "Yes" : "No"}</td>
+                <td className="py-2">
+                  {details.requiredSkipperLicense ? "Yes" : "No"}
+                </td>
               </tr>
               <tr className={isViewMore ? "visible" : "hidden"}>
                 <td className="py-2">Minimum Charter Duration</td>
@@ -164,6 +129,7 @@ const YachtDetails: FC<YachtDetailsProps> = ({ details }) => {
             {isViewMore ? "View Less" : "View More"}
           </div>
         </div>
+        {/*  */}
 
         {/* Products Section */}
         <Box
@@ -173,30 +139,21 @@ const YachtDetails: FC<YachtDetailsProps> = ({ details }) => {
           overflow="hidden"
           p="6"
         >
-          <Text
-            fontSize="2xl"
-            fontWeight="semibold"
-            mb="4"
-          >
+          <Text fontSize="2xl" fontWeight="semibold" mb="4">
             Available Products and Extras
           </Text>
           {details.products.map((product, pIndex) => (
-            <Box
-              key={pIndex}
-              mb="4"
-            >
+            <Box key={pIndex} mb="4">
               <Text fontWeight="bold">{product.name}</Text>
               <CheckboxGroup colorScheme="blue">
-                <Stack
-                  pl="6"
-                  mt="1"
-                  spacing="1"
-                >
+                <Stack pl="6" mt="1" spacing="1">
                   {product.extras.map((extra) => (
                     <Checkbox
                       key={extra.id}
-                      isChecked={selectedExtras.includes(extra.id)}
-                      onChange={() => handleCheckboxChange(extra.id)}
+                      isChecked={selectedExtras.some((e) => e.id === extra.id)}
+                      onChange={() =>
+                        handleCheckboxChange({ id: extra.id, name: extra.name })
+                      }
                     >
                       {extra.name} - {extra.price} {extra.currency}
                     </Checkbox>
@@ -232,15 +189,9 @@ const YachtDetails: FC<YachtDetailsProps> = ({ details }) => {
       </div>
       <div className="hidden w-full max-w-sm pb-11 lg:block xl:max-w-md 3xl:max-w-lg">
         <div className="sticky right-0 top-28 4xl:top-40">
-          <BookingForm
-            price={500}
-            averageRating={2.31}
-            totalReviews={312}
-          />
+          <BookingForm price={500} averageRating={2.31} totalReviews={312} />
         </div>
       </div>
     </div>
   );
-};
-
-export default YachtDetails;
+}

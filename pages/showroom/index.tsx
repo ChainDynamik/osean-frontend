@@ -17,7 +17,7 @@ function BoatGrid() {
 
         return (
           <YachtCard
-            key={item.id.toString()}
+            key={item.id}
             id={item.id}
             slides={item.images.map((image) => image.url)}
             title={item.name}

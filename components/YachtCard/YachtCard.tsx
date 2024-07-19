@@ -24,7 +24,6 @@ export type ListingItemTypes = {
   location: string;
   price: string;
   boatManufacturingDate: string;
-  yachtId: number;
 };
 
 export default function YachtCard({
@@ -33,11 +32,10 @@ export default function YachtCard({
   caption,
   title,
   location,
-  yachtId,
   price,
   boatManufacturingDate,
 }: ListingItemTypes) {
-  console.log(yachtId, price, "id of yacht");
+  console.log(price, "id of yacht");
 
   return (
     <div className="listing-card group/item relative inline-flex w-full flex-col">
