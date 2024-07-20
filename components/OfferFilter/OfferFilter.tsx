@@ -7,8 +7,8 @@ import { format } from "date-fns";
 import Button from "../Button/Button";
 import { useRouter } from "next/navigation";
 import { cn } from "../../util";
-import { Dropdown } from "../Dropdown/Dropdown";
 import { useOfferFilterState } from "../../util/store/offerFiltersStore";
+import { Dropdown } from "../Dropdown/Dropdown";
 
 interface BookingFormProps {
   className?: string;
@@ -27,6 +27,8 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
   const maxLength = useOfferFilterState((state) => state.maxLength);
   const minBerths = useOfferFilterState((state) => state.minBerths);
   const maxBerths = useOfferFilterState((state) => state.maxBerths);
+  const minYear = useOfferFilterState((state) => state.minYear);
+  const maxYear = useOfferFilterState((state) => state.maxYear);
 
   // Zustand actions
   const setStoreStartDate = useOfferFilterState((state) => state.setStartDate);
@@ -37,6 +39,8 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
   const setStoreMaxLength = useOfferFilterState((state) => state.setMaxLength);
   const setStoreMinBerths = useOfferFilterState((state) => state.setMinBerths);
   const setStoreMaxBerths = useOfferFilterState((state) => state.setMaxBerths);
+  const setStoreMinYear = useOfferFilterState((state) => state.setMinYear);
+  const setStoreMaxYear = useOfferFilterState((state) => state.setMaxYear);
 
   const handleReserve = () => {
     // Add additional logic for reserving if needed
@@ -120,7 +124,7 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
               >
                 <path
                   fillRule="evenodd"
-                  d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 011.414 1.414l-4 4a1 1 010-1.414z"
                   clipRule="evenodd"
                 />
               </svg>
@@ -184,6 +188,30 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
           type="number"
           value={maxBerths || ""}
           onChange={(e) => setStoreMaxBerths(Number(e.target.value))}
+          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Min Year
+        </label>
+        <input
+          type="number"
+          value={minYear || ""}
+          onChange={(e) => setStoreMinYear(Number(e.target.value))}
+          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Max Year
+        </label>
+        <input
+          type="number"
+          value={maxYear || ""}
+          onChange={(e) => setStoreMaxYear(Number(e.target.value))}
           className="w-full mt-1 p-2 border border-gray-300 rounded-md"
         />
       </div>

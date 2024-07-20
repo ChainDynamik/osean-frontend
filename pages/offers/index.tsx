@@ -8,8 +8,8 @@ import OffersCard, {
   OffersCardProps,
 } from "../../components/OffersCard/OffersCard";
 import OfferFilter from "../../components/OfferFilter/OfferFilter";
-import { CustomDropdown } from "../../components/CustomDropdown/CustomDropdown";
 import { useOfferFilterState } from "../../util/store/offerFiltersStore";
+import { CustomDropdown } from "../../components/CustomDropdown/CustomDropdown";
 
 type Extra = {
   id: number;
@@ -73,6 +73,8 @@ export default function Offers() {
   const maxLength = useOfferFilterState((state) => state.maxLength);
   const minBerths = useOfferFilterState((state) => state.minBerths);
   const maxBerths = useOfferFilterState((state) => state.maxBerths);
+  const minYear = useOfferFilterState((state) => state.minYear);
+  const maxYear = useOfferFilterState((state) => state.maxYear);
 
   async function fetchOffers() {
     const request = await axios.get(
@@ -123,6 +125,7 @@ export default function Offers() {
       length: boat.length,
       berths: boat.berths,
       cabins: boat.cabins,
+      year: boat.year,
     };
   };
 
@@ -145,13 +148,20 @@ export default function Offers() {
   };
 
   const filteredOffers = filterOffers(offers, filters).filter((data) => {
-    const { length, berths } = data.boat;
+    const { length, berths, year } = data.boat;
     const withinMinLength = minLength ? length >= minLength : true;
     const withinMaxLength = maxLength ? length <= maxLength : true;
     const withinMinBerths = minBerths ? berths >= minBerths : true;
     const withinMaxBerths = maxBerths ? berths <= maxBerths : true;
+    const withinMinYear = minYear ? year >= minYear : true;
+    const withinMaxYear = maxYear ? year <= maxYear : true;
     return (
-      withinMinLength && withinMaxLength && withinMinBerths && withinMaxBerths
+      withinMinLength &&
+      withinMaxLength &&
+      withinMinBerths &&
+      withinMaxBerths &&
+      withinMinYear &&
+      withinMaxYear
     );
   });
 

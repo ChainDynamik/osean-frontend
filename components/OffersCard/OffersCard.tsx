@@ -16,6 +16,7 @@ export type OffersCardProps = {
   dateTo: string; // Added dateTo
   cabins: string; // Added dateTo
   berths: string; // Added dateTo
+  year: string; // Added dateTo
 };
 
 const OffersCard: React.FC<OffersCardProps> = ({
@@ -33,6 +34,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   cabins,
   length,
   berths,
+  year,
 }) => {
   const calculateDiscountPercentage = (
     startPrice: number,
@@ -115,7 +117,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   className="w-4 -translate-y-[1px] text-black"
                 />
               </div>
-              <p className="mb-0 text-black text-xs">2021</p>
+              <p className="mb-0 text-black text-xs">{year}</p>
             </div>{" "}
             <div className="flex gap-1">
               <div>
