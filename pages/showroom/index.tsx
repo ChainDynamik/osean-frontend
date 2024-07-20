@@ -64,9 +64,12 @@ function BoatGrid() {
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
       {yachts?.map((item) => {
         const slides = getOrderedImages(item.images); // Get the ordered images
+        console.log(item, "details");
 
         return (
           <YachtCard
+            cabins={item.cabins}
+            berths={item.berths}
             key={item.id}
             id={item.id}
             slides={slides}
@@ -98,19 +101,15 @@ export default function TopBoatsPage() {
           />
         </div>
       </div>
-
-      <Section
-        className="group/section container-fluid pt-[2rem] !px-0 mt-4 overflow-hidden lg:mt-16"
-        title="Top boat rentals"
-        description="Unsatiable it considered invitation he traveling insensible."
-        headerClassName="items-end mb-4 md:mb-5 xl:mb-6 gap-5"
-        // rightElement={<SeeMore />}
-      >
-        {/* {!state && <ListingCardLoader />} */}
-        {/* {state && <BoatGrid />}
-         */}
+      <section className="py-16 mt-2 px-4">
+        <div className="mb-10">
+          <h3>Top Boat Rentals</h3>
+          <p>
+            Unsatiable It Considered Invitation He Traveling Insensible.
+          </p>{" "}
+        </div>
         <BoatGrid />
-      </Section>
+      </section>
     </main>
   );
 }

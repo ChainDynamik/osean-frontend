@@ -35,6 +35,9 @@ module.exports = {
         satisfy: ["var(--font-satisfy)"],
         poppins: ["var(--font-poppins)"],
       },
+      colors: {
+        primary: "#015ce6",
+      },
       fontSize: {
         h1: [
           "2.25rem",
@@ -80,40 +83,7 @@ module.exports = {
           },
         ],
       },
-      colors: {
-        gray: {
-          light: "rgb(var(--gray-light) / <alpha-value>)",
-          lighter: "rgb(var(--gray-lighter) / <alpha-value>)",
-          lightest: "rgb(var(--gray-lightest) / <alpha-value>)",
-          DEFAULT: "rgb(var(--gray-default) / <alpha-value>)",
-          dark: "rgb(var(--gray-dark) / <alpha-value>)",
-          1000: "rgb(var(--gray-1000) / <alpha-value>)",
-        },
-        primary: {
-          DEFAULT: "rgb(var(--primary) / <alpha-value>)",
-        },
-        secondary: {
-          DEFAULT: "rgb(var(--secondary) / <alpha-value>)",
-        },
-        red: {
-          light: "rgb(var(--red-light) / <alpha-value>)",
-          lighter: "rgb(var(--red-lighter) / <alpha-value>)",
-          DEFAULT: "rgb(var(--red-default) / <alpha-value>)",
-          dark: "rgb(var(--red-dark) / <alpha-value>)",
-        },
-        orange: {
-          light: "rgb(var(--orange-light) / <alpha-value>)",
-          lighter: "rgb(var(--orange-lighter) / <alpha-value>)",
-          DEFAULT: "rgb(var(--orange-default) / <alpha-value>)",
-          dark: "rgb(var(--orange-dark) / <alpha-value>)",
-        },
-        green: {
-          light: "rgb(var(--green-light) / <alpha-value>)",
-          lighter: "rgb(var(--green-lighter) / <alpha-value>)",
-          DEFAULT: "rgb(var(--green-default) / <alpha-value>)",
-          dark: "rgb(var(--green-dark) / <alpha-value>)",
-        },
-      },
+
       textColor: {
         skin: {
           base: "rgb(var(--gray-light) / <alpha-value>)",

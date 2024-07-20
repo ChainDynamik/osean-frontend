@@ -23,6 +23,8 @@ export type ListingItemTypes = {
   slug: string;
   location: string;
   price: string;
+  cabins: number;
+  berths: number;
   boatManufacturingDate: string;
 };
 
@@ -34,11 +36,13 @@ export default function YachtCard({
   location,
   price,
   boatManufacturingDate,
+  cabins,
+  berths,
 }: ListingItemTypes) {
   console.log(price, "id of yacht");
 
   return (
-    <div className="listing-card group/item relative inline-flex w-full flex-col">
+    <div className="listing-card shadow-card ring-offset-2 hover:bg-primary/5 ring-primary hover:ring-1 transition-all duration-300 ease-in-out border-[1px] border-black/20 rounded-xl px-2.5 group/item relative inline-flex w-full flex-col">
       <div className="relative w-full overflow-hidden rounded-xl">
         {/* <AddToWishlist
           isWishListed={false}
@@ -61,7 +65,7 @@ export default function YachtCard({
             {slides?.map((slide, index) => (
               <SwiperSlide key={`slide-${index}`}>
                 <Image
-                  className="aspect-[34/25] bg-gray-lighter"
+                  className="aspect-[34/20] pt-2 !rounded-[0.5rem] aspectvideo bg-gray-lighter"
                   src={slide}
                   width={816}
                   height={600}
@@ -71,16 +75,7 @@ export default function YachtCard({
               </SwiperSlide>
             ))}
           </Swiper>
-          {/* <ActionIcon
-            rounded="full"
-            color="light"
-            size="sm"
-            className={clsx(
-              ` boat_${id}-listing-item-button-prev absolute left-4 top-1/2 z-10 hiden -translate-y-1/2 shadow-md !transition-all focus:!ring-0 md:invsible md:flex md:disable:hidden md:group-hover/item:isible`
-            )}
-          >
-            <ChevronLeftIcon className="-ml-0.5 h-auto w-[7px]" />
-          </ActionIcon> */}
+
           <div
             onClick={() => {
               console.log("I was clicked");
@@ -108,29 +103,32 @@ export default function YachtCard({
           </div>
         </div>
       </div>
+      {/*  */}
       <Link href={`/yacht-details/${id}`}>
-        {/* // <Link href={"/"}> */}
         <div className="content pt-3 text-black">
-          <div className="mb-1 flex items-center gap-5">
-            {/* <span className="relative flex items-center font-bold text-gray-dark before:absolute before:-right-3 before:block before:h-1 before:w-1 before:rounded-full before:bg-gray-dark">
-              {time}
-            </span> */}
-            <span className="font-bold">{caption}</span>
+          <div className=" text-blue-800 text-lg mb-0.5 flex items-center gap-5">
+            <span className="font-bold">
+              {caption} ({boatManufacturingDate})
+            </span>
           </div>
-          <h4 className="text-ellipsis text-gray-dark !text-lg 2xl:mb-1.5">
+          <h4 className="text-ellipsis mb-0.5 text-gray-dark !text-lg 2xl:mb-1.5">
             {title}
           </h4>
-          <p className="mb-3 text-gray-light xl:mb-3">{location}</p>
+          <div className="flex gap-3 items-center">
+            <p className="mb-0 text-black ">{cabins} cabins</p>{" "}
+            <span className="bg-gray-400 rounded-full size-1.5"></span>
+            <p className="mb-0 text-black ">{berths} berths</p>
+            <span className="bg-gray-400 rounded-full size-1.5"></span>
+            <p className="mb-0 text-black ">37 ft</p>
+          </div>
+          {/* <p className="mb-3 text-gray-light xl:mb-3">{location}</p> */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-gray-light">
-              <span className="font-bold text-gray-dark xl:text-[18px] 3xl:text-xl">
+              <span className="inline-block mr-1.5">From</span>
+              <span className="font-bold text-black xl:text-[18px] 3xl:text-xl">
                 {price}
               </span>{" "}
-              avg/day
             </p>
-            <div className="flex items-center gap-3 leading-7">
-              (Boat Year: {boatManufacturingDate})
-            </div>
           </div>
         </div>
       </Link>
