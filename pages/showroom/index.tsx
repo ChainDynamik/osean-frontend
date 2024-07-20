@@ -96,13 +96,28 @@ export default function TopBoatsPage() {
           <Image
             height={200}
             width={400}
+            quality={100}
             alt="discount banner"
             src="/discounts.jpg"
           />
+          {/* <div className="flex flex-col items-center bg-white border-2 border-blue-500 rounded-xl p-3 max-w-lg mx-auto">
+            <h1 className="bg-blue-500 text-yellow-300 p-2 rounded-xl  text-2xl text-center mb-2">
+              EXCLUSIVE DISCOUNTS FOR $OSEAN HOLDERS
+            </h1>
+            <p className="text-blue-500 text-lg text-center">
+              <a href="#" className="font-bold">
+                BUY WITH OSEAN
+              </a>{" "}
+              |
+              <a href="#" className="font-bold ml-2">
+                BUY WITH CREDIT CARD
+              </a>
+            </p>
+          </div> */}
         </div>
       </div>
-      <section className="py-16 mt-2 px-4">
-        <div className="mb-10">
+      <section className="py-16 mt-0 px-4">
+        <div className="mb-12">
           <h3>Top Boat Rentals</h3>
           <p>
             Unsatiable It Considered Invitation He Traveling Insensible.
