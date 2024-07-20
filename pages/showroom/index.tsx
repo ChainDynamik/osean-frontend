@@ -39,15 +39,15 @@ function BoatGrid() {
 
   console.log(yachts);
 
-  const getOrderedImages = (images) => {
+  const getOrderedImages = (images: any) => {
     const mainImage = images.find(
-      (image) => image.description === "Main image"
+      (image: any) => image.description === "Main image"
     );
     const interiorImage = images.find(
-      (image) => image.description === "Interior image"
+      (image: any) => image.description === "Interior image"
     );
     const otherImages = images.filter(
-      (image) =>
+      (image: any) =>
         image.description !== "Main image" &&
         image.description !== "Interior image"
     );

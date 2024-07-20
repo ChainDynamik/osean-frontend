@@ -8,6 +8,7 @@ import Button from "../Button/Button";
 import { useRouter } from "next/navigation";
 import { cn } from "../../util";
 import { useOfferFilterState } from "../../util/store";
+import { Dropdown } from "../Dropdown/Dropdown";
 
 interface BookingFormProps {
   className?: string;
@@ -89,6 +90,17 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
           />
         </div>
       </div>
+
+      <Dropdown.Root>
+        <Dropdown.Trigger className="">
+          <p>Open Me</p>
+        </Dropdown.Trigger>
+        <Dropdown.Content>
+          <Dropdown.Item>Item One</Dropdown.Item>
+          <Dropdown.Item>Item One</Dropdown.Item>
+          <Dropdown.Item>Item One</Dropdown.Item>
+        </Dropdown.Content>
+      </Dropdown.Root>
 
       {/* <div className="mt-4">
         <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">

@@ -188,25 +188,25 @@ export default function BookingForm({
 
       {selectedExtras.length > 0 && (
         <ul className="flex flex-col gap-2 pt-4">
-          <p className="text-lg mb-2 font-bold text-black">EXTRAS</p>
           {/* {selectedExtras.map((extra, index) => {
             return (
               <li className="flex itemscenter gap-2" key={index}>
-                <div className="translate-y-1">
-                  <Icon iconType={"checkbox"} className="w-4  text-blue-500" />
-                </div>
-                <p className="mb-0">{extra.name}</p>
+              <div className="translate-y-1">
+              <Icon iconType={"checkbox"} className="w-4  text-blue-500" />
+              </div>
+              <p className="mb-0">{extra.name}</p>
               </li>
-            );
-          })} */}
+              );
+              })} */}
           <Box
-            mt="10"
+            // mt="10"
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"
             p="2"
             pl="4"
           >
+            <p className="text-lg mb-2.5 mt-1.5 font-bold text-black">EXTRAS</p>
             {/* <Text fontSize="2xl" fontWeight="semibold" mb="4">
         Selected Extras
       </Text> */}

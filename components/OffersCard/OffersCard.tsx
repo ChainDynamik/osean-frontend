@@ -38,7 +38,10 @@ const OffersCard: React.FC<OffersCardProps> = ({
   const discountPercentage = calculateDiscountPercentage(startPrice, price);
 
   return (
-    <div className="w-full !text-black flex gap-3 flex-col rounded-lg p-4 shadow-card border-[0.5px] border-black">
+    <Link
+      href={`/yacht-details/${id}`}
+      className="w-full ring-offset-2 hover:bg-primary/5 ring-primary hover:ring-1 transition-all duration-300 ease-in-out !text-black flex gap-3 flex-col rounded-lg p-4 shadow-card border-[0.5px] border-black"
+    >
       <div className="w-full flex max-xl:flex-col">
         <p className="text-lg mb-0 text-red-500 ">
           {yacht} <span className="ml-2">({dateFrom} -</span>
@@ -120,7 +123,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
             <div className="flex gap-1">
               <div>
                 <Icon
-                  iconType="location"
+                  iconType="feet"
                   className="w-4 -translate-y-[1px] text-black"
                 />
               </div>
@@ -214,7 +217,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
           </button>
         </Link>
       </div> */}
-    </div>
+    </Link>
   );
 };
 

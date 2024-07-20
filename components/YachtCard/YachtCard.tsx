@@ -122,10 +122,10 @@ export default function YachtCard({
             <p className="mb-0 text-black ">37 ft</p>
           </div>
           {/* <p className="mb-3 text-gray-light xl:mb-3">{location}</p> */}
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex mt-2 flex-wrap items-center justify-between gap-3">
             <p className="text-gray-light">
               <span className="inline-block mr-1.5">From</span>
-              <span className="font-bold text-black xl:text-[18px] 3xl:text-xl">
+              <span className="font-bold text-black xl:text-xl 3xl:text-xl">
                 {price}
               </span>{" "}
             </p>

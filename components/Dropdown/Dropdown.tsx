@@ -1,6 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
-import { cn } from "../../util";
 
 /* -------------------------------------------------------------------------------------------------
  * Trigger
@@ -10,9 +9,16 @@ type TriggerElement = ElementRef<typeof DropdownMenu.Trigger>;
 type TriggerProps = ComponentPropsWithoutRef<typeof DropdownMenu.Trigger>;
 
 const Trigger = forwardRef<TriggerElement, TriggerProps>((props, ref) => {
-  const { asChild = true, ...triggerProps } = props;
+  const { asChild = true, className, ...triggerProps } = props;
 
-  return <DropdownMenu.Trigger asChild={asChild} {...triggerProps} ref={ref} />;
+  return (
+    <DropdownMenu.Trigger
+      className={`dropdown-toggle ${className}`}
+      asChild={asChild}
+      {...triggerProps}
+      ref={ref}
+    />
+  );
 });
 
 Trigger.displayName = "DropdownTrigger";
@@ -22,37 +28,44 @@ Trigger.displayName = "DropdownTrigger";
  * -----------------------------------------------------------------------------------------------*/
 
 type ContentElement = ElementRef<typeof DropdownMenu.Content>;
-type ContentProps = ComponentPropsWithoutRef<typeof DropdownMenu.Content>;
+type ContentProps = ComponentPropsWithoutRef<typeof DropdownMenu.Content> & {
+  overlayClassname?: string;
+};
 
 const Content = forwardRef<ContentElement, ContentProps>((props, ref) => {
+  const { overlayClassname, children, className, ...contentProps } = props;
   return (
     <DropdownMenu.Portal>
       <DropdownMenu.Content
-        className={cn(
-          "bg-primary",
-          //   "origin-[--radix-popover-content-transform-origin]",
-          // Animation enter
-          "data-[state=open]:data-[side=top]:animate-slide-from-top data-[state=open]:data-[side=bottom]:animate-slide-from-bottom data-[state=open]:data-[side=left]:animate-slide-from-left data-[state=open]:data-[side=right]:animate-slide-from-right",
-          // Animation out
-          "data-[state=closed]:data-[side=top]:animate-slide-to-top data-[state=closed]:data-[side=bottom]:animate-slide-to-bottom data-[state=closed]:data-[side=left]:animate-slide-to-left data-[state=closed]:data-[side=right]:animate-slide-to-right"
-        )}
+        sideOffset={6}
+        side="bottom"
+        className={`dropdown-menu p-2 border rounded shadow ${className}`}
+        {...contentProps}
         ref={ref}
-        {...props}
-      />
+      >
+        {children}
+      </DropdownMenu.Content>
     </DropdownMenu.Portal>
   );
 });
+
 Content.displayName = "DropdownContent";
 
 /* -------------------------------------------------------------------------------------------------
  * Item
  * -----------------------------------------------------------------------------------------------*/
 
-type ItemElelment = ElementRef<typeof DropdownMenu.Item>;
+type ItemElement = ElementRef<typeof DropdownMenu.Item>;
 type ItemProps = ComponentPropsWithoutRef<typeof DropdownMenu.Item>;
 
-const Item = forwardRef<ItemElelment, ItemProps>((props, ref) => {
-  return <DropdownMenu.Item ref={ref} {...props} />;
+const Item = forwardRef<ItemElement, ItemProps>((props, ref) => {
+  return (
+    <DropdownMenu.Item
+      className="dropdown-item px-3 py-2 cursor-pointer"
+      ref={ref}
+      {...props}
+    />
+  );
 });
 
 Item.displayName = "DropdownItem";
