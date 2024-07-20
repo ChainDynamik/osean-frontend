@@ -79,9 +79,7 @@ export default function Offers() {
 
   async function fetchOffers() {
     const request = await axios.get(
-      `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=2024-08-17T00%3A00%3A00&dateTo=2024-08-24T00%3A00%3A00&companyId=2672&currency=${
-        currency || ""
-      }&showOptions=true&passengersOnBoard=1`,
+      `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=2024-08-17T00%3A00%3A00&dateTo=2024-08-24T00%3A00%3A00&companyId=2672&currency=EUR&showOptions=true&passengersOnBoard=1`,
       {
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
@@ -131,6 +129,7 @@ export default function Offers() {
       berths: boat.berths,
       cabins: boat.cabins,
       year: boat.year,
+      kind: boat.kind,
     };
   };
 
@@ -218,9 +217,9 @@ export default function Offers() {
               const offerBoatObject = mapOfferToProps(offerObject, boatObject);
 
               console.log(
-                offerBoatObject,
+                // offerBoatObject,
                 boatObject,
-                offerObject,
+                // offerObject,
                 "offer + boat data"
               );
 
