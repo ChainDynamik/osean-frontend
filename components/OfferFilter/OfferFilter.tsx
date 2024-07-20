@@ -114,59 +114,66 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
       <div className="flex flex-col gap-4">
         <div className="mt-4 flex flex-col gap-2">
           <p className="mb-0 text-black text-lg">Currencies:</p>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={currencies.includes("EUR")}
-              onChange={() => toggleCurrency("EUR")}
-              className="form-checkbox"
-            />
-            <span className="ml-2">EUR</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={currencies.includes("USD")}
-              onChange={() => toggleCurrency("USD")}
-              className="form-checkbox"
-            />
-            <span className="ml-2">USD</span>
-          </label>
+          <div className="flex gap-4 items-center">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={currencies.includes("EUR")}
+                onChange={() => toggleCurrency("EUR")}
+                className="form-checkbox"
+              />
+              <span className="ml-2">EUR</span>
+            </label>
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={currencies.includes("USD")}
+                onChange={() => toggleCurrency("USD")}
+                className="form-checkbox"
+              />
+              <span className="ml-2">USD</span>
+            </label>
+          </div>
         </div>
         <div className="mt-4 flex flex-col gap-2">
           <p className="mb-0 text-black text-lg">Products:</p>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={productFilters.includes("bareboat")}
-              onChange={() => toggleProductFilter("bareboat")}
-              className="form-checkbox"
-            />
-            <span className="ml-2">Bareboat</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={productFilters.includes("crewed")}
-              onChange={() => toggleProductFilter("crewed")}
-              className="form-checkbox"
-            />
-            <span className="ml-2">Crewed</span>
-          </label>
+          <div className="flex gap-4 items-center">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={productFilters.includes("bareboat")}
+                onChange={() => toggleProductFilter("bareboat")}
+                className="form-checkbox"
+              />
+              <span className="ml-2">Bareboat</span>
+            </label>
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={productFilters.includes("crewed")}
+                onChange={() => toggleProductFilter("crewed")}
+                className="form-checkbox"
+              />
+              <span className="ml-2">Crewed</span>
+            </label>
+          </div>
         </div>
         <div className="mt-4 flex flex-col gap-2">
           <p className="mb-0 text-black text-lg">Kinds:</p>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={kindFilters.includes("sail boat")}
-              onChange={() => toggleKindFilter("sail boat")}
-              className="form-checkbox"
-            />
-            <span className="ml-2">Sail Boat</span>
-          </label>
+          <div className="flex gap-4 items-center">
+            <label className="inline-flex items-center">
+              <input
+                type="checkbox"
+                checked={kindFilters.includes("sail boat")}
+                onChange={() => toggleKindFilter("sail boat")}
+                className="form-checkbox"
+              />
+              <span className="ml-2">Sail Boat</span>
+            </label>
+          </div>
         </div>
       </div>
+      {/*  */}
       <div className="flex justify-between gap-4 items-center">
         <div className="mt-4">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
