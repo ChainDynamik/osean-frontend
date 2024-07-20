@@ -76,6 +76,7 @@ export default function Offers() {
   const minYear = useOfferFilterState((state) => state.minYear);
   const maxYear = useOfferFilterState((state) => state.maxYear);
   const productFilter = useOfferFilterState((state) => state.productFilter);
+  const kindFilter = useOfferFilterState((state) => state.kindFilter);
 
   async function fetchOffers() {
     const request = await axios.get(
@@ -152,7 +153,7 @@ export default function Offers() {
   };
 
   const filteredOffers = filterOffers(offers, filters).filter((data) => {
-    const { length, berths, year } = data.boat;
+    const { length, berths, year, kind } = data.boat;
     const withinMinLength = minLength ? length >= minLength : true;
     const withinMaxLength = maxLength ? length <= maxLength : true;
     const withinMinBerths = minBerths ? berths >= minBerths : true;
@@ -164,6 +165,8 @@ export default function Offers() {
       data.boat.products.some(
         (product) => product.name.toLowerCase() === productFilter
       );
+    const matchesKindFilter =
+      kindFilter === "all kinds" || kind.toLowerCase() === kindFilter;
 
     return (
       withinMinLength &&
@@ -172,7 +175,8 @@ export default function Offers() {
       withinMaxBerths &&
       withinMinYear &&
       withinMaxYear &&
-      matchesProductFilter
+      matchesProductFilter &&
+      matchesKindFilter
     );
   });
 
@@ -218,8 +222,8 @@ export default function Offers() {
 
               console.log(
                 // offerBoatObject,
-                boatObject,
-                // offerObject,
+                // boatObject,
+                offerObject,
                 "offer + boat data"
               );
 

@@ -12,6 +12,7 @@ type OfferFilterState = {
   minYear: number | null;
   maxYear: number | null;
   productFilter: string;
+  kindFilter: string;
   setStartDate: (date: Date | null) => void;
   setEndDate: (date: Date | null) => void;
   setAmount: (amount: number | null) => void;
@@ -23,6 +24,7 @@ type OfferFilterState = {
   setMinYear: (year: number | null) => void;
   setMaxYear: (year: number | null) => void;
   setProductFilter: (product: string) => void;
+  setKindFilter: (kind: string) => void;
 };
 
 export const useOfferFilterState = create<OfferFilterState>((set) => ({
@@ -37,6 +39,7 @@ export const useOfferFilterState = create<OfferFilterState>((set) => ({
   minYear: null,
   maxYear: null,
   productFilter: "all products",
+  kindFilter: "all kinds",
   setStartDate: (date) => set({ startDate: date }),
   setEndDate: (date) => set({ endDate: date }),
   setAmount: (amount) => set({ amount }),
@@ -48,4 +51,5 @@ export const useOfferFilterState = create<OfferFilterState>((set) => ({
   setMinYear: (year) => set({ minYear: year }),
   setMaxYear: (year) => set({ maxYear: year }),
   setProductFilter: (product) => set({ productFilter: product }),
+  setKindFilter: (kind) => set({ kindFilter: kind }),
 }));

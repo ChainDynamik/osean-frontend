@@ -30,6 +30,7 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
   const minYear = useOfferFilterState((state) => state.minYear);
   const maxYear = useOfferFilterState((state) => state.maxYear);
   const productFilter = useOfferFilterState((state) => state.productFilter);
+  const kindFilter = useOfferFilterState((state) => state.kindFilter);
 
   // Zustand actions
   const setStoreStartDate = useOfferFilterState((state) => state.setStartDate);
@@ -44,6 +45,9 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
   const setStoreMaxYear = useOfferFilterState((state) => state.setMaxYear);
   const setStoreProductFilter = useOfferFilterState(
     (state) => state.setProductFilter
+  );
+  const setStoreKindFilter = useOfferFilterState(
+    (state) => state.setKindFilter
   );
 
   const handleReserve = () => {
@@ -128,7 +132,7 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
               >
                 <path
                   fillRule="evenodd"
-                  d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 011.414 1.414l-4 4a1 1 010-1.414z"
+                  d="M5.293 9.707a1 1 011.414 0L10 13.414l3.293-3.707a1 1 011.414 1.414l-4 4a1 1 010-1.414z"
                   clipRule="evenodd"
                 />
               </svg>
@@ -240,7 +244,7 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
               >
                 <path
                   fillRule="evenodd"
-                  d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 011.414 1.414l-4 4a1 1 010-1.414z"
+                  d="M5.293 9.707a1 1 011.414 0L10 13.414l3.293-3.707a1 1 011.414 1.414l-4 4a1 1 010-1.414z"
                   clipRule="evenodd"
                 />
               </svg>
@@ -257,6 +261,43 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
             </Dropdown.Item>
             <Dropdown.Item onClick={() => setStoreProductFilter("crewed")}>
               Crewed
+            </Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>
+      </div>
+
+      <div className="mt-4">
+        <Dropdown.Root>
+          <Dropdown.Trigger className="">
+            <button
+              type="button"
+              className="inline-flex justify-between w-fit rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              id="options-menu"
+              aria-haspopup="true"
+              aria-expanded="true"
+            >
+              {kindFilter ? kindFilter : "All Kinds"}
+              <svg
+                className="-mr-1 ml-2 h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 9.707a1 1 011.414 0L10 13.414l3.293-3.707a1 1 011.414 1.414l-4 4a 1 1 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </Dropdown.Trigger>
+          <Dropdown.Content>
+            <Dropdown.Item onClick={() => setStoreKindFilter("all kinds")}>
+              All Kinds
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setStoreKindFilter("sail boat")}>
+              Sail Boat
             </Dropdown.Item>
           </Dropdown.Content>
         </Dropdown.Root>
