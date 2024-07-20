@@ -68,15 +68,15 @@ export default function Offers() {
   const startDate = useOfferFilterState((state) => state.startDate);
   const endDate = useOfferFilterState((state) => state.endDate);
   const filterAmount = useOfferFilterState((state) => state.amount);
-  const currency = useOfferFilterState((state) => state.currency);
+  const currencies = useOfferFilterState((state) => state.currencies);
   const minLength = useOfferFilterState((state) => state.minLength);
   const maxLength = useOfferFilterState((state) => state.maxLength);
   const minBerths = useOfferFilterState((state) => state.minBerths);
   const maxBerths = useOfferFilterState((state) => state.maxBerths);
   const minYear = useOfferFilterState((state) => state.minYear);
   const maxYear = useOfferFilterState((state) => state.maxYear);
-  const productFilter = useOfferFilterState((state) => state.productFilter);
-  const kindFilter = useOfferFilterState((state) => state.kindFilter);
+  const productFilters = useOfferFilterState((state) => state.productFilters);
+  const kindFilters = useOfferFilterState((state) => state.kindFilters);
 
   async function fetchOffers() {
     const request = await axios.get(
@@ -104,7 +104,7 @@ export default function Offers() {
 
   useEffect(() => {
     if (yachts.length) fetchOffers();
-  }, [yachts, currency, startDate, endDate]);
+  }, [yachts, startDate, endDate]);
 
   const mapOfferToProps = (
     offer: Reservation,
@@ -134,25 +134,7 @@ export default function Offers() {
     };
   };
 
-  const filterOffers = (offers: OfferWithBoat[], filters: any) => {
-    if (filters.currency) {
-      const fuse = new Fuse(offers, {
-        keys: ["offer.currency"],
-        threshold: 0, // Adjust based on the level of fuzzy matching required
-        isCaseSensitive: true, // Make sure matching is case sensitive
-      });
-
-      const results = fuse.search(filters.currency);
-      return results.map((result) => result.item);
-    }
-    return offers;
-  };
-
-  const filters = {
-    currency: currency,
-  };
-
-  const filteredOffers = filterOffers(offers, filters).filter((data) => {
+  const filteredOffers = offers.filter((data) => {
     const { length, berths, year, kind } = data.boat;
     const withinMinLength = minLength ? length >= minLength : true;
     const withinMaxLength = maxLength ? length <= maxLength : true;
@@ -160,13 +142,16 @@ export default function Offers() {
     const withinMaxBerths = maxBerths ? berths <= maxBerths : true;
     const withinMinYear = minYear ? year >= minYear : true;
     const withinMaxYear = maxYear ? year <= maxYear : true;
+    const matchesCurrencyFilter = currencies.includes(data.offer.currency);
     const matchesProductFilter =
-      productFilter === "all products" ||
-      data.boat.products.some(
-        (product) => product.name.toLowerCase() === productFilter
+      productFilters.length === 0 ||
+      productFilters.some((filter) =>
+        data.boat.products.some(
+          (product) => product.name.toLowerCase() === filter
+        )
       );
     const matchesKindFilter =
-      kindFilter === "all kinds" || kind.toLowerCase() === kindFilter;
+      kindFilters.length === 0 || kindFilters.includes(kind.toLowerCase());
 
     return (
       withinMinLength &&
@@ -175,6 +160,7 @@ export default function Offers() {
       withinMaxBerths &&
       withinMinYear &&
       withinMaxYear &&
+      matchesCurrencyFilter &&
       matchesProductFilter &&
       matchesKindFilter
     );
@@ -221,8 +207,8 @@ export default function Offers() {
               const offerBoatObject = mapOfferToProps(offerObject, boatObject);
 
               console.log(
-                // offerBoatObject,
-                // boatObject,
+                offerBoatObject,
+                boatObject,
                 offerObject,
                 "offer + boat data"
               );
