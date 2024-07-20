@@ -133,28 +133,30 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
         </Dropdown.Root>
       </div>
 
-      <div className="mt-4">
-        <label className="block text-sm font-semibold uppercase text-gray-dark">
-          Min Length
-        </label>
-        <input
-          type="number"
-          value={minLength || ""}
-          onChange={(e) => setStoreMinLength(Number(e.target.value))}
-          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-        />
-      </div>
+      <div className="flex gap-4 items-center">
+        <div className="mt-4">
+          <label className="block text-sm font-semibold uppercase text-gray-dark">
+            Min Length
+          </label>
+          <input
+            type="number"
+            value={minLength || ""}
+            onChange={(e) => setStoreMinLength(Number(e.target.value))}
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
-      <div className="mt-4">
-        <label className="block text-sm font-semibold uppercase text-gray-dark">
-          Max Length
-        </label>
-        <input
-          type="number"
-          value={maxLength || ""}
-          onChange={(e) => setStoreMaxLength(Number(e.target.value))}
-          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-        />
+        <div className="mt-4">
+          <label className="block text-sm font-semibold uppercase text-gray-dark">
+            Max Length
+          </label>
+          <input
+            type="number"
+            value={maxLength || ""}
+            onChange={(e) => setStoreMaxLength(Number(e.target.value))}
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
       </div>
 
       <Button
