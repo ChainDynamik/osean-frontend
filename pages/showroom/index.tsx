@@ -5,21 +5,71 @@ import YachtCard from "../../components/YachtCard/YachtCard";
 import useYachts from "../../hooks/useYachts";
 import OfferFilter from "../../components/OfferFilter/OfferFilter";
 
+// function BoatGrid() {
+//   const { yachts } = useYachts();
+
+//   console.log(yachts);
+
+//   return (
+//     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
+//       {yachts?.map((item, index) => {
+//         const slides = item.images.slice(0, 5).map((image) => image.url);
+
+//         return (
+//           <YachtCard
+//             key={item.id}
+//             id={item.id}
+//             slides={slides}
+//             // slides={item.images.map((image) => image.url)}
+//             title={item.name}
+//             caption={item.kind}
+//             slug="slug"
+//             location={item.homeBase}
+//             price={item.deposit + "€"}
+//             boatManufacturingDate={item.year.toString()}
+//           />
+//         );
+//       })}
+//     </div>
+//   );
+// }
+
 function BoatGrid() {
   const { yachts } = useYachts();
 
   console.log(yachts);
 
+  const getOrderedImages = (images) => {
+    const mainImage = images.find(
+      (image) => image.description === "Main image"
+    );
+    const interiorImage = images.find(
+      (image) => image.description === "Interior image"
+    );
+    const otherImages = images.filter(
+      (image) =>
+        image.description !== "Main image" &&
+        image.description !== "Interior image"
+    );
+
+    const orderedImages = [];
+    if (mainImage) orderedImages.push(mainImage);
+    if (interiorImage) orderedImages.push(interiorImage);
+    orderedImages.push(...otherImages);
+
+    return orderedImages.slice(0, 5).map((image) => image.url);
+  };
+
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
-      {yachts?.map((item, index) => {
-        console.log(item, item.id, item.id.toString(), "items");
+      {yachts?.map((item) => {
+        const slides = getOrderedImages(item.images); // Get the ordered images
 
         return (
           <YachtCard
             key={item.id}
             id={item.id}
-            slides={item.images.map((image) => image.url)}
+            slides={slides}
             title={item.name}
             caption={item.kind}
             slug="slug"

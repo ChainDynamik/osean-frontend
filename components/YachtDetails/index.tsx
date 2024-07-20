@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Box, Text, Checkbox, CheckboxGroup, Stack } from "@chakra-ui/react";
-import BookingForm from "../BookingForm/BookingForm";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import { useSelectedExtrasStore } from "../../util/store";
-// import { useSelectedExtrasStore } from "../../store/selectedExtrasStore"; // Import the Zustand store
+import BookingForm from "../BookingForm/BookingForm";
+// import SelectedExtras from "../SelectedExtras/SelectedExtras"; // Import the SelectedExtras component
 
 interface YachtDetailsProps {
   details: BookingManagerYacht;
@@ -139,9 +139,6 @@ export default function YachtDetails({ details }: YachtDetailsProps) {
           overflow="hidden"
           p="6"
         >
-          <Text fontSize="2xl" fontWeight="semibold" mb="4">
-            Available Products and Extras
-          </Text>
           {details.products.map((product, pIndex) => (
             <Box key={pIndex} mb="4">
               <Text fontWeight="bold">{product.name}</Text>
@@ -163,6 +160,9 @@ export default function YachtDetails({ details }: YachtDetailsProps) {
             </Box>
           ))}
         </Box>
+
+        {/* Selected Extras Section */}
+        {/* <SelectedExtras /> */}
 
         {/* Owner Info Section */}
         <div className="mt-10">
@@ -188,7 +188,8 @@ export default function YachtDetails({ details }: YachtDetailsProps) {
         </div>
       </div>
       <div className="hidden w-full max-w-sm pb-11 lg:block xl:max-w-md 3xl:max-w-lg">
-        <div className="sticky right-0 top-28 4xl:top-40">
+        {/* <div className="sticky right-0 top-28 4xl:top-40"> */}
+        <div className="">
           <BookingForm price={500} averageRating={2.31} totalReviews={312} />
         </div>
       </div>
