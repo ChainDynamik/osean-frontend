@@ -1,5 +1,6 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { cn } from "../../util";
 
 /* -------------------------------------------------------------------------------------------------
  * Trigger
@@ -13,7 +14,7 @@ const Trigger = forwardRef<TriggerElement, TriggerProps>((props, ref) => {
 
   return (
     <DropdownMenu.Trigger
-      className={`dropdown-toggle ${className}`}
+      className={cn("w-fit", className)}
       asChild={asChild}
       {...triggerProps}
       ref={ref}
@@ -27,6 +28,29 @@ Trigger.displayName = "DropdownTrigger";
  * Content
  * -----------------------------------------------------------------------------------------------*/
 
+// type ContentElement = ElementRef<typeof DropdownMenu.Content>;
+// type ContentProps = ComponentPropsWithoutRef<typeof DropdownMenu.Content>;
+
+// const Content = forwardRef<ContentElement, ContentProps>((props, ref) => {
+//   return (
+//     <DropdownMenu.Portal>
+//       <DropdownMenu.Content
+//         className={cn(
+//           "bg-primary",
+//           //   "origin-[--radix-popover-content-transform-origin]",
+//           // Animation enter
+//           "data-[state=open]:data-[side=top]:animate-slide-from-top data-[state=open]:data-[side=bottom]:animate-slide-from-bottom data-[state=open]:data-[side=left]:animate-slide-from-left data-[state=open]:data-[side=right]:animate-slide-from-right",
+//           // Animation out
+//           "data-[state=closed]:data-[side=top]:animate-slide-to-top data-[state=closed]:data-[side=bottom]:animate-slide-to-bottom data-[state=closed]:data-[side=left]:animate-slide-to-left data-[state=closed]:data-[side=right]:animate-slide-to-right"
+//         )}
+//         ref={ref}
+//         {...props}
+//       />
+//     </DropdownMenu.Portal>
+//   );
+// });
+// Content.displayName = "DropdownContent";
+
 type ContentElement = ElementRef<typeof DropdownMenu.Content>;
 type ContentProps = ComponentPropsWithoutRef<typeof DropdownMenu.Content> & {
   overlayClassname?: string;
@@ -39,7 +63,7 @@ const Content = forwardRef<ContentElement, ContentProps>((props, ref) => {
       <DropdownMenu.Content
         sideOffset={6}
         side="bottom"
-        className={`dropdown-menu p-2 border rounded shadow ${className}`}
+        className="outline-none rounded-lg shadow-2xl overflow-hidden shadow-black/10 cursor-pointer border border-border"
         {...contentProps}
         ref={ref}
       >
@@ -55,13 +79,13 @@ Content.displayName = "DropdownContent";
  * Item
  * -----------------------------------------------------------------------------------------------*/
 
-type ItemElement = ElementRef<typeof DropdownMenu.Item>;
+type ItemElelment = ElementRef<typeof DropdownMenu.Item>;
 type ItemProps = ComponentPropsWithoutRef<typeof DropdownMenu.Item>;
 
-const Item = forwardRef<ItemElement, ItemProps>((props, ref) => {
+const Item = forwardRef<ItemElelment, ItemProps>((props, ref) => {
   return (
     <DropdownMenu.Item
-      className="dropdown-item px-3 py-2 cursor-pointer"
+      className="px-3 !py-2.5 !outline-none bg-white hover:!bg-gray-200 min-w-[100px] border-b-[1px] transition-all ease-in duration-200 flex gap-3"
       ref={ref}
       {...props}
     />
@@ -69,6 +93,14 @@ const Item = forwardRef<ItemElement, ItemProps>((props, ref) => {
 });
 
 Item.displayName = "DropdownItem";
+// type ItemElelment = ElementRef<typeof DropdownMenu.Item>;
+// type ItemProps = ComponentPropsWithoutRef<typeof DropdownMenu.Item>;
+
+// const Item = forwardRef<ItemElelment, ItemProps>((props, ref) => {
+//   return <DropdownMenu.Item ref={ref} {...props} />;
+// });
+
+// Item.displayName = "DropdownItem";
 
 /* -------------------------------------------------------------------------------------------------
  * SubTrigger

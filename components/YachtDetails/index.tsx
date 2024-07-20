@@ -177,7 +177,7 @@ export default function YachtDetails({ details }: YachtDetailsProps) {
               <div className="flex flex-col">
                 <p className="font-semibold !mb-0">{details.company}</p>
                 <div className="flex items-center">
-                  <span className="text-yellow-500 flex flex">4.99★</span>
+                  <span className="text-yellow-500 flex">4.99★</span>
                   <span className="ml-2 text-gray-600">(20 reviews)</span>
                 </div>
               </div>

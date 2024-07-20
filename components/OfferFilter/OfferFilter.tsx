@@ -7,8 +7,8 @@ import { format } from "date-fns";
 import Button from "../Button/Button";
 import { useRouter } from "next/navigation";
 import { cn } from "../../util";
-import { useOfferFilterState } from "../../util/store";
 import { Dropdown } from "../Dropdown/Dropdown";
+import { useOfferFilterState } from "../../util/store/offerFiltersStore";
 
 interface BookingFormProps {
   className?: string;
@@ -22,11 +22,17 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
   const startDate = useOfferFilterState((state) => state.startDate);
   const endDate = useOfferFilterState((state) => state.endDate);
   const amount = useOfferFilterState((state) => state.amount);
+  const currency = useOfferFilterState((state) => state.currency);
+  const minLength = useOfferFilterState((state) => state.minLength);
+  const maxLength = useOfferFilterState((state) => state.maxLength);
 
   // Zustand actions
   const setStoreStartDate = useOfferFilterState((state) => state.setStartDate);
   const setStoreEndDate = useOfferFilterState((state) => state.setEndDate);
   const setStoreAmount = useOfferFilterState((state) => state.setAmount);
+  const setStoreCurrency = useOfferFilterState((state) => state.setCurrency);
+  const setStoreMinLength = useOfferFilterState((state) => state.setMinLength);
+  const setStoreMaxLength = useOfferFilterState((state) => state.setMaxLength);
 
   const handleReserve = () => {
     // Add additional logic for reserving if needed
@@ -60,7 +66,6 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
         className={cn(
           "relative mt-6 grid grid-cols-2 gap-3 rounded-t-lg border border-b-0 border-gray-lighter"
         )}
-        // onBlur={() => setFocus(false)}
       >
         <span
           className={cn(
@@ -91,28 +96,66 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
         </div>
       </div>
 
-      <Dropdown.Root>
-        <Dropdown.Trigger className="">
-          <p>Open Me</p>
-        </Dropdown.Trigger>
-        <Dropdown.Content>
-          <Dropdown.Item>Item One</Dropdown.Item>
-          <Dropdown.Item>Item One</Dropdown.Item>
-          <Dropdown.Item>Item One</Dropdown.Item>
-        </Dropdown.Content>
-      </Dropdown.Root>
+      <div className="mt-4">
+        <Dropdown.Root>
+          <Dropdown.Trigger className="">
+            <button
+              type="button"
+              className="inline-flex justify-between w-fit rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              id="options-menu"
+              aria-haspopup="true"
+              aria-expanded="true"
+            >
+              Currency
+              <svg
+                className="-mr-1 ml-2 h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </Dropdown.Trigger>
+          <Dropdown.Content>
+            <Dropdown.Item onClick={() => setStoreCurrency("EUR")}>
+              EUR
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setStoreCurrency("USD")}>
+              USD
+            </Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>
+      </div>
 
-      {/* <div className="mt-4">
-        <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
-          Amount
-        </span>
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Min Length
+        </label>
         <input
           type="number"
-          value={amount || ""}
-          onChange={(e) => setStoreAmount(Number(e.target.value))}
-          className="w-full border border-gray-300 rounded p-2"
+          value={minLength || ""}
+          onChange={(e) => setStoreMinLength(Number(e.target.value))}
+          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
         />
-      </div> */}
+      </div>
+
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Max Length
+        </label>
+        <input
+          type="number"
+          value={maxLength || ""}
+          onChange={(e) => setStoreMaxLength(Number(e.target.value))}
+          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+        />
+      </div>
 
       <Button
         size="xl"

@@ -9,10 +9,12 @@ export type OffersCardProps = {
   endBase: string;
   price: number;
   startPrice: number;
+  length: number;
   currency: string;
   imageUrl?: string;
   dateFrom: string; // Added dateFrom
   dateTo: string; // Added dateTo
+  cabins: string; // Added dateTo
 };
 
 const OffersCard: React.FC<OffersCardProps> = ({
@@ -27,6 +29,8 @@ const OffersCard: React.FC<OffersCardProps> = ({
   dateFrom, // Added dateFrom
   dateTo, // Added dateTo
   id,
+  cabins,
+  length,
 }) => {
   const calculateDiscountPercentage = (
     startPrice: number,
@@ -127,7 +131,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   className="w-4 -translate-y-[1px] text-black"
                 />
               </div>
-              <p className="mb-0 text-black text-xs">38 ft</p>
+              <p className="mb-0 text-black text-xs">{length} ft</p>
             </div>{" "}
             <div className="flex gap-1">
               <div>
@@ -147,7 +151,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   className="w-4 -translate-y-[1px] text-black"
                 />
               </div>
-              <p className="mb-0 text-black text-xs">3 cab</p>
+              <p className="mb-0 text-black text-xs">{cabins} cab</p>
             </div>{" "}
             <div className="flex gap-1">
               <div>
@@ -166,6 +170,15 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 />
               </div>
               <p className="mb-0 text-black text-xs">Full Batten</p>
+            </div>
+            <div className="flex gap-1">
+              <div>
+                <Icon
+                  iconType="cash"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">{currency}</p>
             </div>
           </div>
         </div>

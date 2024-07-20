@@ -53,30 +53,92 @@ export const useGalleryModalStore = create<GalleryStoreType>((set) => ({
 
 // import { create } from "zustand";
 
-interface OfferFilterState {
-  startDate: Date | null;
-  endDate: Date | null;
-  amount: number | null;
-  setStartDate: (date: Date | null) => void;
-  setEndDate: (date: Date | null) => void;
-  setAmount: (amount: number | null) => void;
-  clearDates: () => void;
-}
+// interface OfferFilterState {
+//   startDate: Date | null;
+//   endDate: Date | null;
+//   amount: number | null;
+//   setStartDate: (date: Date | null) => void;
+//   setEndDate: (date: Date | null) => void;
+//   setAmount: (amount: number | null) => void;
+//   clearDates: () => void;
+// }
 
-export const useOfferFilterState = create<OfferFilterState>((set) => ({
-  startDate: new Date("2024-08-18"), // Initialize with 17th August 2024
-  endDate: new Date("2024-08-21"), // Initialize with 21st August 2024
-  amount: null,
-  setStartDate: (date) => set({ startDate: date }),
-  setEndDate: (date) => set({ endDate: date }),
-  setAmount: (amount) => set({ amount }),
-  clearDates: () =>
-    set({
-      startDate: new Date("2024-08-17"),
-      endDate: new Date("2024-08-21"),
-      amount: null,
-    }), // Reset to specific dates
-}));
+// export const useOfferFilterState = create<OfferFilterState>((set) => ({
+//   startDate: new Date("2024-08-18"), // Initialize with 17th August 2024
+//   endDate: new Date("2024-08-21"), // Initialize with 21st August 2024
+//   amount: null,
+//   setStartDate: (date) => set({ startDate: date }),
+//   setEndDate: (date) => set({ endDate: date }),
+//   setAmount: (amount) => set({ amount }),
+//   clearDates: () =>
+//     set({
+//       startDate: new Date("2024-08-17"),
+//       endDate: new Date("2024-08-21"),
+//       amount: null,
+//     }), // Reset to specific dates
+// }));
+
+// util/store.js
+// import create from 'zustand';
+
+// interface OfferFilterState {
+//   startDate: Date | null;
+//   endDate: Date | null;
+//   amount: number | null;
+//   currency: string; // Add currency to the state
+//   setStartDate: (date: Date | null) => void;
+//   setEndDate: (date: Date | null) => void;
+//   setAmount: (amount: number | null) => void;
+//   setCurrency: (currency: string) => void; // Add setter for currency
+//   clearDates: () => void;
+// }
+
+// export const useOfferFilterState = create<OfferFilterState>((set) => ({
+//   startDate: new Date("2024-08-18"), // Initialize with 18th August 2024
+//   endDate: new Date("2024-08-21"), // Initialize with 21st August 2024
+//   amount: null,
+//   currency: "EUR", // Default currency
+//   setStartDate: (date) => set({ startDate: date }),
+//   setEndDate: (date) => set({ endDate: date }),
+//   setAmount: (amount) => set({ amount }),
+//   setCurrency: (currency) => set({ currency }), // Setter for currency
+//   clearDates: () =>
+//     set({
+//       startDate: new Date("2024-08-17"),
+//       endDate: new Date("2024-08-21"),
+//       amount: null,
+//     }), // Reset to specific dates
+// }));
+
+// type OfferFilterState = {
+//   startDate: Date | null;
+//   endDate: Date | null;
+//   amount: number | null;
+//   currency: string;
+//   minLength: number | null;
+//   maxLength: number | null;
+//   setStartDate: (date: Date | null) => void;
+//   setEndDate: (date: Date | null) => void;
+//   setAmount: (amount: number | null) => void;
+//   setCurrency: (currency: string) => void;
+//   setMinLength: (length: number | null) => void;
+//   setMaxLength: (length: number | null) => void;
+// };
+
+// export const useOfferFilterState = create<OfferFilterState>((set) => ({
+//   startDate: null,
+//   endDate: null,
+//   amount: null,
+//   currency: "EUR",
+//   minLength: null,
+//   maxLength: null,
+//   setStartDate: (date) => set({ startDate: date }),
+//   setEndDate: (date) => set({ endDate: date }),
+//   setAmount: (amount) => set({ amount }),
+//   setCurrency: (currency) => set({ currency }),
+//   setMinLength: (length) => set({ minLength: length }),
+//   setMaxLength: (length) => set({ maxLength: length }),
+// }));
 
 // interface Extra {
 //   id: number;

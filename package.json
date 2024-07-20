@@ -45,6 +45,7 @@
     "emotion-theming": "^11.0.0",
     "ethers": "^5",
     "framer-motion": "^10.12.16",
+    "fuse.js": "^7.0.0",
     "jotai": "^2.8.4",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
