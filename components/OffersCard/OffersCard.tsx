@@ -2,7 +2,6 @@ import Link from "next/link";
 import Icon from "../icon-selector/icon-selector";
 
 export type OffersCardProps = {
-  product: string;
   yacht: string;
   id: number;
   startBase: string;
@@ -17,10 +16,10 @@ export type OffersCardProps = {
   cabins: string; // Added dateTo
   berths: string; // Added dateTo
   year: string; // Added dateTo
+  products: string[]; // Added dateTo
 };
 
 const OffersCard: React.FC<OffersCardProps> = ({
-  product,
   yacht,
   startBase,
   endBase,
@@ -35,6 +34,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   length,
   berths,
   year,
+  products,
 }) => {
   const calculateDiscountPercentage = (
     startPrice: number,
@@ -44,11 +44,12 @@ const OffersCard: React.FC<OffersCardProps> = ({
   };
 
   const discountPercentage = calculateDiscountPercentage(startPrice, price);
+  console.log();
 
   return (
     <Link
       href={`/yacht-details/${id}`}
-      className="w-full ring-offset-2 hover:bg-primary/5 ring-primary hover:ring-1 transition-all duration-300 ease-in-out !text-black flex gap-3 flex-col rounded-lg p-4 shadow-card border-[0.5px] border-black"
+      className="w-full ring-offset-2 hover:bg-primary/15 ring-primary hover:ring-1 transition-all duration-300 ease-in-out !text-black flex gap-3 flex-col rounded-lg p-4 shadow-card border-[0.5px] border-black"
     >
       <div className="w-full flex max-xl:flex-col">
         <p className="text-lg mb-0 text-red-500 ">
@@ -126,7 +127,15 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   className="w-4 -translate-y-[1px] text-black"
                 />
               </div>
-              <p className="mb-0 text-black text-xs">Bareboat</p>
+              {/* <p className="mb-0 text-black text-xs">hi</p> */}
+              {products?.map((product, index) => {
+                return (
+                  <p key={index} className="mb-0 capitalize text-black text-xs">
+                    {product}
+                    {index < products.length - 1 && ","}
+                  </p>
+                );
+              })}
             </div>
             <div className="flex gap-1">
               <div>
@@ -201,7 +210,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
           {yacht}
         </div>
         <div>
-          <p className="text-gray-900 text-base mb-2">Product: {product}</p>
+          <p className="text-gray-900 text-base mb-2">Products: {products}</p>
           <div className="flex justify-between items-baseline">
             <p className="mb-0">Start Base</p>
             <p className="mb-0">End Base</p>

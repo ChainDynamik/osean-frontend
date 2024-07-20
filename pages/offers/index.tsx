@@ -75,6 +75,7 @@ export default function Offers() {
   const maxBerths = useOfferFilterState((state) => state.maxBerths);
   const minYear = useOfferFilterState((state) => state.minYear);
   const maxYear = useOfferFilterState((state) => state.maxYear);
+  const productFilter = useOfferFilterState((state) => state.productFilter);
 
   async function fetchOffers() {
     const request = await axios.get(
@@ -110,9 +111,13 @@ export default function Offers() {
     offer: Reservation,
     boat: BookingManagerYacht
   ): OffersCardProps => {
+    const productNames = boat.products.map((product) =>
+      product.name.toLowerCase()
+    );
+
     return {
       id: offer.yachtId,
-      product: offer.product,
+      products: productNames,
       yacht: offer.yacht,
       startBase: offer.startBase,
       endBase: offer.endBase,
@@ -155,13 +160,20 @@ export default function Offers() {
     const withinMaxBerths = maxBerths ? berths <= maxBerths : true;
     const withinMinYear = minYear ? year >= minYear : true;
     const withinMaxYear = maxYear ? year <= maxYear : true;
+    const matchesProductFilter =
+      productFilter === "all products" ||
+      data.boat.products.some(
+        (product) => product.name.toLowerCase() === productFilter
+      );
+
     return (
       withinMinLength &&
       withinMaxLength &&
       withinMinBerths &&
       withinMaxBerths &&
       withinMinYear &&
-      withinMaxYear
+      withinMaxYear &&
+      matchesProductFilter
     );
   });
 

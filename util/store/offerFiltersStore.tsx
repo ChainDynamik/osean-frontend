@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 
 type OfferFilterState = {
   startDate: Date | null;
@@ -11,6 +11,7 @@ type OfferFilterState = {
   maxBerths: number | null;
   minYear: number | null;
   maxYear: number | null;
+  productFilter: string;
   setStartDate: (date: Date | null) => void;
   setEndDate: (date: Date | null) => void;
   setAmount: (amount: number | null) => void;
@@ -21,19 +22,21 @@ type OfferFilterState = {
   setMaxBerths: (berths: number | null) => void;
   setMinYear: (year: number | null) => void;
   setMaxYear: (year: number | null) => void;
+  setProductFilter: (product: string) => void;
 };
 
 export const useOfferFilterState = create<OfferFilterState>((set) => ({
   startDate: null,
   endDate: null,
   amount: null,
-  currency: "EUR",
+  currency: null,
   minLength: null,
   maxLength: null,
   minBerths: null,
   maxBerths: null,
   minYear: null,
   maxYear: null,
+  productFilter: "all products",
   setStartDate: (date) => set({ startDate: date }),
   setEndDate: (date) => set({ endDate: date }),
   setAmount: (amount) => set({ amount }),
@@ -44,4 +47,5 @@ export const useOfferFilterState = create<OfferFilterState>((set) => ({
   setMaxBerths: (berths) => set({ maxBerths: berths }),
   setMinYear: (year) => set({ minYear: year }),
   setMaxYear: (year) => set({ maxYear: year }),
+  setProductFilter: (product) => set({ productFilter: product }),
 }));
