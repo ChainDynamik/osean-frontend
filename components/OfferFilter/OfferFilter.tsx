@@ -25,6 +25,8 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
   const currency = useOfferFilterState((state) => state.currency);
   const minLength = useOfferFilterState((state) => state.minLength);
   const maxLength = useOfferFilterState((state) => state.maxLength);
+  const minBerths = useOfferFilterState((state) => state.minBerths);
+  const maxBerths = useOfferFilterState((state) => state.maxBerths);
 
   // Zustand actions
   const setStoreStartDate = useOfferFilterState((state) => state.setStartDate);
@@ -33,6 +35,8 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
   const setStoreCurrency = useOfferFilterState((state) => state.setCurrency);
   const setStoreMinLength = useOfferFilterState((state) => state.setMinLength);
   const setStoreMaxLength = useOfferFilterState((state) => state.setMaxLength);
+  const setStoreMinBerths = useOfferFilterState((state) => state.setMinBerths);
+  const setStoreMaxBerths = useOfferFilterState((state) => state.setMaxBerths);
 
   const handleReserve = () => {
     // Add additional logic for reserving if needed
@@ -106,7 +110,7 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
               aria-haspopup="true"
               aria-expanded="true"
             >
-              Currency
+              {currency ? currency : "All Currencies"}
               <svg
                 className="-mr-1 ml-2 h-5 w-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -123,6 +127,9 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
             </button>
           </Dropdown.Trigger>
           <Dropdown.Content>
+            <Dropdown.Item onClick={() => setStoreCurrency(null)}>
+              All Currencies
+            </Dropdown.Item>
             <Dropdown.Item onClick={() => setStoreCurrency("EUR")}>
               EUR
             </Dropdown.Item>
@@ -133,30 +140,52 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
         </Dropdown.Root>
       </div>
 
-      <div className="flex gap-4 items-center">
-        <div className="mt-4">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Min Length
-          </label>
-          <input
-            type="number"
-            value={minLength || ""}
-            onChange={(e) => setStoreMinLength(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
-        </div>
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Min Length
+        </label>
+        <input
+          type="number"
+          value={minLength || ""}
+          onChange={(e) => setStoreMinLength(Number(e.target.value))}
+          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+        />
+      </div>
 
-        <div className="mt-4">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Max Length
-          </label>
-          <input
-            type="number"
-            value={maxLength || ""}
-            onChange={(e) => setStoreMaxLength(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
-        </div>
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Max Length
+        </label>
+        <input
+          type="number"
+          value={maxLength || ""}
+          onChange={(e) => setStoreMaxLength(Number(e.target.value))}
+          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Min Berths
+        </label>
+        <input
+          type="number"
+          value={minBerths || ""}
+          onChange={(e) => setStoreMinBerths(Number(e.target.value))}
+          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Max Berths
+        </label>
+        <input
+          type="number"
+          value={maxBerths || ""}
+          onChange={(e) => setStoreMaxBerths(Number(e.target.value))}
+          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+        />
       </div>
 
       <Button

@@ -71,10 +71,14 @@ export default function Offers() {
   const currency = useOfferFilterState((state) => state.currency);
   const minLength = useOfferFilterState((state) => state.minLength);
   const maxLength = useOfferFilterState((state) => state.maxLength);
+  const minBerths = useOfferFilterState((state) => state.minBerths);
+  const maxBerths = useOfferFilterState((state) => state.maxBerths);
 
   async function fetchOffers() {
     const request = await axios.get(
-      `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=2024-08-17T00%3A00%3A00&dateTo=2024-08-24T00%3A00%3A00&companyId=2672&currency=${currency}&showOptions=true&passengersOnBoard=1`,
+      `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=2024-08-17T00%3A00%3A00&dateTo=2024-08-24T00%3A00%3A00&companyId=2672&currency=${
+        currency || ""
+      }&showOptions=true&passengersOnBoard=1`,
       {
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
@@ -98,7 +102,7 @@ export default function Offers() {
 
   useEffect(() => {
     if (yachts.length) fetchOffers();
-  }, [yachts, currency]);
+  }, [yachts, currency, startDate, endDate]);
 
   const mapOfferToProps = (
     offer: Reservation,
@@ -123,25 +127,32 @@ export default function Offers() {
   };
 
   const filterOffers = (offers: OfferWithBoat[], filters: any) => {
-    const fuse = new Fuse(offers, {
-      keys: ["offer.currency"],
-      threshold: 0, // Adjust based on the level of fuzzy matching required
-      isCaseSensitive: true, // Make sure matching is case sensitive
-    });
+    if (filters.currency) {
+      const fuse = new Fuse(offers, {
+        keys: ["offer.currency"],
+        threshold: 0, // Adjust based on the level of fuzzy matching required
+        isCaseSensitive: true, // Make sure matching is case sensitive
+      });
 
-    const results = fuse.search(filters);
-    return results.map((result) => result.item);
+      const results = fuse.search(filters.currency);
+      return results.map((result) => result.item);
+    }
+    return offers;
   };
 
   const filters = {
-    "offer.currency": currency,
+    currency: currency,
   };
 
   const filteredOffers = filterOffers(offers, filters).filter((data) => {
-    const { length } = data.boat;
+    const { length, berths } = data.boat;
     const withinMinLength = minLength ? length >= minLength : true;
     const withinMaxLength = maxLength ? length <= maxLength : true;
-    return withinMinLength && withinMaxLength;
+    const withinMinBerths = minBerths ? berths >= minBerths : true;
+    const withinMaxBerths = maxBerths ? berths <= maxBerths : true;
+    return (
+      withinMinLength && withinMaxLength && withinMinBerths && withinMaxBerths
+    );
   });
 
   const sortedOffers = [...filteredOffers].sort((a, b) => {
@@ -184,7 +195,12 @@ export default function Offers() {
 
               const offerBoatObject = mapOfferToProps(offerObject, boatObject);
 
-              console.log(boatObject, "offer + boat data");
+              console.log(
+                offerBoatObject,
+                boatObject,
+                offerObject,
+                "offer + boat data"
+              );
 
               const image = boatObject?.images[0]?.url;
 
