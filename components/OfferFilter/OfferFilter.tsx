@@ -111,18 +111,102 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
           />
         </div>
       </div>
+      {/*  */}
+      <div className="flex justify-between flex-wrap gap-4 items-center">
+        <div className="mt-4 flex flex-col gap-2">
+          <p className="mb-0 text-black text-lg">Currencies:</p>
+          <Dropdown.Root>
+            <Dropdown.Trigger className="">
+              <button
+                type="button"
+                className="inline-flex justify-between w-fit rounded-md border border-gray-300 shadow-sm px-2 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none capitalize focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                id="options-menu"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
+                {currency ? currency : "All"}
+                <svg
+                  className="-mr-1 ml-2 h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              <Dropdown.Item onClick={() => setStoreCurrency(null)}>
+                All
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setStoreCurrency("EUR")}>
+                EUR
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setStoreCurrency("USD")}>
+                USD
+              </Dropdown.Item>
+            </Dropdown.Content>
+          </Dropdown.Root>
+        </div>
+        <div className="mt-4 flex flex-col gap-2">
+          <p className="mb-0 text-black text-lg">Products:</p>
+          <Dropdown.Root>
+            <Dropdown.Trigger className="">
+              <button
+                type="button"
+                className="inline-flex justify-between w-fit rounded-md border border-gray-300 shadow-sm px-2 py-2 bg-white capitalize text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                id="options-menu"
+                aria-haspopup="true"
+                aria-expanded="true"
+              >
+                {productFilter ? productFilter : "All"}
+                <svg
+                  className="-mr-1 ml-2 h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              <Dropdown.Item onClick={() => setStoreProductFilter("all")}>
+                All
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setStoreProductFilter("bareboat")}>
+                Bareboat
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setStoreProductFilter("crewed")}>
+                Crewed
+              </Dropdown.Item>
+            </Dropdown.Content>
+          </Dropdown.Root>
+        </div>
+      </div>
 
-      <div className="mt-4">
+      <div className="mt-4 flex flex-col gap-2">
+        <p className="mb-0 text-black text-lg">Kinds:</p>
         <Dropdown.Root>
           <Dropdown.Trigger className="">
             <button
               type="button"
-              className="inline-flex justify-between w-fit rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex justify-between w-fit rounded-md border border-gray-300 shadow-sm px-2 py-2 text-center capitalize bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               id="options-menu"
               aria-haspopup="true"
               aria-expanded="true"
             >
-              {currency ? currency : "All Currencies"}
+              {kindFilter ? kindFilter : "All"}
               <svg
                 className="-mr-1 ml-2 h-5 w-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -132,175 +216,97 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
               >
                 <path
                   fillRule="evenodd"
-                  d="M5.293 9.707a1 1 011.414 0L10 13.414l3.293-3.707a1 1 011.414 1.414l-4 4a1 1 010-1.414z"
+                  d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                   clipRule="evenodd"
                 />
               </svg>
             </button>
           </Dropdown.Trigger>
           <Dropdown.Content>
-            <Dropdown.Item onClick={() => setStoreCurrency(null)}>
-              All Currencies
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setStoreCurrency("EUR")}>
-              EUR
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setStoreCurrency("USD")}>
-              USD
-            </Dropdown.Item>
-          </Dropdown.Content>
-        </Dropdown.Root>
-      </div>
-
-      <div className="mt-4">
-        <label className="block text-sm font-semibold uppercase text-gray-dark">
-          Min Length
-        </label>
-        <input
-          type="number"
-          value={minLength || ""}
-          onChange={(e) => setStoreMinLength(Number(e.target.value))}
-          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-        />
-      </div>
-
-      <div className="mt-4">
-        <label className="block text-sm font-semibold uppercase text-gray-dark">
-          Max Length
-        </label>
-        <input
-          type="number"
-          value={maxLength || ""}
-          onChange={(e) => setStoreMaxLength(Number(e.target.value))}
-          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-        />
-      </div>
-
-      <div className="mt-4">
-        <label className="block text-sm font-semibold uppercase text-gray-dark">
-          Min Berths
-        </label>
-        <input
-          type="number"
-          value={minBerths || ""}
-          onChange={(e) => setStoreMinBerths(Number(e.target.value))}
-          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-        />
-      </div>
-
-      <div className="mt-4">
-        <label className="block text-sm font-semibold uppercase text-gray-dark">
-          Max Berths
-        </label>
-        <input
-          type="number"
-          value={maxBerths || ""}
-          onChange={(e) => setStoreMaxBerths(Number(e.target.value))}
-          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-        />
-      </div>
-
-      <div className="mt-4">
-        <label className="block text-sm font-semibold uppercase text-gray-dark">
-          Min Year
-        </label>
-        <input
-          type="number"
-          value={minYear || ""}
-          onChange={(e) => setStoreMinYear(Number(e.target.value))}
-          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-        />
-      </div>
-
-      <div className="mt-4">
-        <label className="block text-sm font-semibold uppercase text-gray-dark">
-          Max Year
-        </label>
-        <input
-          type="number"
-          value={maxYear || ""}
-          onChange={(e) => setStoreMaxYear(Number(e.target.value))}
-          className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-        />
-      </div>
-
-      <div className="mt-4">
-        <Dropdown.Root>
-          <Dropdown.Trigger className="">
-            <button
-              type="button"
-              className="inline-flex justify-between w-fit rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              id="options-menu"
-              aria-haspopup="true"
-              aria-expanded="true"
-            >
-              {productFilter ? productFilter : "All Products"}
-              <svg
-                className="-mr-1 ml-2 h-5 w-5"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 9.707a1 1 011.414 0L10 13.414l3.293-3.707a1 1 011.414 1.414l-4 4a1 1 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </Dropdown.Trigger>
-          <Dropdown.Content>
-            <Dropdown.Item
-              onClick={() => setStoreProductFilter("all products")}
-            >
-              All Products
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setStoreProductFilter("bareboat")}>
-              Bareboat
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setStoreProductFilter("crewed")}>
-              Crewed
-            </Dropdown.Item>
-          </Dropdown.Content>
-        </Dropdown.Root>
-      </div>
-
-      <div className="mt-4">
-        <Dropdown.Root>
-          <Dropdown.Trigger className="">
-            <button
-              type="button"
-              className="inline-flex justify-between w-fit rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              id="options-menu"
-              aria-haspopup="true"
-              aria-expanded="true"
-            >
-              {kindFilter ? kindFilter : "All Kinds"}
-              <svg
-                className="-mr-1 ml-2 h-5 w-5"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.293 9.707a1 1 011.414 0L10 13.414l3.293-3.707a1 1 011.414 1.414l-4 4a 1 1 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </Dropdown.Trigger>
-          <Dropdown.Content>
-            <Dropdown.Item onClick={() => setStoreKindFilter("all kinds")}>
-              All Kinds
+            <Dropdown.Item onClick={() => setStoreKindFilter("all")}>
+              All
             </Dropdown.Item>
             <Dropdown.Item onClick={() => setStoreKindFilter("sail boat")}>
               Sail Boat
             </Dropdown.Item>
           </Dropdown.Content>
         </Dropdown.Root>
+      </div>
+      <div className="flex justify-between gap-4 items-center">
+        <div className="mt-4">
+          <label className="block text-sm font-semibold uppercase text-gray-dark">
+            Min Length
+          </label>
+          <input
+            type="number"
+            value={minLength || ""}
+            onChange={(e) => setStoreMinLength(Number(e.target.value))}
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+
+        <div className="mt-4">
+          <label className="block text-sm font-semibold uppercase text-gray-dark">
+            Max Length
+          </label>
+          <input
+            type="number"
+            value={maxLength || ""}
+            onChange={(e) => setStoreMaxLength(Number(e.target.value))}
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-between gap-4 items-center">
+        <div className="mt-4">
+          <label className="block text-sm font-semibold uppercase text-gray-dark">
+            Min Berths
+          </label>
+          <input
+            type="number"
+            value={minBerths || ""}
+            onChange={(e) => setStoreMinBerths(Number(e.target.value))}
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+
+        <div className="mt-4">
+          <label className="block text-sm font-semibold uppercase text-gray-dark">
+            Max Berths
+          </label>
+          <input
+            type="number"
+            value={maxBerths || ""}
+            onChange={(e) => setStoreMaxBerths(Number(e.target.value))}
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+      </div>
+      <div className="flex justify-between gap-4 items-center">
+        <div className="mt-4">
+          <label className="block text-sm font-semibold uppercase text-gray-dark">
+            Min Year
+          </label>
+          <input
+            type="number"
+            value={minYear || ""}
+            onChange={(e) => setStoreMinYear(Number(e.target.value))}
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+
+        <div className="mt-4">
+          <label className="block text-sm font-semibold uppercase text-gray-dark">
+            Max Year
+          </label>
+          <input
+            type="number"
+            value={maxYear || ""}
+            onChange={(e) => setStoreMaxYear(Number(e.target.value))}
+            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+          />
+        </div>
       </div>
 
       <Button
