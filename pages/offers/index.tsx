@@ -184,12 +184,7 @@ export default function Offers() {
 
               const offerBoatObject = mapOfferToProps(offerObject, boatObject);
 
-              console.log(
-                offerBoatObject,
-                boatObject,
-                offerObject,
-                "offer + boat data"
-              );
+              console.log(boatObject, "offer + boat data");
 
               const image = boatObject?.images[0]?.url;
 
