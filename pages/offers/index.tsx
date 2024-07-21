@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { format } from "date-fns"; // Import format from date-fns
-import Fuse from "fuse.js";
+import { format } from "date-fns";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
 import OffersCard, {
   OffersCardProps,
 } from "../../components/OffersCard/OffersCard";
-import OfferFilter from "../../components/OfferFilter/OfferFilter";
-import { useOfferFilterState } from "../../util/store/offerFiltersStore";
+import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
 import { CustomDropdown } from "../../components/CustomDropdown/CustomDropdown";
 import { useTripStore } from "../../util/store/tripStore";
+import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
 
 type Extra = {
   id: number;
@@ -67,35 +66,72 @@ export default function Offers() {
   const [sortOption, setSortOption] = useState<string>("");
   const { yachts, fetchChrisBoats, getBoatById } = useYachts();
 
-  const startDate = useOfferFilterState((state) => state.startDate);
-  const endDate = useOfferFilterState((state) => state.endDate);
-  const filterAmount = useOfferFilterState((state) => state.amount);
-  const currencies = useOfferFilterState((state) => state.currencies);
-  const minLength = useOfferFilterState((state) => state.minLength);
-  const maxLength = useOfferFilterState((state) => state.maxLength);
-  const minBerths = useOfferFilterState((state) => state.minBerths);
-  const maxBerths = useOfferFilterState((state) => state.maxBerths);
-  const minYear = useOfferFilterState((state) => state.minYear);
-  const maxYear = useOfferFilterState((state) => state.maxYear);
-  const productFilters = useOfferFilterState((state) => state.productFilters);
-  const kindFilters = useOfferFilterState((state) => state.kindFilters);
+  const {
+    startDate,
+    endDate,
+    amount,
+    currencies,
+    minLength,
+    maxLength,
+    minBerths,
+    maxBerths,
+    minYear,
+    maxYear,
+    productFilters,
+    kindFilters,
+    passengersOnBoard,
+    country,
+  } = useOfferApiFilterState();
 
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
-  console.log(tripStart, tripEnd, "trips");
 
   async function fetchOffers() {
     const dateFrom = tripStart ? format(tripStart, "yyyy-MM-dd") : "2024-08-17";
     const dateTo = tripEnd ? format(tripEnd, "yyyy-MM-dd") : "2024-08-24";
     console.log(dateFrom, dateTo, "date format-");
 
-    const request = await axios.get(
-      `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
-        },
-      }
-    );
+    let queryString = `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
+
+    if (currencies.length > 0) {
+      queryString += `&currency=${currencies.join(",")}`;
+    }
+    if (minLength) {
+      queryString += `&minLength=${minLength}`;
+    }
+    if (maxLength) {
+      queryString += `&maxLength=${maxLength}`;
+    }
+    if (minBerths) {
+      queryString += `&minBerths=${minBerths}`;
+    }
+    if (maxBerths) {
+      queryString += `&maxBerths=${maxBerths}`;
+    }
+    if (minYear) {
+      queryString += `&minYear=${minYear}`;
+    }
+    if (maxYear) {
+      queryString += `&maxYear=${maxYear}`;
+    }
+    if (productFilters.length > 0) {
+      queryString += `&product=${productFilters.join(",")}`;
+    }
+    if (kindFilters.length > 0) {
+      queryString += `&kind=${kindFilters.join(",")}`;
+    }
+    if (passengersOnBoard) {
+      queryString += `&passengersOnBoard=${passengersOnBoard}`;
+    }
+    if (country) {
+      queryString += `&country=${country}`;
+    }
+    console.log(queryString, "query");
+
+    const request = await axios.get(queryString, {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
+      },
+    });
 
     const offers: Reservation[] = request.data;
 
@@ -113,7 +149,24 @@ export default function Offers() {
 
   useEffect(() => {
     if (yachts.length) fetchOffers();
-  }, [yachts, tripStart, tripEnd]);
+  }, [
+    yachts,
+    tripStart,
+    tripEnd,
+    currencies,
+    minLength,
+    maxLength,
+    minBerths,
+    maxBerths,
+    minYear,
+    maxYear,
+    productFilters,
+    kindFilters,
+    passengersOnBoard,
+    country,
+  ]);
+
+  console.log(offers, "query offers");
 
   const mapOfferToProps = (
     offer: Reservation,
@@ -230,7 +283,7 @@ export default function Offers() {
       </div>
       <div className="flex gap-8">
         <div className="w-[30%] min-w-[30%]">
-          <OfferFilter />
+          <OfferApiFilter />
         </div>
         <div className="flex w-full items-center flex-col gap-8">
           {sortedOffers.length === 0 && (
