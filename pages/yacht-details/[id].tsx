@@ -164,6 +164,8 @@ const YachtDetailsPage: FC = () => {
     return <p>Listing not found</p>;
   }
 
+  const isLoading = yacht === undefined;
+
   return (
     <>
       <div className="container-fluid relative !px-10 pt-20 w-full">
@@ -174,7 +176,8 @@ const YachtDetailsPage: FC = () => {
             })}
           />
         )} */}
-        {yacht && <YachtDetails details={yacht} />}
+        <YachtDetails details={yacht} loading={isLoading} />
+        {/* {yacht && <YachtDetails details={yacht} />} */}
         <SimilarYacht />
       </div>
       {/* <SubscriptionBlock sectionClassName="3xl:!px-12 4xl:!px-12" /> */}

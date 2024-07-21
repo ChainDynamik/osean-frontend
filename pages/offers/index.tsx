@@ -246,8 +246,8 @@ export default function Offers() {
               const offerBoatObject = mapOfferToProps(offerObject, boatObject);
 
               console.log(
-                offerBoatObject,
-                boatObject,
+                // offerBoatObject,
+                // boatObject,
                 offerObject,
                 "offer + boat data"
               );
