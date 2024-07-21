@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Box, Text, Checkbox, CheckboxGroup, Stack } from "@chakra-ui/react";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
-import { useSelectedExtrasStore } from "../../util/store";
 import BookingForm from "../BookingForm/BookingForm";
+import { useSelectedExtrasStore } from "../../util/store/extraStore";
 // import SelectedExtras from "../SelectedExtras/SelectedExtras"; // Import the SelectedExtras component
 
 interface YachtDetailsProps {
@@ -17,7 +17,7 @@ export default function YachtDetails({ details }: YachtDetailsProps) {
   );
   const toggleExtra = useSelectedExtrasStore((state) => state.toggleExtra);
 
-  const handleCheckboxChange = (extra: { id: number; name: string }) => {
+  const handleCheckboxChange = (extra: Extra) => {
     toggleExtra(extra);
   };
 
@@ -149,7 +149,12 @@ export default function YachtDetails({ details }: YachtDetailsProps) {
                       key={extra.id}
                       isChecked={selectedExtras.some((e) => e.id === extra.id)}
                       onChange={() =>
-                        handleCheckboxChange({ id: extra.id, name: extra.name })
+                        handleCheckboxChange({
+                          id: extra.id,
+                          name: extra.name,
+                          price: extra.price,
+                          currency: extra.currency,
+                        })
                       }
                     >
                       {extra.name} - {extra.price} {extra.currency}

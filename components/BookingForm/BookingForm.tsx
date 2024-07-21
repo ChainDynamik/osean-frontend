@@ -7,9 +7,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import Button from "../Button/Button";
 import { Staricon } from "../../assets/icons-components/star-icon";
 import PaymentModal from "../PaymentModal/PaymentModal";
-import { useSelectedExtrasStore } from "../../util/store";
 import Icon from "../icon-selector/icon-selector";
 import { Box, Checkbox, CheckboxGroup, Stack } from "@chakra-ui/react";
+import { useSelectedExtrasStore } from "../../util/store/extraStore";
 
 interface BookingFormProps {
   price: number;
@@ -40,18 +40,26 @@ export default function BookingForm({
     if (nights > 1) setNights(nights - 1);
   };
 
-  const getTotalPrice = (price: number, nights: number) => {
-    return price * nights;
+  const getTotalPrice = (
+    price: number,
+    nights: number,
+    selectedExtras: { price: number }[]
+  ) => {
+    const extrasTotal = selectedExtras.reduce(
+      (total, extra) => total + extra.price,
+      0
+    );
+    return price * nights + extrasTotal;
   };
 
   const discount = 117; // Example value, update as needed
-  const cleaningFee = 52; // Example value, update as needed
+  const cleaningFee = 100; // Example value, update as needed
   const serviceFee = 65; // Example value, update as needed
   const totalFee =
-    getTotalPrice(price, nights) - discount + cleaningFee + serviceFee;
-  // const selectedExtras = useSelectedExtrasStore(
-  //   (state) => state.selectedExtras
-  // );
+    getTotalPrice(price, nights, selectedExtras) -
+    discount +
+    cleaningFee +
+    serviceFee;
 
   return (
     <form
@@ -117,26 +125,18 @@ export default function BookingForm({
       <div className="flex justify-between items-center mt-4">
         <p className="text-black mb-0">Nights: {nights}</p>
         <div className="flex items-center gap-4">
-          <Button
-            size="sm"
-            rounded="lg"
-            type="button"
-            variant="outline"
-            className="hover:bg-gray-200"
+          <button
+            className="hover:bg-gray-200 bg-transparent border border-gray-300 hover:brightness-110 hover:shadow-lg hover:shadow-black/30 hov:border-gray-1000 focus:enabled:border-gray-1000 focus:ring-gray-900/30 px-2 rounded-lg"
             onClick={handleIncreaseNights}
           >
             Increase
-          </Button>
-          <Button
-            size="sm"
-            rounded="lg"
-            type="button"
-            variant="outline"
-            className="hover:bg-gray-200"
+          </button>
+          <button
+            className="hover:bg-gray-200 bg-transparent border border-gray-300 hover:brightness-110 hover:shadow-lg hover:shadow-black/30 hov:border-gray-1000 focus:enabled:border-gray-1000 focus:ring-gray-900/30 px-2 rounded-lg"
             onClick={handleReduceNights}
           >
             Reduce
-          </Button>
+          </button>
         </div>
       </div>
 
@@ -166,7 +166,9 @@ export default function BookingForm({
           <span className="font-normal">
             ${price} * {nights} Nights
           </span>
-          <span className="font-bold">${getTotalPrice(price, nights)}</span>
+          <span className="font-bold">
+            ${getTotalPrice(price, nights, selectedExtras)}
+          </span>
         </li>
         <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
           <span className="font-normal">Weekly discount</span>
@@ -188,18 +190,7 @@ export default function BookingForm({
 
       {selectedExtras.length > 0 && (
         <ul className="flex flex-col gap-2 pt-4">
-          {/* {selectedExtras.map((extra, index) => {
-            return (
-              <li className="flex itemscenter gap-2" key={index}>
-              <div className="translate-y-1">
-              <Icon iconType={"checkbox"} className="w-4  text-blue-500" />
-              </div>
-              <p className="mb-0">{extra.name}</p>
-              </li>
-              );
-              })} */}
           <Box
-            // mt="10"
             borderWidth="1px"
             borderRadius="lg"
             overflow="hidden"
@@ -207,9 +198,6 @@ export default function BookingForm({
             pl="4"
           >
             <p className="text-lg mb-2.5 mt-1.5 font-bold text-black">EXTRAS</p>
-            {/* <Text fontSize="2xl" fontWeight="semibold" mb="4">
-        Selected Extras
-      </Text> */}
             <CheckboxGroup colorScheme="blue">
               <Stack mt="1" spacing="1">
                 {selectedExtras.map((extra) => (
@@ -218,7 +206,7 @@ export default function BookingForm({
                     isChecked={true}
                     onChange={() => toggleExtra(extra)}
                   >
-                    {extra.name}
+                    {extra.name} - {extra.price} {extra.currency}
                   </Checkbox>
                 ))}
               </Stack>

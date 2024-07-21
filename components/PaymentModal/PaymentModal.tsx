@@ -9,6 +9,7 @@ import OseanModal from "../OseanModal/OseanModal";
 import dynamic from "next/dynamic";
 import CardModal from "../CardModal/CardModal";
 import { useTransactionStore } from "../../util/store";
+import { useSelectedExtrasStore } from "../../util/store/extraStore";
 
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -48,6 +49,9 @@ export default function PaymentModal({
     paymentModalIsOpen,
     setPaymentModal,
   } = useTransactionStore();
+  const selectedExtras = useSelectedExtrasStore(
+    (state) => state.selectedExtras
+  );
 
   return (
     <Modal.Root open={paymentModalIsOpen} onOpenChange={setPaymentModal}>
@@ -163,6 +167,21 @@ export default function PaymentModal({
                 <span className="font-normal">Total fee</span>
                 <span className="font-bold">${totalFee}</span>
               </li>
+            </ul>
+          </div>
+          <div className="mt-6">
+            <h4 className="text-lg font-bold text-gray-900 mb-2">
+              Booking Summary
+            </h4>
+            <ul>
+              {selectedExtras.map((extra) => (
+                <li
+                  key={extra.id}
+                  className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark"
+                >
+                  {extra.name}
+                </li>
+              ))}
             </ul>
           </div>
         </div>

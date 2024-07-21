@@ -117,7 +117,8 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
         onClick={handleUpdateTripDates}
         className="mt-4 mb-7 w-full flex flex-col gap-2 hover:!bg-black text-base !font-bold uppercase"
       >
-        {`Filter dates from ${localTripStart?.toLocaleDateString()} to ${localTripEnd?.toLocaleDateString()}`}
+        Filter Dates
+        {/* {`Filter dates from ${localTripStart?.toLocaleDateString()} to ${localTripEnd?.toLocaleDateString()}`} */}
       </Button>
       {/*  */}
       <div className="flex flex-col gap-4 border-t-2 mt-6 border-t-gray-300">
