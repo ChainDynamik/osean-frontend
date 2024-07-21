@@ -115,7 +115,7 @@ export default function YachtCard({
           </div>
         </div>
       </div>
-      <RouteComponent href={`/yacht-details/${id}`}>
+      <Link href={`/yacht-details/${id}`}>
         <div className="content pt-3 text-black">
           <div className="text-blue-800 text-lg mb-0.5 flex items-center gap-5">
             <span className="font-bold">
@@ -161,7 +161,7 @@ export default function YachtCard({
             )}
           </div>
         </div>
-      </RouteComponent>
+      </Link>
     </div>
   );
 }
