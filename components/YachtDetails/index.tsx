@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box, Text, Checkbox, CheckboxGroup, Stack } from "@chakra-ui/react";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import BookingForm from "../BookingForm/BookingForm";
-import { useSelectedExtrasStore } from "../../util/store/extraStore";
+import { Extra, useSelectedExtrasStore } from "../../util/store/extraStore";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css"; // Import styles
 
@@ -22,6 +22,39 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   const handleCheckboxChange = (extra: Extra) => {
     toggleExtra(extra);
   };
+
+  const specifications = [
+    { label: "Name", value: details?.name },
+    { label: "Model", value: details?.model },
+    { label: "Year", value: details?.year },
+    { label: "Kind", value: details?.kind },
+    { label: "Draught", value: details?.draught },
+    { label: "Beam", value: details?.beam },
+    { label: "Length", value: details?.length },
+    { label: "Water Capacity", value: details?.waterCapacity },
+    { label: "Fuel Capacity", value: details?.fuelCapacity },
+    { label: "Engine", value: details?.engine },
+    { label: "Deposit", value: details?.deposit },
+    { label: "Deposit With Waiver", value: details?.depositWithWaiver },
+    { label: "Currency", value: details?.currency },
+    { label: "Berths", value: details?.berths },
+    {
+      label: "Required Skipper License",
+      value: details?.requiredSkipperLicense ? "Yes" : "No",
+    },
+    {
+      label: "Minimum Charter Duration",
+      value: `${details?.minimumCharterDuration} days`,
+    },
+    {
+      label: "Maximum Charter Duration",
+      value: `${details?.maximumCharterDuration} days`,
+    },
+  ];
+
+  const visibleSpecifications = isViewMore
+    ? specifications
+    : specifications.slice(0, 3);
 
   return (
     <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16">
@@ -70,37 +103,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
           <h2 className="text-2xl font-semibold mb-4">Specifications</h2>
           <table className="w-full text-left">
             <tbody>
-              {[
-                { label: "Name", value: details?.name },
-                { label: "Model", value: details?.model },
-                { label: "Year", value: details?.year },
-                { label: "Kind", value: details?.kind },
-                { label: "Draught", value: details?.draught },
-                { label: "Beam", value: details?.beam },
-                { label: "Length", value: details?.length },
-                { label: "Water Capacity", value: details?.waterCapacity },
-                { label: "Fuel Capacity", value: details?.fuelCapacity },
-                { label: "Engine", value: details?.engine },
-                { label: "Deposit", value: details?.deposit },
-                {
-                  label: "Deposit With Waiver",
-                  value: details?.depositWithWaiver,
-                },
-                { label: "Currency", value: details?.currency },
-                { label: "Berths", value: details?.berths },
-                {
-                  label: "Required Skipper License",
-                  value: details?.requiredSkipperLicense ? "Yes" : "No",
-                },
-                {
-                  label: "Minimum Charter Duration",
-                  value: `${details?.minimumCharterDuration} days`,
-                },
-                {
-                  label: "Maximum Charter Duration",
-                  value: `${details?.maximumCharterDuration} days`,
-                },
-              ].map(({ label, value }, index) => (
+              {visibleSpecifications.map(({ label, value }, index) => (
                 <tr key={index} className={index !== 0 ? "border-t" : ""}>
                   <td className="py-2">{label}</td>
                   <td className="py-2">

@@ -5,35 +5,6 @@ import YachtCard from "../../components/YachtCard/YachtCard";
 import useYachts from "../../hooks/useYachts";
 import ReserveOffer from "../../components/ReserveOffer/ReserveOffer";
 
-// function BoatGrid() {
-//   const { yachts } = useYachts();
-
-//   console.log(yachts);
-
-//   return (
-//     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
-//       {yachts?.map((item, index) => {
-//         const slides = item.images.slice(0, 5).map((image) => image.url);
-
-//         return (
-//           <YachtCard
-//             key={item.id}
-//             id={item.id}
-//             slides={slides}
-//             // slides={item.images.map((image) => image.url)}
-//             title={item.name}
-//             caption={item.kind}
-//             slug="slug"
-//             location={item.homeBase}
-//             price={item.deposit + "€"}
-//             boatManufacturingDate={item.year.toString()}
-//           />
-//         );
-//       })}
-//     </div>
-//   );
-// }
-
 function BoatGrid() {
   const { yachts } = useYachts();
 
@@ -60,28 +31,50 @@ function BoatGrid() {
     return orderedImages.slice(0, 5).map((image) => image.url);
   };
 
+  const isLoading = !yachts || yachts.length === 0;
+
+  const loadingCards = Array.from({ length: 8 }, (_, index) => (
+    <YachtCard
+      key={index}
+      loading={true}
+      cabins={0}
+      berths={0}
+      id={index}
+      slides={[]}
+      title=""
+      caption=""
+      slug=""
+      location=""
+      price=""
+      boatManufacturingDate=""
+    />
+  ));
+
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
-      {yachts?.map((item) => {
-        const slides = getOrderedImages(item.images); // Get the ordered images
-        console.log(item, "details");
+      {isLoading
+        ? loadingCards
+        : yachts?.map((item) => {
+            const slides = getOrderedImages(item.images); // Get the ordered images
+            console.log(item, "details");
 
-        return (
-          <YachtCard
-            cabins={item.cabins}
-            berths={item.berths}
-            key={item.id}
-            id={item.id}
-            slides={slides}
-            title={item.name}
-            caption={item.kind}
-            slug="slug"
-            location={item.homeBase}
-            price={item.deposit + "€"}
-            boatManufacturingDate={item.year.toString()}
-          />
-        );
-      })}
+            return (
+              <YachtCard
+                loading={false}
+                cabins={item.cabins}
+                berths={item.berths}
+                key={item.id}
+                id={item.id}
+                slides={slides}
+                title={item.name}
+                caption={item.kind}
+                slug="slug"
+                location={item.homeBase}
+                price={item.deposit + "€"}
+                boatManufacturingDate={item.year.toString()}
+              />
+            );
+          })}
     </div>
   );
 }
@@ -89,7 +82,7 @@ function BoatGrid() {
 export default function TopBoatsPage() {
   return (
     <main className="!px-10 mt-[5.5rem]">
-      <div className="yacht-page-header flex items-center  relative h-[calc(100vh-110px)] w-full">
+      <div className="yacht-page-header flex items-center relative h-[calc(100vh-110px)] w-full">
         <ReserveOffer isRoute className="absolute left-8 bottom-8" />
         {/* <BookingForm /> */}
         <div className="absolute right-0 bottom-0">
@@ -100,28 +93,12 @@ export default function TopBoatsPage() {
             alt="discount banner"
             src="/discounts.jpg"
           />
-          {/* <div className="flex flex-col items-center bg-white border-2 border-blue-500 rounded-xl p-3 max-w-lg mx-auto">
-            <h1 className="bg-blue-500 text-yellow-300 p-2 rounded-xl  text-2xl text-center mb-2">
-              EXCLUSIVE DISCOUNTS FOR $OSEAN HOLDERS
-            </h1>
-            <p className="text-blue-500 text-lg text-center">
-              <a href="#" className="font-bold">
-                BUY WITH OSEAN
-              </a>{" "}
-              |
-              <a href="#" className="font-bold ml-2">
-                BUY WITH CREDIT CARD
-              </a>
-            </p>
-          </div> */}
         </div>
       </div>
       <section className="py-16 mt-0 px-4">
         <div className="mb-12">
           <h3>Top Boat Rentals</h3>
-          <p>
-            Unsatiable It Considered Invitation He Traveling Insensible.
-          </p>{" "}
+          <p>Unsatiable It Considered Invitation He Traveling Insensible.</p>
         </div>
         <BoatGrid />
       </section>

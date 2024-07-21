@@ -9,8 +9,6 @@ import YachtDetails, {
   YachtDetailsDataType,
 } from "../../components/YachtDetails";
 import SimilarYacht from "../../components/SimilarYacht/SimilarYacht";
-import axios from "axios";
-import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import useYachts from "../../hooks/useYachts";
 
 export const YachtDetailsData: YachtDetailsDataType[] = [
@@ -126,8 +124,6 @@ export const YachtDetailsData: YachtDetailsDataType[] = [
   },
 ];
 
-// src/pages/yacht-details/[slug].tsx
-
 const YachtDetailsPage: FC = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -138,11 +134,6 @@ const YachtDetailsPage: FC = () => {
 
   const { yachts } = useYachts();
 
-  // Find the listing that matches the id when integrating
-  // const listing = YachtDetailsData.find((listing) =>
-  //   listing.title.toLowerCase().includes((slug as string).toLowerCase())
-  // );
-
   async function getYachtDetails() {
     console.log(`Fetching yacht details for ${id}`);
     console.log(yachts);
@@ -151,8 +142,6 @@ const YachtDetailsPage: FC = () => {
 
     setYacht(yachtDetails);
   }
-
-  // console.log(yacht);
 
   useEffect(() => {
     if (yachts && id) getYachtDetails();
@@ -169,18 +158,15 @@ const YachtDetailsPage: FC = () => {
   return (
     <>
       <div className="container-fluid relative !px-10 pt-20 w-full">
-        {/* {yacht && (
-          <GallaryBlock
-            images={yacht.images.map((image: any) => {
-              return image.url;
-            })}
-          />
-        )} */}
+        {/* {yacht && ( */}
+        <GallaryBlock
+          loading={isLoading}
+          images={yacht?.images.slice(0, 3).map((image: any) => image.url)}
+        />
+        {/* )} */}
         <YachtDetails details={yacht} loading={isLoading} />
-        {/* {yacht && <YachtDetails details={yacht} />} */}
         <SimilarYacht />
       </div>
-      {/* <SubscriptionBlock sectionClassName="3xl:!px-12 4xl:!px-12" /> */}
     </>
   );
 };

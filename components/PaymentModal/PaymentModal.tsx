@@ -169,21 +169,23 @@ export default function PaymentModal({
               </li>
             </ul>
           </div>
-          <div className="mt-6">
-            <h4 className="text-lg font-bold text-gray-900 mb-2">
-              Booking Summary
-            </h4>
-            <ul>
-              {selectedExtras.map((extra) => (
-                <li
-                  key={extra.id}
-                  className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark"
-                >
-                  {extra.name}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {selectedExtras.length > 0 && (
+            <div className="mt-6">
+              <h4 className="text-lg font-bold text-gray-900 mb-2">
+                Selected Extras
+              </h4>
+              <ul>
+                {selectedExtras.map((extra) => (
+                  <li
+                    key={extra.id}
+                    className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark"
+                  >
+                    {extra.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </Modal.Content>
     </Modal.Root>

@@ -89,7 +89,7 @@ export default function Offers() {
     console.log(dateFrom, dateTo, "date format-");
 
     const request = await axios.get(
-      `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00&companyId=2672&currency=EUR&showOptions=true&passengersOnBoard=1`,
+      `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`,
       {
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
@@ -247,9 +247,9 @@ export default function Offers() {
 
               console.log(
                 // offerBoatObject,
-                // boatObject,
-                offerObject,
-                "offer + boat data"
+                boatObject,
+                // offerObject,
+                "offer + boat "
               );
 
               const image = boatObject?.images[0]?.url;

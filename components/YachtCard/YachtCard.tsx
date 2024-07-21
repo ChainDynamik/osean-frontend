@@ -3,7 +3,8 @@
 import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import {
   Swiper,
   SwiperSlide,
@@ -14,6 +15,7 @@ import AddToWishlist from "../../assets/icons-components/add-to-wishlist";
 import { ChevronLeftIcon } from "../../assets/icons-components/chevronLeft";
 import { ChevronRightIcon } from "../../assets/icons-components/chevronRight";
 import ActionIcon from "../../assets/icons-components/action-icon";
+import { cn } from "../../util";
 
 export type ListingItemTypes = {
   id: number;
@@ -26,6 +28,7 @@ export type ListingItemTypes = {
   cabins: number;
   berths: number;
   boatManufacturingDate: string;
+  loading?: boolean; // Add a loading prop
 };
 
 export default function YachtCard({
@@ -38,43 +41,53 @@ export default function YachtCard({
   boatManufacturingDate,
   cabins,
   berths,
+  loading = false, // Default loading to false
 }: ListingItemTypes) {
   console.log(price, "id of yacht");
+  const RouteComponent = loading ? "div" : "Link";
 
   return (
-    <div className="listing-card shadow-card ring-offset-2 hover:bg-primary/15 ring-primary hover:ring-1 transition-all duration-300 ease-in-out border-[1px] border-black/20 rounded-xl px-2.5 group/item relative inline-flex w-full flex-col">
+    <div
+      className={cn(
+        "listing-card shadow-card  transition-all duration-300 ease-in-out border-[1px] border-black/20 rounded-xl px-2.5 group/item relative inline-flex w-full flex-col",
+        {
+          "ring-offset-2 hover:bg-primary/15 ring-primary hover:ring-1":
+            !loading,
+        }
+      )}
+    >
       <div className="relative w-full overflow-hidden rounded-xl">
-        {/* <AddToWishlist
-          isWishListed={false}
-          onClick={(data) => console.log("Item added to Wishlist.", data)}
-        /> */}
         <div className="listing-item after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-1/4 after:w-full after:bg-gradient-to-t after:from-black/25">
-          <Swiper
-            className="!static"
-            modules={[Pagination, Navigation]}
-            pagination={{
-              clickable: true,
-            }}
-            loop
-            slidesPerView={1}
-            navigation={{
-              nextEl: `.boat_${id}-listing-item-button-next`,
-              prevEl: `.boat_${id}-listing-item-button-prev`,
-            }}
-          >
-            {slides?.map((slide, index) => (
-              <SwiperSlide key={`slide-${index}`}>
-                <Image
-                  className="aspect-[34/20] pt-2 !rounded-[0.5rem] aspectvideo bg-gray-lighter"
-                  src={slide}
-                  width={816}
-                  height={600}
-                  alt="boat"
-                  priority
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          {loading ? (
+            <Skeleton height={150} />
+          ) : (
+            <Swiper
+              className="!static"
+              modules={[Pagination, Navigation]}
+              pagination={{
+                clickable: true,
+              }}
+              loop
+              slidesPerView={1}
+              navigation={{
+                nextEl: `.boat_${id}-listing-item-button-next`,
+                prevEl: `.boat_${id}-listing-item-button-prev`,
+              }}
+            >
+              {slides?.map((slide, index) => (
+                <SwiperSlide key={`slide-${index}`}>
+                  <Image
+                    className="aspect-[34/20] pt-2 !rounded-[0.5rem] aspectvideo bg-gray-lighter"
+                    src={slide}
+                    width={816}
+                    height={600}
+                    alt="boat"
+                    priority
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
 
           <div
             onClick={() => {
@@ -88,7 +101,6 @@ export default function YachtCard({
               <ChevronLeftIcon className="-mr-0.5 text-black h-auto w-[7px]" />
             </div>{" "}
           </div>
-          {/*  */}
           <div
             onClick={() => {
               console.log("I was clicked");
@@ -103,35 +115,53 @@ export default function YachtCard({
           </div>
         </div>
       </div>
-      {/*  */}
-      <Link href={`/yacht-details/${id}`}>
+      <RouteComponent href={`/yacht-details/${id}`}>
         <div className="content pt-3 text-black">
-          <div className=" text-blue-800 text-lg mb-0.5 flex items-center gap-5">
+          <div className="text-blue-800 text-lg mb-0.5 flex items-center gap-5">
             <span className="font-bold">
-              {caption} ({boatManufacturingDate})
+              {loading ? (
+                <Skeleton width={150} />
+              ) : (
+                `${caption} (${boatManufacturingDate})`
+              )}
             </span>
           </div>
           <h4 className="text-ellipsis mb-0.5 text-gray-dark !text-lg 2xl:mb-1.5">
-            {title}
+            {loading ? <Skeleton width={200} /> : title}
           </h4>
           <div className="flex gap-3 items-center">
-            <p className="mb-0 text-black ">{cabins} cabins</p>{" "}
-            <span className="bg-gray-400 rounded-full size-1.5"></span>
-            <p className="mb-0 text-black ">{berths} berths</p>
-            <span className="bg-gray-400 rounded-full size-1.5"></span>
-            <p className="mb-0 text-black ">37 ft</p>
+            {loading ? (
+              <>
+                <Skeleton width={50} />
+                <span className="bg-gray-400 rounded-full size-1.5"></span>
+                <Skeleton width={50} />
+                <span className="bg-gray-400 rounded-full size-1.5"></span>
+                <Skeleton width={50} />
+              </>
+            ) : (
+              <>
+                <p className="mb-0 text-black ">{cabins} cabins</p>
+                <span className="bg-gray-400 rounded-full size-1.5"></span>
+                <p className="mb-0 text-black ">{berths} berths</p>
+                <span className="bg-gray-400 rounded-full size-1.5"></span>
+                <p className="mb-0 text-black ">37 ft</p>
+              </>
+            )}
           </div>
-          {/* <p className="mb-3 text-gray-light xl:mb-3">{location}</p> */}
           <div className="flex mt-2 flex-wrap items-center justify-between gap-3">
-            <p className="text-gray-light">
-              <span className="inline-block mr-1.5">From</span>
-              <span className="font-bold text-black xl:text-xl 3xl:text-xl">
-                {price}
-              </span>{" "}
-            </p>
+            {loading ? (
+              <Skeleton width={100} />
+            ) : (
+              <p className="text-gray-light">
+                <span className="inline-block mr-1.5">From</span>
+                <span className="font-bold text-black xl:text-xl 3xl:text-xl">
+                  {price}
+                </span>
+              </p>
+            )}
           </div>
         </div>
-      </Link>
+      </RouteComponent>
     </div>
   );
 }

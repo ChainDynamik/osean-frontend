@@ -1,11 +1,11 @@
 import { create } from "zustand";
 
-interface Extra {
+export type Extra = {
   id: number;
   name: string;
   price: number;
   currency: string;
-}
+};
 
 interface SelectedExtrasState {
   selectedExtras: Extra[];
