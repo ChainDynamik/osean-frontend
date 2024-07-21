@@ -202,6 +202,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   className="w-4 -translate-y-[1px] text-black"
                 />
               </div>
+              ber
               <p className="mb-0 text-black text-xs">{berths}</p>
             </div>
             <div className="flex gap-1">

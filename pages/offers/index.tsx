@@ -162,6 +162,34 @@ export default function Offers() {
     const matchesKindFilter =
       kindFilters.length === 0 || kindFilters.includes(kind.toLowerCase());
 
+    console.log({
+      length,
+      berths,
+      year,
+      kind,
+      withinMinLength,
+      withinMaxLength,
+      withinMinBerths,
+      withinMaxBerths,
+      withinMinYear,
+      withinMaxYear,
+      matchesCurrencyFilter,
+      matchesProductFilter,
+      matchesKindFilter,
+    });
+    console.log(
+      withinMinLength &&
+        withinMaxLength &&
+        withinMinBerths &&
+        withinMaxBerths &&
+        withinMinYear &&
+        withinMaxYear &&
+        matchesCurrencyFilter &&
+        matchesProductFilter &&
+        matchesKindFilter,
+      "the condition"
+    );
+
     return (
       withinMinLength &&
       withinMaxLength &&

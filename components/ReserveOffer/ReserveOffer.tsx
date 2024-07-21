@@ -19,7 +19,7 @@ export default function ReserveOffer({ className, isRoute }: BookingFormProps) {
   const { setTripStart, setTripEnd } = useTripStore();
 
   const [localTripStart, setLocalTripStart] = useState<Date | null>(
-    new Date("2024-08-01")
+    new Date("2024-08-17")
   );
   const [localTripEnd, setLocalTripEnd] = useState<Date | null>(
     new Date("2024-08-24")
