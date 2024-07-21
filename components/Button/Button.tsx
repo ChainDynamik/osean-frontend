@@ -2,6 +2,7 @@
 
 import clsx from "clsx";
 import { forwardRef } from "react";
+import { cn } from "../../util";
 
 const classes = {
   base: "inline-flex font-medium items-center justify-center focus:outline-none transition duration-200 active:scale-90",
@@ -89,15 +90,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={type}
         disabled={disabled}
-        className={clsx(
-          classes.base,
-          classes.size[size],
-          classes.rounded[rounded],
-          variantStyle.base,
-          variantStyle.color[color],
-          isLoading && "pointer-events-none relative",
-          disabled &&
-            "cursor-not-allowed !border-gray-200 !bg-gray-100 !text-gray-400",
+        className={cn(
+          "w-full cursor-pointer text-center !bg-black text-white rounded-lg px-4 flex items-center justify-center hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out py-[14px] text-base !font-bold tracking-widest",
           className
         )}
         {...buttonProps}

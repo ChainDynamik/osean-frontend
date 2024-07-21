@@ -42,7 +42,7 @@ export default function YachtCard({
   console.log(price, "id of yacht");
 
   return (
-    <div className="listing-card shadow-card ring-offset-2 hover:bg-primary/5 ring-primary hover:ring-1 transition-all duration-300 ease-in-out border-[1px] border-black/20 rounded-xl px-2.5 group/item relative inline-flex w-full flex-col">
+    <div className="listing-card shadow-card ring-offset-2 hover:bg-primary/15 ring-primary hover:ring-1 transition-all duration-300 ease-in-out border-[1px] border-black/20 rounded-xl px-2.5 group/item relative inline-flex w-full flex-col">
       <div className="relative w-full overflow-hidden rounded-xl">
         {/* <AddToWishlist
           isWishListed={false}

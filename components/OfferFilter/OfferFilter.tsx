@@ -1,13 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { format } from "date-fns";
 import Button from "../Button/Button";
 import { useRouter } from "next/navigation";
 import { cn } from "../../util";
 import { useOfferFilterState } from "../../util/store/offerFiltersStore";
+import { useTripStore } from "../../util/store/tripStore";
 
 interface BookingFormProps {
   className?: string;
@@ -18,8 +18,6 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
   const router = useRouter();
 
   // Zustand state
-  const startDate = useOfferFilterState((state) => state.startDate);
-  const endDate = useOfferFilterState((state) => state.endDate);
   const amount = useOfferFilterState((state) => state.amount);
   const currencies = useOfferFilterState((state) => state.currencies);
   const minLength = useOfferFilterState((state) => state.minLength);
@@ -32,8 +30,6 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
   const kindFilters = useOfferFilterState((state) => state.kindFilters);
 
   // Zustand actions
-  const setStoreStartDate = useOfferFilterState((state) => state.setStartDate);
-  const setStoreEndDate = useOfferFilterState((state) => state.setEndDate);
   const setStoreAmount = useOfferFilterState((state) => state.setAmount);
   const toggleCurrency = useOfferFilterState((state) => state.toggleCurrency);
   const setStoreMinLength = useOfferFilterState((state) => state.setMinLength);
@@ -49,14 +45,17 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
     (state) => state.toggleKindFilter
   );
 
+  const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
+
+  const [localTripStart, setLocalTripStart] = useState<Date | null>(tripStart);
+  const [localTripEnd, setLocalTripEnd] = useState<Date | null>(tripEnd);
+
+  const handleUpdateTripDates = () => {
+    setTripStart(localTripStart);
+    setTripEnd(localTripEnd);
+  };
+
   const handleReserve = () => {
-    // Add additional logic for reserving if needed
-    console.log(
-      "Reservation made:",
-      startDate ? format(startDate, "dd/MM/yyyy") : "",
-      endDate ? format(endDate, "dd/MM/yyyy") : "",
-      amount
-    );
     if (isRoute) {
       router.push("/offers");
     }
@@ -92,8 +91,8 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
             Trip Start
           </span>
           <DatePicker
-            selected={startDate}
-            onChange={(date) => setStoreStartDate(date)}
+            selected={localTripStart}
+            onChange={(date) => setLocalTripStart(date)}
             dateFormat="dd/MM/yyyy"
             className="w-full !border-none focus:!outline-none focus:!border-none !outline-none"
           />
@@ -103,15 +102,29 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
             Trip End
           </span>
           <DatePicker
-            selected={endDate}
-            onChange={(date) => setStoreEndDate(date)}
+            selected={localTripEnd}
+            onChange={(date) => setLocalTripEnd(date)}
             dateFormat="dd/MM/yyyy"
             className="w-full !ring-offset-0 !border-none focus:!outline-none focus:!border-none !outline-none"
           />
         </div>
       </div>
+      <Button
+        size="sm"
+        rounded="lg"
+        type="button"
+        variant="solid"
+        onClick={handleUpdateTripDates}
+        className="mt-4 mb-7 w-full flex flex-col gap-2 hover:!bg-black text-base !font-bold uppercase"
+      >
+        Get Yachts
+        {/* <p className="text-white">Get Yachts from </p> */}
+        {/* <p className="text-white">
+            {`${localTripStart?.toLocaleDateString()} to ${localTripEnd?.toLocaleDateString()}`}
+          </p> */}
+      </Button>
       {/*  */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 border-t-2 mt-6 border-t-gray-300">
         <div className="mt-4 flex flex-col gap-2">
           <p className="mb-0 text-black text-lg">Currencies:</p>
           <div className="flex gap-4 items-center">
@@ -250,16 +263,6 @@ export default function OfferFilter({ className, isRoute }: BookingFormProps) {
           />
         </div>
       </div>
-
-      <Button
-        size="xl"
-        rounded="lg"
-        type="submit"
-        variant="solid"
-        className="mt-4 w-full hover:!bg-black !py-[14px] text-base !font-bold uppercase tracking-widest"
-      >
-        reserve
-      </Button>
     </form>
   );
 }

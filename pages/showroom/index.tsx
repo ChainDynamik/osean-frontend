@@ -3,7 +3,7 @@ import Image from "next/image";
 import Section from "../../components/Section/Section";
 import YachtCard from "../../components/YachtCard/YachtCard";
 import useYachts from "../../hooks/useYachts";
-import OfferFilter from "../../components/OfferFilter/OfferFilter";
+import ReserveOffer from "../../components/ReserveOffer/ReserveOffer";
 
 // function BoatGrid() {
 //   const { yachts } = useYachts();
@@ -90,7 +90,7 @@ export default function TopBoatsPage() {
   return (
     <main className="!px-10 mt-[5.5rem]">
       <div className="yacht-page-header flex items-center  relative h-[calc(100vh-110px)] w-full">
-        <OfferFilter isRoute className="absolute left-8 bottom-8" />
+        <ReserveOffer isRoute className="absolute left-8 bottom-8" />
         {/* <BookingForm /> */}
         <div className="absolute right-0 bottom-0">
           <Image

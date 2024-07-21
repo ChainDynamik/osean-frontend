@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { format } from "date-fns"; // Import format from date-fns
 import Fuse from "fuse.js";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
@@ -10,6 +11,7 @@ import OffersCard, {
 import OfferFilter from "../../components/OfferFilter/OfferFilter";
 import { useOfferFilterState } from "../../util/store/offerFiltersStore";
 import { CustomDropdown } from "../../components/CustomDropdown/CustomDropdown";
+import { useTripStore } from "../../util/store/tripStore";
 
 type Extra = {
   id: number;
@@ -78,9 +80,16 @@ export default function Offers() {
   const productFilters = useOfferFilterState((state) => state.productFilters);
   const kindFilters = useOfferFilterState((state) => state.kindFilters);
 
+  const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
+  console.log(tripStart, tripEnd, "trips");
+
   async function fetchOffers() {
+    const dateFrom = tripStart ? format(tripStart, "yyyy-MM-dd") : "2024-08-17";
+    const dateTo = tripEnd ? format(tripEnd, "yyyy-MM-dd") : "2024-08-24";
+    console.log(dateFrom, dateTo, "date format-");
+
     const request = await axios.get(
-      `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=2024-08-17T00%3A00%3A00&dateTo=2024-08-24T00%3A00%3A00&companyId=2672&currency=EUR&showOptions=true&passengersOnBoard=1`,
+      `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00&companyId=2672&currency=EUR&showOptions=true&passengersOnBoard=1`,
       {
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
@@ -104,7 +113,7 @@ export default function Offers() {
 
   useEffect(() => {
     if (yachts.length) fetchOffers();
-  }, [yachts, startDate, endDate]);
+  }, [yachts, tripStart, tripEnd]);
 
   const mapOfferToProps = (
     offer: Reservation,
@@ -177,9 +186,11 @@ export default function Offers() {
   });
 
   return (
-    <main className="!px-10 pb-16 mt-[7.5rem]">
-      <div className="flex w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center mb-4">
-        <p className="text-lg font-semibold">{filteredOffers.length} boats</p>
+    <main className="!px-10 pb-16 !mt-[5.5rem]">
+      <div className="flex w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7">
+        <p className="text-lg font-semibold mb-0 ">
+          {filteredOffers.length} boats
+        </p>
         <div className="flex gap-4 items-center">
           <p className="mb-0 text-black">Sort by:</p>
           <CustomDropdown
@@ -193,7 +204,7 @@ export default function Offers() {
         <div className="w-[30%] min-w-[30%]">
           <OfferFilter />
         </div>
-        <div className="flex w-full justify-center items-center flex-col gap-8">
+        <div className="flex w-full items-center flex-col gap-8">
           {sortedOffers.length === 0 && (
             <p className="text-2xl text-black w-full text-center mx-auto">
               No results, please configure filters
