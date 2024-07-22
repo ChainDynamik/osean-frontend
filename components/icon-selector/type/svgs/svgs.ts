@@ -9,3 +9,5 @@ export { default as Calendar } from "../../../../assets/svgs/calendar.svg";
 export { default as Company } from "../../../../assets/svgs/company.svg";
 export { default as Checkbox } from "../../../../assets/svgs/checkbox.svg";
 export { default as Cash } from "../../../../assets/svgs/cash.svg";
+export { default as Boat } from "../../../../assets/svgs/boat.svg";
+export { default as Berth } from "../../../../assets/svgs/berth.svg";

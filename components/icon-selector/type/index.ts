@@ -1,6 +1,8 @@
 import {
   Anchor,
   Bed,
+  Berth,
+  Boat,
   Calendar,
   Cash,
   Checkbox,
@@ -29,5 +31,7 @@ export const ICON_TYPE: {
     company: Company,
     checkbox: Checkbox,
     cash: Cash,
+    boat: Boat,
+    berth: Berth,
   },
 };

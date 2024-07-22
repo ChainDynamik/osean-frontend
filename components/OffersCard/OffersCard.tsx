@@ -176,7 +176,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 {loading ? <Skeleton width={30} /> : `${length} ft`}
               </p>
             </div>
-            <div className="flex gap-1">
+            {/* <div className="flex gap-1">
               <div>
                 <Icon
                   iconType="bed"
@@ -190,7 +190,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   "8 + 2 (convertible salon table)"
                 )}
               </p>
-            </div>
+            </div> */}
             <div className="flex gap-1">
               <div>
                 <Icon
@@ -213,7 +213,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 {loading ? <Skeleton width={30} /> : "3"}
               </p>
             </div>
-            <div className="flex gap-1">
+            {/* <div className="flex gap-1">
               <div>
                 <Icon
                   iconType="location"
@@ -223,7 +223,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
               <p className="mb-0 text-black text-xs">
                 {loading ? <Skeleton width={80} /> : "Full Batten"}
               </p>
-            </div>
+            </div> */}
             <div className="flex gap-1">
               <div>
                 <Icon
@@ -238,7 +238,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
             <div className="flex gap-1">
               <div>
                 <Icon
-                  iconType="cash"
+                  iconType="berth"
                   className="w-4 -translate-y-[1px] text-black"
                 />
               </div>
@@ -249,7 +249,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
             <div className="flex gap-1">
               <div>
                 <Icon
-                  iconType="cash"
+                  iconType="boat"
                   className="w-4 -translate-y-[1px] text-black"
                 />
               </div>

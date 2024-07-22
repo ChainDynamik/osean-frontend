@@ -64,7 +64,9 @@ const sortOptions = [
 export default function Offers() {
   const [offers, setOffers] = useState<OfferWithBoat[]>([]);
   const [sortOption, setSortOption] = useState<string>("");
+  const [hasError, setHasError] = useState<boolean>(false); // Error state
   const { yachts, fetchChrisBoats, getBoatById } = useYachts();
+
   const {
     startDate,
     endDate,
@@ -81,6 +83,7 @@ export default function Offers() {
     passengersOnBoard,
     country,
   } = useOfferApiFilterState();
+
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
 
   async function fetchOffers() {
@@ -125,24 +128,30 @@ export default function Offers() {
     }
     console.log(queryString, "query");
 
-    const request = await axios.get(queryString, {
-      headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
-      },
-    });
+    try {
+      const request = await axios.get(queryString, {
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
+        },
+      });
 
-    const offers: Reservation[] = request.data;
+      const offers: Reservation[] = request.data;
 
-    const offersWithBoats = offers.map((offer) => {
-      const boat = getBoatById(offer.yachtId);
+      const offersWithBoats = offers.map((offer) => {
+        const boat = getBoatById(offer.yachtId);
 
-      return {
-        offer: offer,
-        boat: boat,
-      };
-    });
+        return {
+          offer: offer,
+          boat: boat,
+        };
+      });
 
-    setOffers(offersWithBoats);
+      setOffers(offersWithBoats);
+      setHasError(false); // Reset error state
+    } catch (error) {
+      console.error("Error fetching offers:", error);
+      setHasError(true); // Set error state
+    }
   }
 
   useEffect(() => {
@@ -263,7 +272,9 @@ export default function Offers() {
     <main className="!px-10 pb-16 !mt-[5.5rem]">
       <div className="flex w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7">
         <p className="text-lg font-semibold mb-0 ">
-          {filteredOffers.length} boats
+          {hasError
+            ? "No results, please configure filters"
+            : `${filteredOffers.length} boats`}
         </p>
         <div className="flex gap-4 items-center">
           <p className="mb-0 text-black">Sort by:</p>
@@ -279,28 +290,31 @@ export default function Offers() {
           <OfferApiFilter />
         </div>
         <div className="flex w-full items-center flex-col gap-8">
-          {offers.length === 0
-            ? loadingCards
-            : sortedOffers.map((data, index) => {
-                const boatObject = data.boat;
-                const offerObject = data.offer;
+          {hasError ? (
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Get Quote
+            </button>
+          ) : sortedOffers.length === 0 ? (
+            loadingCards
+          ) : (
+            sortedOffers.map((data, index) => {
+              const boatObject = data.boat;
+              const offerObject = data.offer;
 
-                const offerBoatObject = mapOfferToProps(
-                  offerObject,
-                  boatObject
-                );
+              const offerBoatObject = mapOfferToProps(offerObject, boatObject);
 
-                const image = boatObject?.images[0]?.url;
+              const image = boatObject?.images[0]?.url;
 
-                return (
-                  <OffersCard
-                    key={index}
-                    loading={false}
-                    {...offerBoatObject}
-                    imageUrl={image || ""}
-                  />
-                );
-              })}
+              return (
+                <OffersCard
+                  key={index}
+                  loading={false}
+                  {...offerBoatObject}
+                  imageUrl={image || ""}
+                />
+              );
+            })
+          )}
         </div>
       </div>
     </main>
