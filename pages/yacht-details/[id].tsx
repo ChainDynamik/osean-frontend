@@ -155,16 +155,22 @@ const YachtDetailsPage: FC = () => {
 
   const isLoading = yacht === undefined;
 
+  const planImage =
+    yacht?.images.find((image: any) => image.description === "Plan image")
+      ?.url || "";
+
   return (
     <>
       <div className="container-fluid relative !px-10 pt-20 w-full">
-        {/* {yacht && ( */}
         <GallaryBlock
           loading={isLoading}
           images={yacht?.images.slice(0, 3).map((image: any) => image.url)}
         />
-        {/* )} */}
-        <YachtDetails details={yacht} loading={isLoading} />
+        <YachtDetails
+          details={yacht}
+          loading={isLoading}
+          planImage={planImage}
+        />
         <SimilarYacht />
       </div>
     </>

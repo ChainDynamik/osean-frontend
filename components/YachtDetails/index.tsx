@@ -13,6 +13,7 @@ interface YachtDetailsProps {
 
 export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   const [isViewMore, setIsViewMore] = useState(false);
+  const [isViewMoreExtras, setIsViewMoreExtras] = useState(false);
 
   const selectedExtras = useSelectedExtrasStore(
     (state) => state.selectedExtras
@@ -22,7 +23,6 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   const handleCheckboxChange = (extra: Extra) => {
     toggleExtra(extra);
   };
-  console.log(details, "details");
 
   const specifications = [
     { label: "Name", value: details?.name },
@@ -56,6 +56,13 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   const visibleSpecifications = isViewMore
     ? specifications
     : specifications.slice(0, 3);
+
+  const extras = details?.products.flatMap((product) => product.extras) || [];
+  const visibleExtras = isViewMoreExtras ? extras : extras.slice(0, 10);
+
+  const planImage = details?.images.find(
+    (image) => image.description === "Plan image"
+  )?.url;
 
   return (
     <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16">
@@ -131,44 +138,56 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
           overflow="hidden"
           p="6"
         >
-          {loading
-            ? Array.from({ length: 2 }).map((_, pIndex) => (
-                <Box key={pIndex} mb="4">
-                  <Skeleton width={200} />
-                  <Stack pl="6" mt="1" spacing="1">
-                    {Array.from({ length: 3 }).map((_, eIndex) => (
-                      <Skeleton key={eIndex} height={20} />
-                    ))}
-                  </Stack>
-                </Box>
-              ))
-            : details?.products.map((product, pIndex) => (
-                <Box key={pIndex} mb="4">
-                  <Text fontWeight="bold">{product.name}</Text>
-                  <CheckboxGroup colorScheme="blue">
-                    <Stack pl="6" mt="1" spacing="1">
-                      {product.extras.map((extra) => (
-                        <Checkbox
-                          key={extra.id}
-                          isChecked={selectedExtras.some(
-                            (e) => e.id === extra.id
-                          )}
-                          onChange={() =>
-                            handleCheckboxChange({
-                              id: extra.id,
-                              name: extra.name,
-                              price: extra.price,
-                              currency: extra.currency,
-                            })
-                          }
-                        >
-                          {extra.name} - {extra.price} {extra.currency}
-                        </Checkbox>
-                      ))}
-                    </Stack>
-                  </CheckboxGroup>
-                </Box>
-              ))}
+          {loading ? (
+            Array.from({ length: 2 }).map((_, pIndex) => (
+              <Box key={pIndex} mb="4">
+                <Skeleton width={200} />
+                <Stack pl="6" mt="1" spacing="1">
+                  {Array.from({ length: 3 }).map((_, eIndex) => (
+                    <Skeleton key={eIndex} height={20} />
+                  ))}
+                </Stack>
+              </Box>
+            ))
+          ) : (
+            <>
+              <Text fontWeight="bold">EXTRAS</Text>
+              <CheckboxGroup colorScheme="blue">
+                <Stack pl="6" mt="1" spacing="1">
+                  {visibleExtras.map((extra) => (
+                    <Checkbox
+                      key={extra.id}
+                      isChecked={selectedExtras.some((e) => e.id === extra.id)}
+                      onChange={() =>
+                        handleCheckboxChange({
+                          id: extra.id,
+                          name: extra.name,
+                          price: extra.price,
+                          currency: extra.currency,
+                        })
+                      }
+                    >
+                      {extra.name} - {extra.price} {extra.currency}
+                    </Checkbox>
+                  ))}
+                </Stack>
+              </CheckboxGroup>
+              {extras.length > 10 && (
+                <div
+                  className="mt-2 text-blue-600 cursor-pointer"
+                  onClick={() => setIsViewMoreExtras(!isViewMoreExtras)}
+                >
+                  {isViewMoreExtras ? "View Less" : "View More"}
+                </div>
+              )}
+              {planImage && (
+                <div className="mt-4">
+                  <h3 className="text-xl font-semibold mb-2">Plan Image</h3>
+                  <img src={planImage} alt="Plan" className="w-full h-auto" />
+                </div>
+              )}
+            </>
+          )}
         </Box>
 
         {/* Selected Extras Section */}
