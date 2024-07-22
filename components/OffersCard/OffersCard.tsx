@@ -2,6 +2,7 @@ import Link from "next/link";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Icon from "../icon-selector/icon-selector";
+import { format } from "date-fns";
 
 export type OffersCardProps = {
   yacht: string;
@@ -13,15 +14,15 @@ export type OffersCardProps = {
   length: number;
   currency: string;
   imageUrl?: string;
-  dateFrom: string; // Added dateFrom
-  dateTo: string; // Added dateTo
-  cabins: string; // Added dateTo
-  berths: string; // Added dateTo
-  year: string; // Added dateTo
-  products: string[]; // Added dateTo
+  dateFrom: string;
+  dateTo: string;
+  cabins: string;
+  berths: string;
+  year: string;
+  products: string[];
   kind: string;
   company: string;
-  loading?: boolean; // Added loading prop
+  loading?: boolean;
 };
 
 const OffersCard: React.FC<OffersCardProps> = ({
@@ -32,8 +33,8 @@ const OffersCard: React.FC<OffersCardProps> = ({
   startPrice,
   currency,
   imageUrl,
-  dateFrom, // Added dateFrom
-  dateTo, // Added dateTo
+  dateFrom,
+  dateTo,
   id,
   cabins,
   length,
@@ -42,7 +43,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   products,
   kind,
   company,
-  loading, // Added loading prop
+  loading,
 }) => {
   const calculateDiscountPercentage = (
     startPrice: number,
@@ -52,7 +53,10 @@ const OffersCard: React.FC<OffersCardProps> = ({
   };
 
   const discountPercentage = calculateDiscountPercentage(startPrice, price);
-  console.log();
+
+  const formatDateTime = (dateTime: string) => {
+    return format(new Date(dateTime), "yyyy-MM-dd h:mm a");
+  };
 
   return (
     <Link
@@ -61,20 +65,18 @@ const OffersCard: React.FC<OffersCardProps> = ({
     >
       <div className="w-full flex max-xl:flex-col">
         <p className="text-lg mb-0 text-red-500 ">
-          {/* {loading ? <Skeleton width={200} /> : yacht}{" "} */}
           <span className="ml-2">
-            {loading ? <Skeleton width={50} /> : `(${dateFrom} -`}
+            {loading ? (
+              <Skeleton width={50} />
+            ) : (
+              `(${formatDateTime(dateFrom)} -`
+            )}
           </span>
-          <span>{loading ? <Skeleton width={50} /> : dateTo})</span>
+          <span>
+            {loading ? <Skeleton width={50} /> : formatDateTime(dateTo)})
+          </span>
         </p>
-        {/*  */}
-        {/* <span className="inline-block mx-2 max-xl:hidden">|</span> */}
-
-        {/* <p className="text-lg mb-0 text-green-600">
-          {loading ? <Skeleton width={200} /> : "NEW Owner Version 3 cabin"}
-        </p> */}
       </div>
-      {/*  */}
       <div className="flex gap-4">
         <div className="relative w-[350px] max-h-[150px] h-[150px] border-[1.5px] rounded-md border-black p-2 aspect-video">
           {loading ? (
@@ -101,32 +103,12 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   <Skeleton width={100} />
                 ) : (
                   <>
-                    <span className="font-bold">Base:</span> {startBase} /{" "}
-                    {endBase}
+                    <span className="font-bold">Base:</span> {startBase}
                   </>
                 )}
               </p>
             </div>
-            {/* <div className="flex items-center gap-0.5">
-              <div>
-                <Icon
-                  iconType="company"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
-              </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? (
-                  <Skeleton width={100} />
-                ) : (
-                  <>
-                    <span className="font-bold">Company: </span>
-                    {company}
-                  </>
-                )}
-              </p>
-            </div> */}
           </div>
-          {/*  */}
           <div className="flex gap-4">
             <div className="grid grid-cols-2 gap-y-1.5 gap-x-4 mt-3">
               <div className="flex gap-1">
@@ -183,21 +165,6 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   {loading ? <Skeleton width={30} /> : `${length}m`}
                 </p>
               </div>
-              {/* <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="bed"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
-              </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? (
-                  <Skeleton width={100} />
-                ) : (
-                  "8 + 2 (convertible salon table)"
-                )}
-              </p>
-            </div> */}
               <div className="flex gap-1">
                 <div>
                   <Icon
@@ -220,18 +187,6 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   {loading ? <Skeleton width={30} /> : "3"}
                 </p>
               </div>
-
-              {/* <div className="flex gap-1">
-                <div>
-                  <Icon
-                    iconType="cash"
-                    className="w-4 -translate-y-[1px] text-black"
-                  />
-                </div>
-                <p className="mb-0 text-black text-xs">
-                  {loading ? <Skeleton width={30} /> : currency}
-                </p>
-              </div> */}
               <div className="flex gap-1">
                 <div>
                   <Icon
@@ -243,19 +198,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   {loading ? <Skeleton width={30} /> : berths}
                 </p>
               </div>
-              {/* <div className="flex gap-1">
-                <div>
-                  <Icon
-                    iconType="boat"
-                    className="w-4 -translate-y-[1px] text-black"
-                  />
-                </div>
-                <p className="mb-0 text-black text-xs">
-                  {loading ? <Skeleton width={30} /> : kind}
-                </p>
-              </div> */}
             </div>
-            {/*  */}
             <div className="flex flex-col mt-3">
               <p className="text-xs text-black mb-0 line-through">
                 Price -{" "}
