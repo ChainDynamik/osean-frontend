@@ -37,7 +37,7 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   startDate: null,
   endDate: null,
   amount: null,
-  currencies: [],
+  currencies: ["EUR"],
   minLength: null,
   maxLength: null,
   minBerths: null,
