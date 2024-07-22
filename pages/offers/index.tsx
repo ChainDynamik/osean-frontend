@@ -65,7 +65,6 @@ export default function Offers() {
   const [offers, setOffers] = useState<OfferWithBoat[]>([]);
   const [sortOption, setSortOption] = useState<string>("");
   const { yachts, fetchChrisBoats, getBoatById } = useYachts();
-
   const {
     startDate,
     endDate,
@@ -82,7 +81,6 @@ export default function Offers() {
     passengersOnBoard,
     country,
   } = useOfferApiFilterState();
-
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
 
   async function fetchOffers() {
@@ -215,34 +213,6 @@ export default function Offers() {
     const matchesKindFilter =
       kindFilters.length === 0 || kindFilters.includes(kind.toLowerCase());
 
-    console.log({
-      length,
-      berths,
-      year,
-      kind,
-      withinMinLength,
-      withinMaxLength,
-      withinMinBerths,
-      withinMaxBerths,
-      withinMinYear,
-      withinMaxYear,
-      matchesCurrencyFilter,
-      matchesProductFilter,
-      matchesKindFilter,
-    });
-    console.log(
-      withinMinLength &&
-        withinMaxLength &&
-        withinMinBerths &&
-        withinMaxBerths &&
-        withinMinYear &&
-        withinMaxYear &&
-        matchesCurrencyFilter &&
-        matchesProductFilter &&
-        matchesKindFilter,
-      "the condition"
-    );
-
     return (
       withinMinLength &&
       withinMaxLength &&
@@ -266,6 +236,29 @@ export default function Offers() {
     return 0; // Default: no sorting
   });
 
+  const loadingCards = Array.from({ length: 4 }, (_, index) => (
+    <OffersCard
+      key={index}
+      loading={true}
+      id={index}
+      yacht=""
+      startBase=""
+      endBase=""
+      price={0}
+      startPrice={0}
+      currency=""
+      imageUrl=""
+      dateFrom=""
+      dateTo=""
+      cabins=""
+      length={0}
+      berths=""
+      year=""
+      products={[]}
+      kind=""
+    />
+  ));
+
   return (
     <main className="!px-10 pb-16 !mt-[5.5rem]">
       <div className="flex w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7">
@@ -286,35 +279,28 @@ export default function Offers() {
           <OfferApiFilter />
         </div>
         <div className="flex w-full items-center flex-col gap-8">
-          {sortedOffers.length === 0 && (
-            <p className="text-2xl text-black w-full text-center mx-auto">
-              No results, please configure filters
-            </p>
-          )}
-          {sortedOffers.length !== 0 &&
-            sortedOffers.map((data, index) => {
-              const boatObject = data.boat;
-              const offerObject = data.offer;
+          {offers.length === 0
+            ? loadingCards
+            : sortedOffers.map((data, index) => {
+                const boatObject = data.boat;
+                const offerObject = data.offer;
 
-              const offerBoatObject = mapOfferToProps(offerObject, boatObject);
+                const offerBoatObject = mapOfferToProps(
+                  offerObject,
+                  boatObject
+                );
 
-              console.log(
-                // offerBoatObject,
-                boatObject,
-                // offerObject,
-                "offer + boat "
-              );
+                const image = boatObject?.images[0]?.url;
 
-              const image = boatObject?.images[0]?.url;
-
-              return (
-                <OffersCard
-                  key={index}
-                  {...offerBoatObject}
-                  imageUrl={image || ""}
-                />
-              );
-            })}
+                return (
+                  <OffersCard
+                    key={index}
+                    loading={false}
+                    {...offerBoatObject}
+                    imageUrl={image || ""}
+                  />
+                );
+              })}
         </div>
       </div>
     </main>
