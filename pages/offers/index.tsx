@@ -6,9 +6,7 @@ import { format } from "date-fns";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
-import OffersCard, {
-  OffersCardProps,
-} from "../../components/OffersCard/OffersCard";
+import OffersCard, { OffersCardProps } from "../../components/OffersCard/OffersCard";
 import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
@@ -137,7 +135,7 @@ export default function Offers() {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
         },
       });
-
+      // tsst
       const offers: Reservation[] = request.data;
 
       const offersWithBoats = offers.map((offer) => {
@@ -178,13 +176,8 @@ export default function Offers() {
 
   console.log(offers, "query offers");
 
-  const mapOfferToProps = (
-    offer: Reservation,
-    boat: BookingManagerYacht
-  ): OffersCardProps => {
-    const productNames = boat.products.map((product) =>
-      product.name.toLowerCase()
-    );
+  const mapOfferToProps = (offer: Reservation, boat: BookingManagerYacht): OffersCardProps => {
+    const productNames = boat.products.map((product) => product.name.toLowerCase());
 
     return {
       id: offer.yachtId,
@@ -217,13 +210,8 @@ export default function Offers() {
     const matchesCurrencyFilter = data.offer.currency === currency;
     const matchesProductFilter =
       productFilters.length === 0 ||
-      productFilters.some((filter) =>
-        data.boat.products.some(
-          (product) => product.name.toLowerCase() === filter
-        )
-      );
-    const matchesKindFilter =
-      kindFilters.length === 0 || kindFilters.includes(kind.toLowerCase());
+      productFilters.some((filter) => data.boat.products.some((product) => product.name.toLowerCase() === filter));
+    const matchesKindFilter = kindFilters.length === 0 || kindFilters.includes(kind.toLowerCase());
 
     return (
       withinMinLength &&
@@ -291,9 +279,7 @@ export default function Offers() {
           {hasError && (
             <div className="flex absolute top-[45vh] flex-col gap-4">
               <p className="text-lg font-semibold mb-0 ">
-                {hasError
-                  ? "No results, please configure filters"
-                  : `${filteredOffers.length} boats`}
+                {hasError ? "No results, please configure filters" : `${filteredOffers.length} boats`}
               </p>
               {/*  */}
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
