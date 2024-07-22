@@ -8,7 +8,7 @@ import ReserveOffer from "../../components/ReserveOffer/ReserveOffer";
 function BoatGrid() {
   const { yachts } = useYachts();
 
-  console.log(yachts);
+  console.log(yachts, "my yachts");
 
   const getOrderedImages = (images: any) => {
     const mainImage = images.find(
@@ -62,12 +62,13 @@ function BoatGrid() {
               <YachtCard
                 loading={false}
                 cabins={item.cabins}
+                length={item.length}
                 berths={item.berths}
                 key={item.id}
                 id={item.id}
                 slides={slides}
-                title={item.name}
-                caption={item.kind}
+                title={item.kind}
+                caption={item.model}
                 slug="slug"
                 location={item.homeBase}
                 price={item.deposit + "€"}

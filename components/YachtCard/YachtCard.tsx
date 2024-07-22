@@ -25,6 +25,7 @@ export type ListingItemTypes = {
   slug: string;
   location: string;
   price: string;
+  length: number;
   cabins: number;
   berths: number;
   boatManufacturingDate: string;
@@ -41,6 +42,7 @@ export default function YachtCard({
   boatManufacturingDate,
   cabins,
   berths,
+  length,
   loading = false, // Default loading to false
 }: ListingItemTypes) {
   console.log(price, "id of yacht");
@@ -144,7 +146,7 @@ export default function YachtCard({
                 <span className="bg-gray-400 rounded-full size-1.5"></span>
                 <p className="mb-0 text-black ">{berths} berths</p>
                 <span className="bg-gray-400 rounded-full size-1.5"></span>
-                <p className="mb-0 text-black ">37 ft</p>
+                <p className="mb-0 text-black ">{length}m</p>
               </>
             )}
           </div>
