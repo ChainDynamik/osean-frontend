@@ -124,59 +124,63 @@ const OffersCard: React.FC<OffersCardProps> = ({
             </div>
           </div>
           {/*  */}
-          <div className="grid grid-cols-2 gap-y-1.5 gap-x-4 mt-3">
-            <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="anchor"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
+          <div className="flex gap-4">
+            <div className="grid grid-cols-2 gap-y-1.5 gap-x-4 mt-3">
+              <div className="flex gap-1">
+                <div>
+                  <Icon
+                    iconType="anchor"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                </div>
+                <p className="mb-0 text-black text-xs">
+                  {loading ? <Skeleton width={50} /> : "Catamaran"}
+                </p>
               </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? <Skeleton width={50} /> : "Catamaran"}
-              </p>
-            </div>
-            <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="calendar"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
+              <div className="flex gap-1">
+                <div>
+                  <Icon
+                    iconType="calendar"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                </div>
+                <p className="mb-0 text-black text-xs">
+                  {loading ? <Skeleton width={50} /> : year}
+                </p>
               </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? <Skeleton width={50} /> : year}
-              </p>
-            </div>
-            <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="gift"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
+              <div className="flex gap-1">
+                <div>
+                  <Icon
+                    iconType="gift"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                </div>
+                {loading ? (
+                  <Skeleton width={100} />
+                ) : (
+                  products?.map((product, index) => (
+                    <p
+                      key={index}
+                      className="mb-0 capitalize text-black text-xs"
+                    >
+                      {product}
+                      {index < products.length - 1 && ","}
+                    </p>
+                  ))
+                )}
               </div>
-              {loading ? (
-                <Skeleton width={100} />
-              ) : (
-                products?.map((product, index) => (
-                  <p key={index} className="mb-0 capitalize text-black text-xs">
-                    {product}
-                    {index < products.length - 1 && ","}
-                  </p>
-                ))
-              )}
-            </div>
-            <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="feet"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
+              <div className="flex gap-1">
+                <div>
+                  <Icon
+                    iconType="feet"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                </div>
+                <p className="mb-0 text-black text-xs">
+                  {loading ? <Skeleton width={30} /> : `${length} ft`}
+                </p>
               </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? <Skeleton width={30} /> : `${length} ft`}
-              </p>
-            </div>
-            {/* <div className="flex gap-1">
+              {/* <div className="flex gap-1">
               <div>
                 <Icon
                   iconType="bed"
@@ -191,70 +195,74 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 )}
               </p>
             </div> */}
-            <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="door"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
+              <div className="flex gap-1">
+                <div>
+                  <Icon
+                    iconType="door"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                </div>
+                <p className="mb-0 text-black text-xs">
+                  {loading ? <Skeleton width={30} /> : `${cabins} cab`}
+                </p>
               </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? <Skeleton width={30} /> : `${cabins} cab`}
-              </p>
+              <div className="flex gap-1">
+                <div>
+                  <Icon
+                    iconType="shower"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                </div>
+                <p className="mb-0 text-black text-xs">
+                  {loading ? <Skeleton width={30} /> : "3"}
+                </p>
+              </div>
+
+              <div className="flex gap-1">
+                <div>
+                  <Icon
+                    iconType="cash"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                </div>
+                <p className="mb-0 text-black text-xs">
+                  {loading ? <Skeleton width={30} /> : currency}
+                </p>
+              </div>
+              <div className="flex gap-1">
+                <div>
+                  <Icon
+                    iconType="berth"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                </div>
+                <p className="mb-0 text-black text-xs">
+                  {loading ? <Skeleton width={30} /> : berths}
+                </p>
+              </div>
+              <div className="flex gap-1">
+                <div>
+                  <Icon
+                    iconType="boat"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                </div>
+                <p className="mb-0 text-black text-xs">
+                  {loading ? <Skeleton width={30} /> : kind}
+                </p>
+              </div>
             </div>
-            <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="shower"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
-              </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? <Skeleton width={30} /> : "3"}
+            {/*  */}
+            <div className="flex flex-col">
+              <p className="text-xs  mb-0 line-through">
+                Price - <span className="text-green-500">{startPrice}</span>
               </p>
-            </div>
-            {/* <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="location"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
-              </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? <Skeleton width={80} /> : "Full Batten"}
+              <p className="mb-0 text-sm ">
+                Discount -{" "}
+                <span className="text-green-500 ">{discountPercentage}%</span>
               </p>
-            </div> */}
-            <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="cash"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
-              </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? <Skeleton width={30} /> : currency}
-              </p>
-            </div>
-            <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="berth"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
-              </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? <Skeleton width={30} /> : berths}
-              </p>
-            </div>
-            <div className="flex gap-1">
-              <div>
-                <Icon
-                  iconType="boat"
-                  className="w-4 -translate-y-[1px] text-black"
-                />
-              </div>
-              <p className="mb-0 text-black text-xs">
-                {loading ? <Skeleton width={30} /> : kind}
+              <p className=" mb-0 text-sm ">
+                Price - <span className="text-green-500">{price}</span>
               </p>
             </div>
           </div>
