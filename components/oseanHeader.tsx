@@ -121,15 +121,7 @@ export const OseanHeader: React.FC = () => {
                       Home
                     </a>
                   </li>
-                  <li
-                    className="nav-item animated"
-                    data-animation="fadeInDown"
-                    data-animation-delay="1.2s"
-                  >
-                    <Link className="nav-link" href="/showroom">
-                      Yachts Showroom
-                    </Link>
-                  </li>
+
                   <li
                     className="nav-item animated"
                     data-animation="fadeInDown"
@@ -180,7 +172,7 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.4s"
                   >
-                    <a className="nav-link" href="https://club.osean.online">
+                    <a className="nav-link" href="/club">
                       Club
                     </a>
                   </li>
