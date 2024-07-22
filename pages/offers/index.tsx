@@ -274,11 +274,6 @@ export default function Offers() {
   return (
     <main className="!px-10 pb-16 !mt-[5.5rem]">
       <div className="flex w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7">
-        <p className="text-lg font-semibold mb-0 ">
-          {hasError
-            ? "No results, please configure filters"
-            : `${filteredOffers.length} boats`}
-        </p>
         <div className="flex gap-4 items-center">
           <p className="mb-0 text-black">Sort by:</p>
           <CustomDropdown
@@ -293,13 +288,23 @@ export default function Offers() {
           <OfferApiFilter />
         </div>
         <div className="flex w-full items-center flex-col gap-8">
-          {hasError ? (
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              Get Quote
-            </button>
-          ) : sortedOffers.length === 0 ? (
-            loadingCards
-          ) : (
+          {hasError && (
+            <div className="flex absolute top-[45vh] flex-col gap-4">
+              <p className="text-lg font-semibold mb-0 ">
+                {hasError
+                  ? "No results, please configure filters"
+                  : `${filteredOffers.length} boats`}
+              </p>
+              {/*  */}
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Get Quote
+              </button>
+            </div>
+          )}
+          {!hasError && sortedOffers.length === 0 && loadingCards}
+
+          {!hasError &&
+            sortedOffers.length > 0 &&
             sortedOffers.map((data, index) => {
               const boatObject = data.boat;
               const offerObject = data.offer;
@@ -316,8 +321,7 @@ export default function Offers() {
                   imageUrl={image || ""}
                 />
               );
-            })
-          )}
+            })}
         </div>
       </div>
     </main>
