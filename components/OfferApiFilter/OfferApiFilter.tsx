@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "../../util";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
+import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
 
 interface BookingFormProps {
   className?: string;
@@ -290,17 +291,12 @@ export default function OfferApiFilter({
             className="w-full mt-1 p-2 border border-gray-300 rounded-md"
           />
         </div>
-        <div className="mt-4">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Country
-          </label>
-          <input
-            type="text"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
-        </div>
+      </div>
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Country
+        </label>
+        <CountriesDropdown />
       </div>
     </form>
   );

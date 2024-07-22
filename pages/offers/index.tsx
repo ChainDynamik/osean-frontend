@@ -1,3 +1,5 @@
+// src/pages/offers.tsx
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
@@ -8,9 +10,9 @@ import OffersCard, {
   OffersCardProps,
 } from "../../components/OffersCard/OffersCard";
 import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
-import { CustomDropdown } from "../../components/CustomDropdown/CustomDropdown";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
+import { CustomDropdown } from "../../components/CustomDropdown/CustomDropdown";
 
 type Extra = {
   id: number;
@@ -81,10 +83,11 @@ export default function Offers() {
     productFilters,
     kindFilters,
     passengersOnBoard,
-    country,
+    countries,
   } = useOfferApiFilterState();
 
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
+  console.log(`&countries=[${countries}]`, "chris");
 
   async function fetchOffers() {
     const dateFrom = tripStart ? format(tripStart, "yyyy-MM-dd") : "2024-08-17";
@@ -92,9 +95,10 @@ export default function Offers() {
     console.log(dateFrom, dateTo, "date format-");
 
     let queryString = `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
+    // console.log(`&currency=${currencies}`, "chris");
 
     if (currencies.length > 0) {
-      queryString += `&currency=${currencies.join(",")}`;
+      queryString += `&currency=${currencies}`;
     }
     if (minLength) {
       queryString += `&minLength=${minLength}`;
@@ -123,10 +127,10 @@ export default function Offers() {
     if (passengersOnBoard) {
       queryString += `&passengersOnBoard=${passengersOnBoard}`;
     }
-    if (country) {
-      queryString += `&country=${country}`;
+    if (countries.length > 0) {
+      queryString += `&countries=[${countries}]`;
     }
-    console.log(queryString, "query");
+    // console.log(queryString, "query");
 
     try {
       const request = await axios.get(queryString, {
@@ -170,7 +174,7 @@ export default function Offers() {
     productFilters,
     kindFilters,
     passengersOnBoard,
-    country,
+    countries,
   ]);
 
   console.log(offers, "query offers");

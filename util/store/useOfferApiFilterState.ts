@@ -16,7 +16,7 @@ interface OfferApiFilterState {
   productFilters: string[];
   kindFilters: string[];
   passengersOnBoard: number | null;
-  country: string;
+  countries: string[]; // Change to an array of strings
   setStartDate: (date: Date | null) => void;
   setEndDate: (date: Date | null) => void;
   setAmount: (amount: number | null) => void;
@@ -30,7 +30,7 @@ interface OfferApiFilterState {
   toggleProductFilter: (product: string) => void;
   toggleKindFilter: (kind: string) => void;
   setPassengersOnBoard: (passengers: number | null) => void;
-  setCountry: (country: string) => void;
+  setCountries: (countries: string[]) => void; // Change to handle array
 }
 
 export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
@@ -47,7 +47,7 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   productFilters: [],
   kindFilters: [],
   passengersOnBoard: null,
-  country: "",
+  countries: [], // Initialize as empty array
   setStartDate: (date) => set({ startDate: date }),
   setEndDate: (date) => set({ endDate: date }),
   setAmount: (amount) => set({ amount }),
@@ -76,5 +76,5 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
         : [...state.kindFilters, kind],
     })),
   setPassengersOnBoard: (passengers) => set({ passengersOnBoard: passengers }),
-  setCountry: (country) => set({ country }),
+  setCountries: (countries) => set({ countries }), // Update countries state
 }));

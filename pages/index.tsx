@@ -19,14 +19,14 @@ const Home: NextPage = () => {
 
   if (loading) {
     return (
-    <div>
-    <OseanHeaderLinks />
-    <Loading />
-    </div> 
-    )
+      <div>
+        <OseanHeaderLinks />
+        <Loading />
+      </div>
+    );
   }
 
- /* if (!address) {
+  /* if (!address) {
     return (
       <Container maxW={"1200px"}>
         <Flex h={"50vh"} justifyContent={"center"} alignItems={"center"}>
@@ -40,110 +40,105 @@ const Home: NextPage = () => {
 
   return (
     <Container maxW={"100%"}>
+      <div className="sub-page">
+        <div className="page-header">
+          <div className="img"></div>
+          <div className="head-content container-fluid">
+            <div className="container">
+              <h1 className="page-title">DAO Archive</h1>
 
-              <div className="sub-page">
-                
-                <div className="page-header">
-                    <div className="img"></div>
-                    <div className="head-content container-fluid">
-                        <div className="container">
-                            <h1 className="page-title">DAO Archive</h1>
-                           
-                            <div className="breadcrumb">
-                                <a href="https://osean.online">Home</a> / 
-                                <a className="current">Proposal</a>
-                            </div>
-                           
-                        </div>
-                    </div>
-                </div>
+              <div className="breadcrumb">
+                <a href="https://osean.online">Home</a> /
+                <a className="current">Proposal</a>
+              </div>
             </div>
-    
-    <Container maxW={"1200px"}>
-
-
-
-      <div className="breadcrumb" style={{marginTop:"50px"}}>
-        <Link href="/">Archive &nbsp;</Link> /&nbsp; 
-        <Link href="/vote">Quorum &nbsp;</Link> /&nbsp; 
-        <Link href="/proposals">Submit a Proposal &nbsp;</Link> /&nbsp;
-        <Link href="/decoder">Decode proposal Data</Link>
+          </div>
+        </div>
       </div>
-      <div style={{marginTop:"70px", marginBottom:"50px"}}>
-      
-      <Results />
-      <div style={{marginTop:"50px", marginBottom:"50px"}}>
-      <p style={{ textAlign: 'center' }}> <br />
-          DAO contract on{' '}
-          <a
-            target="_blank"
-            rel="noopener"
-            className="chakra-link chakra-button css-1c0d5xu"
-            href={`https://bscscan.com/address/${DAO_ADDRESS}`}
-          >
-            bscscan{' '}
-            <span
-              style={{ display: 'inline-block' }}
-              className="chakra-button__icon css-1hzyiq5"
-            >
-              <svg
-                stroke="currentColor"
-                fill="none"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                focusable="false"
-                className="chakra-icon css-13otjrl"
-                aria-hidden="true"
-                height="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
+
+      <Container maxW={"1200px"}>
+        <div className="breadcrumb" style={{ marginTop: "50px" }}>
+          <Link href="/">Archive &nbsp;</Link> /&nbsp;
+          <Link href="/vote">Quorum &nbsp;</Link> /&nbsp;
+          <Link href="/proposals">Submit a Proposal &nbsp;</Link> /&nbsp;
+          <Link href="/decoder">Decode proposal Data</Link>
+        </div>
+        <div style={{ marginTop: "70px", marginBottom: "50px" }}>
+          <Results />
+          <div style={{ marginTop: "50px", marginBottom: "50px" }}>
+            <p style={{ textAlign: "center" }}>
+              {" "}
+              <br />
+              DAO contract on{" "}
+              <a
+                target="_blank"
+                rel="noopener"
+                className="chakra-link chakra-button css-1c0d5xu"
+                href={`https://bscscan.com/address/${DAO_ADDRESS}`}
               >
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            </span>
-          </a>
-        </p>
-        <p style={{ textAlign: 'center' }}>
-          Get OSEAN DAO contract ABI {' '}
-          <a
-            target="_blank"
-            rel="noopener"
-            className="chakra-link chakra-button css-1c0d5xu"
-            href={`https://osean.online/assets/daoABI.json`}
-          >
-            here{' '}
-            <span
-              style={{ display: 'inline-block' }}
-              className="chakra-button__icon css-1hzyiq5"
-            >
-              <svg
-                stroke="currentColor"
-                fill="none"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                focusable="false"
-                className="chakra-icon css-13otjrl"
-                aria-hidden="true"
-                height="1em"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
+                bscscan{" "}
+                <span
+                  style={{ display: "inline-block" }}
+                  className="chakra-button__icon css-1hzyiq5"
+                >
+                  <svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    focusable="false"
+                    className="chakra-icon css-13otjrl"
+                    aria-hidden="true"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </span>
+              </a>
+            </p>
+            <p style={{ textAlign: "center" }}>
+              Get OSEAN DAO contract ABI{" "}
+              <a
+                target="_blank"
+                rel="noopener"
+                className="chakra-link chakra-button css-1c0d5xu"
+                href={`https://osean.online/assets/daoABI.json`}
               >
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            </span>
-          </a>
-        </p>
-      </div>
-      </div>
-    </Container>
+                here{" "}
+                <span
+                  style={{ display: "inline-block" }}
+                  className="chakra-button__icon css-1hzyiq5"
+                >
+                  <svg
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    focusable="false"
+                    className="chakra-icon css-13otjrl"
+                    aria-hidden="true"
+                    height="1em"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </span>
+              </a>
+            </p>
+          </div>
+        </div>
+      </Container>
     </Container>
   );
 };
