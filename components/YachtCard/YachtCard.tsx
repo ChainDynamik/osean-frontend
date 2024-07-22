@@ -22,6 +22,7 @@ export type ListingItemTypes = {
   slides: string[];
   caption: string;
   title: string;
+  name: string;
   slug: string;
   location: string;
   price: string;
@@ -42,6 +43,7 @@ export default function YachtCard({
   boatManufacturingDate,
   cabins,
   berths,
+  name,
   length,
   loading = false, // Default loading to false
 }: ListingItemTypes) {
@@ -119,7 +121,7 @@ export default function YachtCard({
       </div>
       <Link href={`/yacht-details/${id}`}>
         <div className="content pt-3 text-black">
-          <div className="text-blue-800 text-lg mb-0.5 flex items-center gap-5">
+          <div className="text-blue-800 text-lg mb-0.5">
             <span className="font-bold">
               {loading ? (
                 <Skeleton width={150} />
@@ -127,6 +129,8 @@ export default function YachtCard({
                 `${caption} (${boatManufacturingDate})`
               )}
             </span>
+            <span className="inline-block mx-1.5">|</span>
+            <span>{name}</span>
           </div>
           <h4 className="text-ellipsis mb-0.5 text-gray-dark !text-lg 2xl:mb-1.5">
             {loading ? <Skeleton width={200} /> : title}

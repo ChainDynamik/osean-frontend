@@ -68,6 +68,7 @@ function BoatGrid() {
                 id={item.id}
                 slides={slides}
                 title={item.kind}
+                name={item.name}
                 caption={item.model}
                 slug="slug"
                 location={item.homeBase}
