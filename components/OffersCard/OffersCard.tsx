@@ -20,6 +20,7 @@ export type OffersCardProps = {
   year: string; // Added dateTo
   products: string[]; // Added dateTo
   kind: string;
+  company: string;
   loading?: boolean; // Added loading prop
 };
 
@@ -40,6 +41,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   year,
   products,
   kind,
+  company,
   loading, // Added loading prop
 }) => {
   const calculateDiscountPercentage = (
@@ -59,18 +61,18 @@ const OffersCard: React.FC<OffersCardProps> = ({
     >
       <div className="w-full flex max-xl:flex-col">
         <p className="text-lg mb-0 text-red-500 ">
-          {loading ? <Skeleton width={200} /> : yacht}{" "}
+          {/* {loading ? <Skeleton width={200} /> : yacht}{" "} */}
           <span className="ml-2">
             {loading ? <Skeleton width={50} /> : `(${dateFrom} -`}
           </span>
           <span>{loading ? <Skeleton width={50} /> : dateTo})</span>
         </p>
         {/*  */}
-        <span className="inline-block mx-2 max-xl:hidden">|</span>
+        {/* <span className="inline-block mx-2 max-xl:hidden">|</span> */}
 
-        <p className="text-lg mb-0 text-green-600">
+        {/* <p className="text-lg mb-0 text-green-600">
           {loading ? <Skeleton width={200} /> : "NEW Owner Version 3 cabin"}
-        </p>
+        </p> */}
       </div>
       {/*  */}
       <div className="flex gap-4">
@@ -99,13 +101,13 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   <Skeleton width={100} />
                 ) : (
                   <>
-                    <span className="font-bold">Base:</span> Lavrion / Olympic
-                    Marina, Greece
+                    <span className="font-bold">Base:</span> {startBase} /{" "}
+                    {endBase}
                   </>
                 )}
               </p>
             </div>
-            <div className="flex items-center gap-0.5">
+            {/* <div className="flex items-center gap-0.5">
               <div>
                 <Icon
                   iconType="company"
@@ -117,11 +119,12 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   <Skeleton width={100} />
                 ) : (
                   <>
-                    <span className="font-bold">Company:</span> South Sea Sail
+                    <span className="font-bold">Company: </span>
+                    {company}
                   </>
                 )}
               </p>
-            </div>
+            </div> */}
           </div>
           {/*  */}
           <div className="flex gap-4">
@@ -134,7 +137,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   />
                 </div>
                 <p className="mb-0 text-black text-xs">
-                  {loading ? <Skeleton width={50} /> : "Catamaran"}
+                  {loading ? <Skeleton width={50} /> : kind}
                 </p>
               </div>
               <div className="flex gap-1">
@@ -177,7 +180,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   />
                 </div>
                 <p className="mb-0 text-black text-xs">
-                  {loading ? <Skeleton width={30} /> : `${length} ft`}
+                  {loading ? <Skeleton width={30} /> : `${length}m`}
                 </p>
               </div>
               {/* <div className="flex gap-1">
@@ -218,7 +221,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 </p>
               </div>
 
-              <div className="flex gap-1">
+              {/* <div className="flex gap-1">
                 <div>
                   <Icon
                     iconType="cash"
@@ -228,7 +231,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 <p className="mb-0 text-black text-xs">
                   {loading ? <Skeleton width={30} /> : currency}
                 </p>
-              </div>
+              </div> */}
               <div className="flex gap-1">
                 <div>
                   <Icon
@@ -240,7 +243,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   {loading ? <Skeleton width={30} /> : berths}
                 </p>
               </div>
-              <div className="flex gap-1">
+              {/* <div className="flex gap-1">
                 <div>
                   <Icon
                     iconType="boat"
@@ -250,19 +253,27 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 <p className="mb-0 text-black text-xs">
                   {loading ? <Skeleton width={30} /> : kind}
                 </p>
-              </div>
+              </div> */}
             </div>
             {/*  */}
             <div className="flex flex-col mt-3">
               <p className="text-xs text-black mb-0 line-through">
-                Price - <span className="text-green-500">{startPrice}</span>
+                Price -{" "}
+                <span className="text-green-500">
+                  {startPrice}
+                  {currency === "EUR" ? "€" : currency === "USD" ? "$" : ""}
+                </span>
               </p>
               <p className="mb-0 text-sm text-black ">
                 Discount -{" "}
                 <span className="text-green-500 ">{discountPercentage}%</span>
               </p>
               <p className=" mb-0 text-sm text-black ">
-                Price - <span className="text-green-500">{price}</span>
+                Price -{" "}
+                <span className="text-green-500">
+                  {price}
+                  {currency === "EUR" ? "€" : currency === "USD" ? "$" : ""}
+                </span>
               </p>
             </div>
           </div>
