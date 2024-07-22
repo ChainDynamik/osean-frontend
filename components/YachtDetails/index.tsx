@@ -22,6 +22,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   const handleCheckboxChange = (extra: Extra) => {
     toggleExtra(extra);
   };
+  console.log(details, "details");
 
   const specifications = [
     { label: "Name", value: details?.name },

@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 import CardModal from "../CardModal/CardModal";
 import { useTransactionStore } from "../../util/store";
 import { useSelectedExtrasStore } from "../../util/store/extraStore";
+import Icon from "../icon-selector/icon-selector";
 
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -178,9 +179,12 @@ export default function PaymentModal({
                 {selectedExtras.map((extra) => (
                   <li
                     key={extra.id}
-                    className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark"
+                    className="flex items-center gap-2 py-1.5 text-base capitalize text-gray-dark"
                   >
-                    {extra.name}
+                    <div>
+                      <Icon iconType="checkbox" className="text-black w-4" />
+                    </div>
+                    <p className="mb-0 text-black">{extra.name}</p>
                   </li>
                 ))}
               </ul>

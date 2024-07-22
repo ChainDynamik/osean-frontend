@@ -10,6 +10,7 @@ import PaymentModal from "../PaymentModal/PaymentModal";
 import Icon from "../icon-selector/icon-selector";
 import { Box, Checkbox, CheckboxGroup, Stack } from "@chakra-ui/react";
 import { useSelectedExtrasStore } from "../../util/store/extraStore";
+import { useTripStore } from "../../util/store/tripStore";
 
 interface BookingFormProps {
   price: number;
@@ -25,9 +26,9 @@ export default function BookingForm({
   className,
 }: BookingFormProps) {
   const [focus, setFocus] = useState<boolean>(false);
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(new Date());
   const [nights, setNights] = useState<number>(1); // Initial number of nights
+
+  const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
   const selectedExtras = useSelectedExtrasStore(
     (state) => state.selectedExtras
   );
@@ -105,8 +106,8 @@ export default function BookingForm({
             Trip Start
           </span>
           <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
+            selected={tripStart}
+            onChange={(date) => setTripStart(date)}
             className="w-full !border-none focus:!outline-none focus:!border-none !outline-none"
           />
         </div>
@@ -115,8 +116,8 @@ export default function BookingForm({
             Trip End
           </span>
           <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
+            selected={tripEnd}
+            onChange={(date) => setTripEnd(date)}
             className="w-full !ring-offset-0 !border-none focus:!outline-none focus:!border-none !outline-none"
           />
         </div>
