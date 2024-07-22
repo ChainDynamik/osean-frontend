@@ -73,7 +73,7 @@ export default function Offers() {
     startDate,
     endDate,
     amount,
-    currencies,
+    currency,
     minLength,
     maxLength,
     minBerths,
@@ -87,7 +87,6 @@ export default function Offers() {
   } = useOfferApiFilterState();
 
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
-  console.log(`&countries=[${countries}]`, "chris");
 
   async function fetchOffers() {
     const dateFrom = tripStart ? format(tripStart, "yyyy-MM-dd") : "2024-08-17";
@@ -97,8 +96,8 @@ export default function Offers() {
     let queryString = `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
     // console.log(`&currency=${currencies}`, "chris");
 
-    if (currencies.length > 0) {
-      queryString += `&currency=${currencies}`;
+    if (currency) {
+      queryString += `&currency=${currency}`;
     }
     if (minLength) {
       queryString += `&minLength=${minLength}`;
@@ -128,7 +127,7 @@ export default function Offers() {
       queryString += `&passengersOnBoard=${passengersOnBoard}`;
     }
     if (countries.length > 0) {
-      queryString += `&countries=[${countries}]`;
+      queryString += `&countries=${countries.join(",")}`;
     }
     // console.log(queryString, "query");
 
@@ -164,7 +163,7 @@ export default function Offers() {
     yachts,
     tripStart,
     tripEnd,
-    currencies,
+    currency,
     minLength,
     maxLength,
     minBerths,
@@ -215,7 +214,7 @@ export default function Offers() {
     const withinMaxBerths = maxBerths ? berths <= maxBerths : true;
     const withinMinYear = minYear ? year >= minYear : true;
     const withinMaxYear = maxYear ? year <= maxYear : true;
-    const matchesCurrencyFilter = currencies.includes(data.offer.currency);
+    const matchesCurrencyFilter = data.offer.currency === currency;
     const matchesProductFilter =
       productFilters.length === 0 ||
       productFilters.some((filter) =>

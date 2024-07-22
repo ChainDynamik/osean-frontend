@@ -10,7 +10,28 @@ import { useRouter } from "next/navigation";
 import { cn } from "../../util";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
-import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
+import Select from "react-select";
+import { COUNTRIES_DATA } from "../../data/countries-data";
+
+const kindOptions = [
+  { value: "sail boat", label: "Sailboat" },
+  { value: "motorboat", label: "Motorboat" },
+  { value: "catamaran", label: "Catamaran" },
+  { value: "gulet", label: "Gulet" },
+  { value: "motorsailer", label: "Motorsailer" },
+  { value: "motoryacht", label: "Motoryacht" },
+  { value: "woodenboat", label: "Woodenboat" },
+  { value: "cruiser", label: "Cruiser" },
+  { value: "powercatamaran", label: "Power Catamaran" },
+  { value: "trimaran", label: "Trimaran" },
+  { value: "houseboat", label: "Houseboat" },
+  { value: "rubberboat", label: "Rubberboat" },
+];
+
+const countryOptions = COUNTRIES_DATA.map((country) => ({
+  value: country.shortName,
+  label: country.name,
+}));
 
 interface BookingFormProps {
   className?: string;
@@ -25,7 +46,7 @@ export default function OfferApiFilter({
 
   // Zustand state
   const amount = useOfferApiFilterState((state) => state.amount);
-  const currencies = useOfferApiFilterState((state) => state.currencies);
+  const currency = useOfferApiFilterState((state) => state.currency);
   const minLength = useOfferApiFilterState((state) => state.minLength);
   const maxLength = useOfferApiFilterState((state) => state.maxLength);
   const minBerths = useOfferApiFilterState((state) => state.minBerths);
@@ -39,13 +60,11 @@ export default function OfferApiFilter({
   const passengersOnBoard = useOfferApiFilterState(
     (state) => state.passengersOnBoard
   );
-  const country = useOfferApiFilterState((state) => state.country);
+  const countries = useOfferApiFilterState((state) => state.countries);
 
   // Zustand actions
   const setStoreAmount = useOfferApiFilterState((state) => state.setAmount);
-  const toggleCurrency = useOfferApiFilterState(
-    (state) => state.toggleCurrency
-  );
+  const setCurrency = useOfferApiFilterState((state) => state.setCurrency);
   const setStoreMinLength = useOfferApiFilterState(
     (state) => state.setMinLength
   );
@@ -63,13 +82,13 @@ export default function OfferApiFilter({
   const toggleProductFilter = useOfferApiFilterState(
     (state) => state.toggleProductFilter
   );
-  const toggleKindFilter = useOfferApiFilterState(
-    (state) => state.toggleKindFilter
+  const setKindFilters = useOfferApiFilterState(
+    (state) => state.setKindFilters
   );
   const setPassengersOnBoard = useOfferApiFilterState(
     (state) => state.setPassengersOnBoard
   );
-  const setCountry = useOfferApiFilterState((state) => state.setCountry);
+  const setCountries = useOfferApiFilterState((state) => state.setCountries);
 
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
 
@@ -85,6 +104,20 @@ export default function OfferApiFilter({
     if (isRoute) {
       router.push("/offers");
     }
+  };
+
+  const handleKindChange = (selectedOptions: any) => {
+    const selectedKinds = selectedOptions
+      ? selectedOptions.map((option: any) => option.value)
+      : [];
+    setKindFilters(selectedKinds);
+  };
+
+  const handleCountryChange = (selectedOptions: any) => {
+    const selectedCountries = selectedOptions
+      ? selectedOptions.map((option: any) => option.value)
+      : [];
+    setCountries(selectedCountries);
   };
 
   return (
@@ -147,27 +180,42 @@ export default function OfferApiFilter({
       </Button>
       <div className="flex flex-col gap-4 border-t-2 mt-6 border-t-gray-300">
         <div className="mt-4 flex flex-col gap-2">
-          <p className="mb-0 text-black text-lg">Currencies:</p>
+          <p className="mb-0 text-black text-lg">Currency:</p>
           <div className="flex gap-4 items-center">
             <label className="inline-flex items-center">
               <input
-                type="checkbox"
-                checked={currencies.includes("EUR")}
-                onChange={() => toggleCurrency("EUR")}
-                className="form-checkbox"
+                type="radio"
+                name="currency"
+                value="EUR"
+                checked={currency === "EUR"}
+                onChange={() => setCurrency("EUR")}
+                className="form-radio"
               />
               <span className="ml-2">EUR</span>
             </label>
-            <label className="inline-flex items-center">
+            {/* <label className="inline-flex items-center">
               <input
-                type="checkbox"
-                checked={currencies.includes("USD")}
-                onChange={() => toggleCurrency("USD")}
-                className="form-checkbox"
+                type="radio"
+                name="currency"
+                value="USD"
+                checked={currency === "USD"}
+                onChange={() => setCurrency("USD")}
+                className="form-radio"
               />
               <span className="ml-2">USD</span>
-            </label>
+            </label> */}
           </div>
+        </div>
+        <div className="mt-4 flex flex-col gap-2">
+          <p className="mb-0 text-black text-lg">Kinds:</p>
+          <Select
+            options={kindOptions}
+            onChange={handleKindChange}
+            isClearable
+            isMulti
+            isSearchable
+            placeholder="Select kinds"
+          />
         </div>
         <div className="mt-4 flex flex-col gap-2">
           <p className="mb-0 text-black text-lg">Products:</p>
@@ -193,18 +241,15 @@ export default function OfferApiFilter({
           </div>
         </div>
         <div className="mt-4 flex flex-col gap-2">
-          <p className="mb-0 text-black text-lg">Kinds:</p>
-          <div className="flex gap-4 items-center">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={kindFilters.includes("sail boat")}
-                onChange={() => toggleKindFilter("sail boat")}
-                className="form-checkbox"
-              />
-              <span className="ml-2">Sail Boat</span>
-            </label>
-          </div>
+          <p className="mb-0 text-black text-lg">Countries:</p>
+          <Select
+            options={countryOptions}
+            onChange={handleCountryChange}
+            isClearable
+            isMulti
+            isSearchable
+            placeholder="Select countries"
+          />
         </div>
       </div>
       <div className="flex justify-between gap-4 items-center">
@@ -291,12 +336,6 @@ export default function OfferApiFilter({
             className="w-full mt-1 p-2 border border-gray-300 rounded-md"
           />
         </div>
-      </div>
-      <div className="mt-4">
-        <label className="block text-sm font-semibold uppercase text-gray-dark">
-          Country
-        </label>
-        <CountriesDropdown />
       </div>
     </form>
   );

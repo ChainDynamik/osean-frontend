@@ -6,7 +6,7 @@ interface OfferApiFilterState {
   startDate: Date | null;
   endDate: Date | null;
   amount: number | null;
-  currencies: string[];
+  currency: string;
   minLength: number | null;
   maxLength: number | null;
   minBerths: number | null;
@@ -16,11 +16,11 @@ interface OfferApiFilterState {
   productFilters: string[];
   kindFilters: string[];
   passengersOnBoard: number | null;
-  countries: string[]; // Change to an array of strings
+  countries: string[];
   setStartDate: (date: Date | null) => void;
   setEndDate: (date: Date | null) => void;
   setAmount: (amount: number | null) => void;
-  toggleCurrency: (currency: string) => void;
+  setCurrency: (currency: string) => void;
   setMinLength: (length: number | null) => void;
   setMaxLength: (length: number | null) => void;
   setMinBerths: (berths: number | null) => void;
@@ -28,16 +28,16 @@ interface OfferApiFilterState {
   setMinYear: (year: number | null) => void;
   setMaxYear: (year: number | null) => void;
   toggleProductFilter: (product: string) => void;
-  toggleKindFilter: (kind: string) => void;
+  setKindFilters: (kinds: string[]) => void;
   setPassengersOnBoard: (passengers: number | null) => void;
-  setCountries: (countries: string[]) => void; // Change to handle array
+  setCountries: (countries: string[]) => void;
 }
 
 export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   startDate: null,
   endDate: null,
   amount: null,
-  currencies: ["EUR"],
+  currency: "EUR",
   minLength: null,
   maxLength: null,
   minBerths: null,
@@ -47,16 +47,11 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   productFilters: [],
   kindFilters: [],
   passengersOnBoard: null,
-  countries: [], // Initialize as empty array
+  countries: [],
   setStartDate: (date) => set({ startDate: date }),
   setEndDate: (date) => set({ endDate: date }),
   setAmount: (amount) => set({ amount }),
-  toggleCurrency: (currency) =>
-    set((state) => ({
-      currencies: state.currencies.includes(currency)
-        ? state.currencies.filter((c) => c !== currency)
-        : [...state.currencies, currency],
-    })),
+  setCurrency: (currency) => set({ currency }),
   setMinLength: (length) => set({ minLength: length }),
   setMaxLength: (length) => set({ maxLength: length }),
   setMinBerths: (berths) => set({ minBerths: berths }),
@@ -69,12 +64,7 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
         ? state.productFilters.filter((p) => p !== product)
         : [...state.productFilters, product],
     })),
-  toggleKindFilter: (kind) =>
-    set((state) => ({
-      kindFilters: state.kindFilters.includes(kind)
-        ? state.kindFilters.filter((k) => k !== kind)
-        : [...state.kindFilters, kind],
-    })),
+  setKindFilters: (kinds) => set({ kindFilters: kinds }),
   setPassengersOnBoard: (passengers) => set({ passengersOnBoard: passengers }),
-  setCountries: (countries) => set({ countries }), // Update countries state
+  setCountries: (countries) => set({ countries }),
 }));
