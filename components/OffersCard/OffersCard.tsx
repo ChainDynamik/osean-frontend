@@ -253,15 +253,15 @@ const OffersCard: React.FC<OffersCardProps> = ({
               </div>
             </div>
             {/*  */}
-            <div className="flex flex-col">
-              <p className="text-xs  mb-0 line-through">
+            <div className="flex flex-col mt-3">
+              <p className="text-xs text-black mb-0 line-through">
                 Price - <span className="text-green-500">{startPrice}</span>
               </p>
-              <p className="mb-0 text-sm ">
+              <p className="mb-0 text-sm text-black ">
                 Discount -{" "}
                 <span className="text-green-500 ">{discountPercentage}%</span>
               </p>
-              <p className=" mb-0 text-sm ">
+              <p className=" mb-0 text-sm text-black ">
                 Price - <span className="text-green-500">{price}</span>
               </p>
             </div>
