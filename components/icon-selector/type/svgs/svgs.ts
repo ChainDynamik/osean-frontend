@@ -11,3 +11,4 @@ export { default as Checkbox } from "../../../../assets/svgs/checkbox.svg";
 export { default as Cash } from "../../../../assets/svgs/cash.svg";
 export { default as Boat } from "../../../../assets/svgs/boat.svg";
 export { default as Berth } from "../../../../assets/svgs/berth.svg";
+export { default as Settings } from "../../../../assets/svgs/settings.svg";

@@ -11,6 +11,7 @@ import {
   Feet,
   Gift,
   Location,
+  Settings,
   Shower,
 } from "./svgs/svgs";
 
@@ -33,5 +34,6 @@ export const ICON_TYPE: {
     cash: Cash,
     boat: Boat,
     berth: Berth,
+    settings: Settings,
   },
 };

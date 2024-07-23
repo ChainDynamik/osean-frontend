@@ -22,6 +22,8 @@ export type OffersCardProps = {
   products: string[];
   kind: string;
   company: string;
+  model: string;
+  name: string;
   loading?: boolean;
 };
 
@@ -31,6 +33,8 @@ const OffersCard: React.FC<OffersCardProps> = ({
   endBase,
   price,
   startPrice,
+  model,
+  name,
   currency,
   imageUrl,
   dateFrom,
@@ -90,7 +94,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
           )}
         </div>
         <div className="w-full">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <div className="flex items-center gap-0.5">
               <div>
                 <Icon
@@ -104,6 +108,42 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 ) : (
                   <>
                     <span className="font-bold">Base:</span> {startBase}
+                  </>
+                )}
+              </p>
+            </div>
+            {/*  */}
+            <div className="flex items-center gap-0.5">
+              <div>
+                <Icon
+                  iconType="boat"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">
+                {loading ? (
+                  <Skeleton width={100} />
+                ) : (
+                  <>
+                    <span className="font-bold">Name:</span> {name}
+                  </>
+                )}
+              </p>
+            </div>
+            {/*  */}
+            <div className="flex items-center gap-0.5">
+              <div>
+                <Icon
+                  iconType="settings"
+                  className="w-4 -translate-y-[1px] text-black"
+                />
+              </div>
+              <p className="mb-0 text-black text-xs">
+                {loading ? (
+                  <Skeleton width={100} />
+                ) : (
+                  <>
+                    <span className="font-bold">Model:</span> {model}
                   </>
                 )}
               </p>

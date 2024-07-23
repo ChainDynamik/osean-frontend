@@ -197,6 +197,8 @@ export default function Offers() {
       dateTo: offer.dateTo,
       passengersOnBoard: boat.passengersOnBoard,
       length: boat.length,
+      name: boat.name,
+      model: boat.model,
       company: boat.company,
       berths: boat.berths,
       cabins: boat.cabins,
