@@ -51,7 +51,7 @@ function BoatGrid() {
   ));
 
   return (
-    <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:gap-y-10">
+    <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 3xl:gap-y-10">
       {isLoading
         ? loadingCards
         : yachts?.map((item) => {
@@ -84,20 +84,22 @@ function BoatGrid() {
 export default function TopBoatsPage() {
   return (
     <main className="!px-10 mt-[5.5rem]">
-      <div className="yacht-page-header flex items-center relative h-[calc(100vh-110px)] w-full">
-        <ReserveOffer isRoute className="absolute left-8 bottom-8" />
-        {/* <BookingForm /> */}
-        <div className="absolute right-0 bottom-0">
-          <Image
-            height={200}
-            width={400}
-            quality={100}
-            alt="discount banner"
-            src="/discounts.jpg"
-          />
+      <div className="yacht-page-header h-[calc(100vh-110px)] w-full">
+        <div className="max-w-[1200px] mx-auto flex items-center relative h-full w-full">
+          <ReserveOffer isRoute className="absolute left-8 bottom-8" />
+          {/* <BookingForm /> */}
+          <div className="absolute right-0 bottom-0">
+            <Image
+              height={200}
+              width={400}
+              quality={100}
+              alt="discount banner"
+              src="/discounts.jpg"
+            />
+          </div>
         </div>
       </div>
-      <section className="py-16 mt-0 px-4">
+      <section className="py-16 mt-0 px-4 max-w-[1200px] mx-auto">
         <div className="mb-12">
           <h3>Top Boat Rentals</h3>
           <p>Unsatiable It Considered Invitation He Traveling Insensible.</p>
