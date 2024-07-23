@@ -13,7 +13,7 @@ export type OffersCardProps = {
   startPrice: number;
   length: number;
   currency: string;
-  passengersOnBoard: string;
+  people: string;
   imageUrl?: string;
   dateFrom: string;
   dateTo: string;
@@ -48,7 +48,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   products,
   kind,
   company,
-  passengersOnBoard,
+  people,
   loading,
 }) => {
   const calculateDiscountPercentage = (
@@ -171,43 +171,44 @@ const OffersCard: React.FC<OffersCardProps> = ({
               <span className="bg-black/70 rounded-full size-1.5"></span>
 
               <p className="mb-0 text-black text-xs">
-                {loading ? <Skeleton width={30} /> : passengersOnBoard}{" "}
-                Passengers
+                {loading ? <Skeleton width={30} /> : people} people
               </p>
             </div>
           </div>
           {/*  */}
           <div className="flex gap-4">
             <div className="grid grid-cols-2 gap-y-1.5 gap-x-4 mt-3">
-              <div className="flex gap-1">
-                <div>
-                  <Icon
-                    iconType="anchor"
-                    className="w-4 -translate-y-[1px] text-black"
-                  />
-                </div>
+              <div className="flex gap-1 items-center">
+                <span className="bg-black/70 rounded-full size-1.5"></span>
+
                 <p className="mb-0 text-black text-xs">
-                  {loading ? <Skeleton width={50} /> : kind}
+                  {loading ? (
+                    <Skeleton width={50} />
+                  ) : (
+                    <span>
+                      <span className="font-bold">Type:</span> {kind}
+                    </span>
+                  )}
                 </p>
               </div>
-              <div className="flex gap-1">
-                <div>
-                  <Icon
-                    iconType="calendar"
-                    className="w-4 -translate-y-[1px] text-black"
-                  />
-                </div>
+              {/*  */}
+              <div className="flex gap-1 items-center">
+                <span className="bg-black/70 rounded-full size-1.5"></span>
+
                 <p className="mb-0 text-black text-xs">
-                  {loading ? <Skeleton width={50} /> : year}
+                  {loading ? (
+                    <Skeleton width={50} />
+                  ) : (
+                    <span>
+                      <span className="font-bold">Berths:</span> {berths}
+                    </span>
+                  )}
                 </p>
               </div>
-              <div className="flex gap-1">
-                <div>
-                  <Icon
-                    iconType="gift"
-                    className="w-4 -translate-y-[1px] text-black"
-                  />
-                </div>
+              {/*  */}
+              <div className="flex gap-1 items-center">
+                <span className="bg-black/70 rounded-full size-1.5"></span>
+
                 {loading ? (
                   <Skeleton width={100} />
                 ) : (
@@ -216,21 +217,24 @@ const OffersCard: React.FC<OffersCardProps> = ({
                       key={index}
                       className="mb-0 capitalize text-black text-xs"
                     >
+                      <span className="font-bold">Product: </span>
                       {product}
                       {index < products.length - 1 && ","}
                     </p>
                   ))
                 )}
               </div>
-              <div className="flex gap-1">
-                <div>
-                  <Icon
-                    iconType="feet"
-                    className="w-4 -translate-y-[1px] text-black"
-                  />
-                </div>
+              <div className="flex gap-1 items-center">
+                <span className="bg-black/70 rounded-full size-1.5"></span>
+
                 <p className="mb-0 text-black text-xs">
-                  {loading ? <Skeleton width={30} /> : `${length}m`}
+                  {loading ? (
+                    <Skeleton width={50} />
+                  ) : (
+                    <span>
+                      <span className="font-bold">Lenght:</span> {length}m
+                    </span>
+                  )}
                 </p>
               </div>
               {/* <div className="flex gap-1 items-center">
@@ -240,21 +244,23 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 </p>
               </div> */}
 
-              <div className="flex gap-1">
-                <div>
-                  <Icon
-                    iconType="berth"
-                    className="w-4 -translate-y-[1px] text-black"
-                  />
-                </div>
+              <div className="flex gap-1 items-center">
+                <span className="bg-black/70 rounded-full size-1.5"></span>
+
                 <p className="mb-0 text-black text-xs">
-                  {loading ? <Skeleton width={30} /> : berths}
+                  {loading ? (
+                    <Skeleton width={50} />
+                  ) : (
+                    <span>
+                      <span className="font-bold">Year:</span> {year}
+                    </span>
+                  )}
                 </p>
               </div>
             </div>
             <div className="flex flex-col mt-3">
               <p className="text-xs text-black mb-0 line-through">
-                Price -{" "}
+                Original price -{" "}
                 <span className="text-green-500">
                   {startPrice}
                   {currency === "EUR" ? "€" : currency === "USD" ? "$" : ""}
