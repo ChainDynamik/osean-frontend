@@ -66,7 +66,7 @@ const sortOptions = [
 export default function Offers() {
   const [offers, setOffers] = useState<OfferWithBoat[]>([]);
   const [sortOption, setSortOption] = useState<string>("");
-  const [hasError, setHasError] = useState<boolean>(false); // Error state
+  const [loading, setLoading] = useState<boolean>(true);
   const { yachts, fetchChrisBoats, getBoatById } = useYachts();
 
   const {
@@ -94,7 +94,6 @@ export default function Offers() {
     console.log(dateFrom, dateTo, "date format-");
 
     let queryString = `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00&companyId=2672`;
-    // console.log(`&currency=${currencies}`, "chris");
 
     if (currency) {
       queryString += `&currency=${currency}`;
@@ -129,7 +128,6 @@ export default function Offers() {
     if (countries.length > 0) {
       queryString += `&countries=${countries.join(",")}`;
     }
-    // console.log(queryString, "query");
 
     try {
       const request = await axios.get(queryString, {
@@ -150,10 +148,10 @@ export default function Offers() {
       });
 
       setOffers(offersWithBoats);
-      setHasError(false); // Reset error state
     } catch (error) {
       console.error("Error fetching offers:", error);
-      setHasError(true); // Set error state
+    } finally {
+      setLoading(false); // Set loading state to false after fetching
     }
   }
 
@@ -269,6 +267,7 @@ export default function Offers() {
       year=""
       products={[]}
       kind=""
+      company=""
     />
   ));
 
@@ -289,22 +288,20 @@ export default function Offers() {
           <OfferApiFilter />
         </div>
         <div className="flex w-full items-center flex-col gap-8">
-          {hasError && (
-            <div className="flex absolute top-[45vh] flex-col gap-4">
+          {!loading && sortedOffers.length === 0 && (
+            <div className="flex flex-col gap-4">
               <p className="text-lg font-semibold mb-0 ">
-                {hasError
-                  ? "No results, please configure filters"
-                  : `${filteredOffers.length} boats`}
+                No results, please configure filters
               </p>
-              {/*  */}
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Get Quote
               </button>
             </div>
           )}
-          {!hasError && sortedOffers.length === 0 && loadingCards}
 
-          {!hasError &&
+          {loading && loadingCards}
+
+          {!loading &&
             sortedOffers.length > 0 &&
             sortedOffers.map((data, index) => {
               const boatObject = data.boat;

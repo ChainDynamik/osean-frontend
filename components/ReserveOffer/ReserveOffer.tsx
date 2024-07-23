@@ -7,6 +7,7 @@ import Button from "../Button/Button";
 import { useRouter } from "next/navigation";
 import { cn } from "../../util";
 import { useTripStore } from "../../util/store/tripStore";
+import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
 
 interface BookingFormProps {
   className?: string;
@@ -85,7 +86,9 @@ export default function ReserveOffer({ className, isRoute }: BookingFormProps) {
           />
         </div>
       </div>
-
+      <div className="mt-4">
+        <CountriesDropdown />
+      </div>
       <Button
         size="xl"
         rounded="lg"

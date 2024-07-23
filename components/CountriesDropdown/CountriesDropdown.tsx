@@ -10,6 +10,7 @@ const countryOptions = COUNTRIES_DATA.map((country) => ({
 
 const CountriesDropdown: React.FC = () => {
   const setCountries = useOfferApiFilterState((state) => state.setCountries);
+  const countries = useOfferApiFilterState((state) => state.countries);
 
   const handleChange = (selectedOptions: any) => {
     const selectedCountries = selectedOptions
@@ -18,14 +19,19 @@ const CountriesDropdown: React.FC = () => {
     setCountries(selectedCountries);
   };
 
+  const selectedOptions = countryOptions.filter((option) =>
+    countries.includes(option.value)
+  );
+
   return (
     <Select
       options={countryOptions}
+      value={selectedOptions}
       onChange={handleChange}
       isClearable
       isMulti
       isSearchable
-      placeholder="Select countries"
+      placeholder="Where would you like to cruise?"
     />
   );
 };

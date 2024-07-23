@@ -12,6 +12,7 @@ import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
 import Select from "react-select";
 import { COUNTRIES_DATA } from "../../data/countries-data";
+import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
 
 const kindOptions = [
   { value: "sail boat", label: "Sailboat" },
@@ -242,14 +243,15 @@ export default function OfferApiFilter({
         </div>
         <div className="mt-4 flex flex-col gap-2">
           <p className="mb-0 text-black text-lg">Countries:</p>
-          <Select
+          {/* <Select
             options={countryOptions}
             onChange={handleCountryChange}
             isClearable
             isMulti
             isSearchable
             placeholder="Select countries"
-          />
+          /> */}
+          <CountriesDropdown />
         </div>
       </div>
       <div className="flex justify-between gap-4 items-center">
