@@ -83,7 +83,7 @@ function BoatGrid() {
 
 export default function TopBoatsPage() {
   return (
-    <main className="!px-10 mt-[5.5rem]">
+    <main className="mt-[5.5rem]">
       <div className="yacht-page-header h-[calc(100vh-110px)] w-full">
         <div className="max-w-[1200px] mx-auto flex items-center relative h-full w-full">
           <ReserveOffer isRoute className="absolute left-8 bottom-8" />

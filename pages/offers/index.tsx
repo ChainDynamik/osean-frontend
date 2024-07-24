@@ -1,5 +1,3 @@
-// src/pages/offers.tsx
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
@@ -311,14 +309,17 @@ export default function Offers() {
 
               const offerBoatObject = mapOfferToProps(offerObject, boatObject);
 
-              const image = boatObject?.images[0]?.url;
+              const mainImage = boatObject?.images.find(
+                (image) => image.description === "Main image"
+              );
+              const imageUrl = mainImage ? mainImage.url : "";
 
               return (
                 <OffersCard
                   key={index}
                   loading={false}
                   {...offerBoatObject}
-                  imageUrl={image || ""}
+                  imageUrl={imageUrl}
                 />
               );
             })}
