@@ -274,6 +274,7 @@ export default function Offers() {
   return (
     <main className="!px-10 pb-16 !mt-[5.5rem]">
       <div className="flex w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7">
+        <p>{sortedOffers.length + 1} Boats</p>
         <div className="flex gap-4 items-center">
           <p className="mb-0 text-black">Sort by:</p>
           <CustomDropdown
