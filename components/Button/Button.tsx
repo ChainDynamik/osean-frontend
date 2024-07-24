@@ -34,11 +34,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={disabled}
         className={cn(
-          "w-full !cursor-pointer text-center bg-black text-white rounded-lg px-4 flex items-center justify-center hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out py-[14px] text-base !font-bold tracking-widest",
+          "w-full !cursor-pointer text-center bg-primary text-white rounded-lg px-4 flex items-center justify-center hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out py-[14px] text-base !font-bold tracking-widest",
           {
             "bg-transparent border hover:!text-white hover:!bg-primary text-primary border-primary":
               variant === "outline",
-            "text-white bg-primary": variant === "secondary",
+            "text-white bg-black": variant === "secondary",
           },
           className
         )}

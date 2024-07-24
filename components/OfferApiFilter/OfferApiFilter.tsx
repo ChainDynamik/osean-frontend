@@ -136,6 +136,11 @@ export default function OfferApiFilter({
         Book your <span className="text-yellow-500">Yacht Charter</span> with{" "}
         <span className="text-blue-500">confidence</span>
       </h2>
+
+      <div className="mt-4 flex flex-col gap-2">
+        <p className="mb-0 text-black text-lg">Destination</p>
+        <CountriesDropdown />
+      </div>
       <div
         className={cn(
           "relative mt-6 grid grid-cols-2 gap-3 rounded-t-lg border border-b-0 border-gray-lighter"
@@ -146,6 +151,7 @@ export default function OfferApiFilter({
             "absolute inset-y-0 left-1/2 translate-x-1/2 border-r border-gray-lighter"
           )}
         ></span>
+
         <div className="p-2">
           <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
             Trip Start
@@ -170,17 +176,15 @@ export default function OfferApiFilter({
         </div>
       </div>
       <Button
-        size="sm"
-        rounded="lg"
         type="button"
-        variant="solid"
+        variant="secondary"
         onClick={handleUpdateTripDates}
         className="mt-4 mb-7 w-full flex flex-col gap-2 hover:!bg-black text-base !font-bold uppercase"
       >
         Filter Dates
       </Button>
       <div className="flex flex-col gap-4 border-t-2 mt-6 border-t-gray-300">
-        <div className="mt-4 flex flex-col gap-2">
+        {/* <div className="mt-4 flex flex-col gap-2">
           <p className="mb-0 text-black text-lg">Currency:</p>
           <div className="flex gap-4 items-center">
             <label className="inline-flex items-center">
@@ -194,21 +198,11 @@ export default function OfferApiFilter({
               />
               <span className="ml-2">EUR</span>
             </label>
-            {/* <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="currency"
-                value="USD"
-                checked={currency === "USD"}
-                onChange={() => setCurrency("USD")}
-                className="form-radio"
-              />
-              <span className="ml-2">USD</span>
-            </label> */}
+       
           </div>
-        </div>
+        </div> */}
         <div className="mt-4 flex flex-col gap-2">
-          <p className="mb-0 text-black text-lg">Kinds:</p>
+          <p className="mb-0 text-black text-lg">Types of boat:</p>
           <Select
             options={kindOptions}
             onChange={handleKindChange}
@@ -240,18 +234,6 @@ export default function OfferApiFilter({
               <span className="ml-2">Crewed</span>
             </label>
           </div>
-        </div>
-        <div className="mt-4 flex flex-col gap-2">
-          <p className="mb-0 text-black text-lg">Countries:</p>
-          {/* <Select
-            options={countryOptions}
-            onChange={handleCountryChange}
-            isClearable
-            isMulti
-            isSearchable
-            placeholder="Select countries"
-          /> */}
-          <CountriesDropdown />
         </div>
       </div>
       <div className="flex justify-between gap-4 items-center">
