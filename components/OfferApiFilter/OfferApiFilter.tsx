@@ -1,5 +1,3 @@
-// src/components/OfferApiFilter/OfferApiFilter.tsx
-
 "use client";
 
 import React, { useState } from "react";
@@ -64,6 +62,7 @@ export default function OfferApiFilter({
     (state) => state.passengersOnBoard
   );
   const countries = useOfferApiFilterState((state) => state.countries);
+  const priceRange = useOfferApiFilterState((state) => state.priceRange);
 
   // Zustand actions
   const setStoreAmount = useOfferApiFilterState((state) => state.setAmount);
@@ -92,12 +91,12 @@ export default function OfferApiFilter({
     (state) => state.setPassengersOnBoard
   );
   const setCountries = useOfferApiFilterState((state) => state.setCountries);
+  const setPriceRange = useOfferApiFilterState((state) => state.setPriceRange);
 
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
 
   const [localTripStart, setLocalTripStart] = useState<Date | null>(tripStart);
   const [localTripEnd, setLocalTripEnd] = useState<Date | null>(tripEnd);
-  const [priceRange, setPriceRange] = useState<number[]>([0, 1000]);
 
   const handleUpdateTripDates = () => {
     setTripStart(localTripStart);
@@ -243,14 +242,14 @@ export default function OfferApiFilter({
           Price Range
         </label>
         <CustomSlider
-          min={100}
-          max={1000}
-          step={100}
+          min={2000}
+          max={5520}
+          step={500}
           defaultValue={priceRange}
           onValueChange={(value) => setPriceRange(value)}
         />
         <div className="flex justify-between mt-2">
-          <span>{priceRange[0]} EUR</span>
+          <span>2000 EUR</span>
           <span>{priceRange[1]} EUR</span>
         </div>
       </div>

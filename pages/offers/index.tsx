@@ -82,6 +82,7 @@ export default function Offers() {
     kindFilters,
     passengersOnBoard,
     countries,
+    priceRange,
   } = useOfferApiFilterState();
 
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
@@ -170,9 +171,11 @@ export default function Offers() {
     kindFilters,
     passengersOnBoard,
     countries,
+    priceRange,
   ]);
 
   console.log(offers, "query offers");
+  console.log(+priceRange[0], +priceRange[1], "wakanda");
 
   const mapOfferToProps = (
     offer: Reservation,
@@ -223,6 +226,8 @@ export default function Offers() {
       );
     const matchesKindFilter =
       kindFilters.length === 0 || kindFilters.includes(kind.toLowerCase());
+    const withinPriceRange =
+      +data.offer.price >= priceRange[0] && +data.offer.price <= priceRange[1];
 
     return (
       withinMinLength &&
@@ -233,7 +238,8 @@ export default function Offers() {
       withinMaxYear &&
       matchesCurrencyFilter &&
       matchesProductFilter &&
-      matchesKindFilter
+      matchesKindFilter &&
+      withinPriceRange
     );
   });
 
@@ -274,7 +280,7 @@ export default function Offers() {
   return (
     <main className="!px-10 pb-16 !mt-[5.5rem]">
       <div className="flex w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7">
-        <p>{sortedOffers.length + 1} Boats</p>
+        <p>{sortedOffers.length} Boats</p>
         <div className="flex gap-4 items-center">
           <p className="mb-0 text-black">Sort by:</p>
           <CustomDropdown

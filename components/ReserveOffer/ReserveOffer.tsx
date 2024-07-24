@@ -90,10 +90,8 @@ export default function ReserveOffer({ className, isRoute }: BookingFormProps) {
         <CountriesDropdown />
       </div>
       <Button
-        size="xl"
-        rounded="lg"
         type="submit"
-        variant="solid"
+        variant="secondary"
         className="mt-4 w-full hover:!bg-black !py-[14px] text-base !font-bold uppercase tracking-widest"
       >
         reserve
