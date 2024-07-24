@@ -17,6 +17,7 @@ interface OfferApiFilterState {
   kindFilters: string[];
   passengersOnBoard: number | null;
   countries: string[];
+  priceRange: number[];
   setStartDate: (date: Date | null) => void;
   setEndDate: (date: Date | null) => void;
   setAmount: (amount: number | null) => void;
@@ -31,6 +32,7 @@ interface OfferApiFilterState {
   setKindFilters: (kinds: string[]) => void;
   setPassengersOnBoard: (passengers: number | null) => void;
   setCountries: (countries: string[]) => void;
+  setPriceRange: (priceRange: number[]) => void;
 }
 
 export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
@@ -48,6 +50,7 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   kindFilters: [],
   passengersOnBoard: null,
   countries: [],
+  priceRange: [0, 1000],
   setStartDate: (date) => set({ startDate: date }),
   setEndDate: (date) => set({ endDate: date }),
   setAmount: (amount) => set({ amount }),
@@ -67,4 +70,5 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   setKindFilters: (kinds) => set({ kindFilters: kinds }),
   setPassengersOnBoard: (passengers) => set({ passengersOnBoard: passengers }),
   setCountries: (countries) => set({ countries }),
+  setPriceRange: (priceRange) => set({ priceRange }),
 }));

@@ -13,6 +13,8 @@ import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState"
 import Select from "react-select";
 import { COUNTRIES_DATA } from "../../data/countries-data";
 import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
+import * as Switch from "@radix-ui/react-switch";
+import CustomSlider from "../CustomSlider/CustomSlider";
 
 const kindOptions = [
   { value: "sail boat", label: "Sailboat" },
@@ -95,6 +97,7 @@ export default function OfferApiFilter({
 
   const [localTripStart, setLocalTripStart] = useState<Date | null>(tripStart);
   const [localTripEnd, setLocalTripEnd] = useState<Date | null>(tripEnd);
+  const [priceRange, setPriceRange] = useState<number[]>([0, 1000]);
 
   const handleUpdateTripDates = () => {
     setTripStart(localTripStart);
@@ -184,23 +187,6 @@ export default function OfferApiFilter({
         Filter Dates
       </Button>
       <div className="flex flex-col gap-4 border-t-2 mt-6 border-t-gray-300">
-        {/* <div className="mt-4 flex flex-col gap-2">
-          <p className="mb-0 text-black text-lg">Currency:</p>
-          <div className="flex gap-4 items-center">
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="currency"
-                value="EUR"
-                checked={currency === "EUR"}
-                onChange={() => setCurrency("EUR")}
-                className="form-radio"
-              />
-              <span className="ml-2">EUR</span>
-            </label>
-       
-          </div>
-        </div> */}
         <div className="mt-4 flex flex-col gap-2">
           <p className="mb-0 text-black text-lg">Types of boat:</p>
           <Select
@@ -214,26 +200,58 @@ export default function OfferApiFilter({
         </div>
         <div className="mt-4 flex flex-col gap-2">
           <p className="mb-0 text-black text-lg">Products:</p>
-          <div className="flex gap-4 items-center">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
+          <div className="flex gap-4 flex-col">
+            <div className="flex items-center gap-2 justify-between">
+              <label
+                className="Label"
+                htmlFor="bareboat"
+                style={{ paddingRight: 15 }}
+              >
+                Bareboat (Without Skipper)
+              </label>
+              <Switch.Root
+                className="SwitchRoot"
+                id="bareboat"
                 checked={productFilters.includes("bareboat")}
-                onChange={() => toggleProductFilter("bareboat")}
-                className="form-checkbox"
-              />
-              <span className="ml-2">Bareboat</span>
-            </label>
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
+                onCheckedChange={() => toggleProductFilter("bareboat")}
+              >
+                <Switch.Thumb className="SwitchThumb" />
+              </Switch.Root>
+            </div>
+            <div className="flex items-center gap-2 justify-between">
+              <label
+                className="Label"
+                htmlFor="crewed"
+                style={{ paddingRight: 15 }}
+              >
+                Crewed (With Skipper)
+              </label>
+              <Switch.Root
+                className="SwitchRoot"
+                id="crewed"
                 checked={productFilters.includes("crewed")}
-                onChange={() => toggleProductFilter("crewed")}
-                className="form-checkbox"
-              />
-              <span className="ml-2">Crewed</span>
-            </label>
+                onCheckedChange={() => toggleProductFilter("crewed")}
+              >
+                <Switch.Thumb className="SwitchThumb" />
+              </Switch.Root>
+            </div>
           </div>
+        </div>
+      </div>
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Price Range
+        </label>
+        <CustomSlider
+          min={100}
+          max={1000}
+          step={100}
+          defaultValue={priceRange}
+          onValueChange={(value) => setPriceRange(value)}
+        />
+        <div className="flex justify-between mt-2">
+          <span>{priceRange[0]} EUR</span>
+          <span>{priceRange[1]} EUR</span>
         </div>
       </div>
       <div className="flex justify-between gap-4 items-center">
