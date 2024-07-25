@@ -14,7 +14,7 @@ const Trigger = forwardRef<TriggerElement, TriggerProps>((props, ref) => {
 
   return (
     <DropdownMenu.Trigger
-      className={cn("w-fit", className)}
+      className={cn("w-fit cursor-pointer", className)}
       asChild={asChild}
       {...triggerProps}
       ref={ref}
@@ -85,7 +85,7 @@ type ItemProps = ComponentPropsWithoutRef<typeof DropdownMenu.Item>;
 const Item = forwardRef<ItemElelment, ItemProps>((props, ref) => {
   return (
     <DropdownMenu.Item
-      className="px-3 !py-2.5 !outline-none bg-white hover:!bg-gray-200 min-w-[100px] border-b-[1px] transition-all ease-in duration-200 flex gap-3"
+      className="px-3 !py-2.5 !outline-none bg-white hover:!bg-gray-200 min-w-[100px] border-b-[1px] flex gap-3"
       ref={ref}
       {...props}
     />
@@ -93,14 +93,6 @@ const Item = forwardRef<ItemElelment, ItemProps>((props, ref) => {
 });
 
 Item.displayName = "DropdownItem";
-// type ItemElelment = ElementRef<typeof DropdownMenu.Item>;
-// type ItemProps = ComponentPropsWithoutRef<typeof DropdownMenu.Item>;
-
-// const Item = forwardRef<ItemElelment, ItemProps>((props, ref) => {
-//   return <DropdownMenu.Item ref={ref} {...props} />;
-// });
-
-// Item.displayName = "DropdownItem";
 
 /* -------------------------------------------------------------------------------------------------
  * SubTrigger

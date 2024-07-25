@@ -14,6 +14,7 @@ import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
 import * as Switch from "@radix-ui/react-switch";
 import * as Slider from "@radix-ui/react-slider";
 import { Dropdown } from "../Dropdown/Dropdown";
+import Icon from "../icon-selector/icon-selector";
 
 const kindOptions = [
   { value: "sail boat", label: "Sailboat" },
@@ -309,7 +310,12 @@ export default function OfferApiFilter({
           </label>
           <Dropdown.Root>
             <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
-              <div>{minLength || "All"}</div>
+              <div className="flex items-center justify-between">
+                <p className="mb-0 text-black">{minLength || "All"}</p>
+                <div>
+                  <Icon iconType="chevron" className="w-3 text-black" />
+                </div>
+              </div>
             </Dropdown.Trigger>
             <Dropdown.Content>
               {lengthOptions.map((option) => (
@@ -329,7 +335,12 @@ export default function OfferApiFilter({
           </label>
           <Dropdown.Root>
             <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
-              <div>{maxLength || "All"}</div>
+              <div className="flex items-center justify-between">
+                <p className="mb-0 text-black">{maxLength || "All"}</p>
+                <div>
+                  <Icon iconType="chevron" className="w-3 text-black" />
+                </div>
+              </div>
             </Dropdown.Trigger>
             <Dropdown.Content>
               {lengthOptions.map((option) => (
@@ -351,7 +362,12 @@ export default function OfferApiFilter({
           </label>
           <Dropdown.Root>
             <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
-              <div>{minYear || "All"}</div>
+              <div className="flex items-center justify-between">
+                <p className="mb-0 text-black">{minYear || "All"}</p>
+                <div>
+                  <Icon iconType="chevron" className="w-3 text-black" />
+                </div>
+              </div>
             </Dropdown.Trigger>
             <Dropdown.Content>
               {yearOptions.map((option) => (
@@ -371,7 +387,12 @@ export default function OfferApiFilter({
           </label>
           <Dropdown.Root>
             <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
-              <div>{maxYear || "All"}</div>
+              <div className="flex items-center justify-between">
+                <p className="mb-0 text-black">{maxYear || "All"}</p>
+                <div>
+                  <Icon iconType="chevron" className="w-3 text-black" />
+                </div>
+              </div>
             </Dropdown.Trigger>
             <Dropdown.Content>
               {yearOptions.map((option) => (
@@ -389,11 +410,16 @@ export default function OfferApiFilter({
       <div className="flex justify-between gap-4 items-center">
         <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Passengers On Board
+            People
           </label>
           <Dropdown.Root>
             <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
-              <div>{passengersOnBoard || "All"}</div>
+              <div className="flex items-center justify-between">
+                <p className="mb-0 text-black">{passengersOnBoard || "All"}</p>
+                <div>
+                  <Icon iconType="chevron" className="w-3 text-black" />
+                </div>
+              </div>
             </Dropdown.Trigger>
             <Dropdown.Content>
               {passengersOptions.map((option) => (
