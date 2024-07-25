@@ -303,15 +303,18 @@ export default function OfferApiFilter({
           <span>{priceRange[1]} EUR</span>
         </div>
       </div>
-      <div className="flex justify-between gap-4 items-center">
+      <div className="flex justify-between items-center">
         <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Min Length
           </label>
           <Dropdown.Root>
-            <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
+            <Dropdown.Trigger className="w-full mt-1 p-2 border-l border-t border-b border-gray-300 rounded-l-md bg-white">
               <div className="flex items-center justify-between">
-                <p className="mb-0 text-black">{minLength || "All"}</p>
+                <p className="mb-0 text-black">
+                  {"< "}
+                  {minLength ? `${minLength} m` : "All"}
+                </p>
                 <div>
                   <Icon iconType="chevron" className="w-3 text-black" />
                 </div>
@@ -334,9 +337,12 @@ export default function OfferApiFilter({
             Max Length
           </label>
           <Dropdown.Root>
-            <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
+            <Dropdown.Trigger className="w-full mt-1 p-2 border-r border-t border-b  border-gray-300 rounded-r-md bg-white">
               <div className="flex items-center justify-between">
-                <p className="mb-0 text-black">{maxLength || "All"}</p>
+                <p className="mb-0 text-black">
+                  {"> "}
+                  {maxLength ? `${maxLength} m` : "All"}
+                </p>
                 <div>
                   <Icon iconType="chevron" className="w-3 text-black" />
                 </div>
@@ -355,14 +361,15 @@ export default function OfferApiFilter({
           </Dropdown.Root>
         </div>
       </div>
-      <div className="flex justify-between gap-4 items-center">
+      <div className="flex justify-between items-center">
         <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Min Year
           </label>
           <Dropdown.Root>
-            <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
+            <Dropdown.Trigger className="w-full mt-1 p-2 border-l border-t border-b border-gray-300 rounded-l-md bg-white">
               <div className="flex items-center justify-between">
+                <div>≥</div>
                 <p className="mb-0 text-black">{minYear || "All"}</p>
                 <div>
                   <Icon iconType="chevron" className="w-3 text-black" />
@@ -386,8 +393,9 @@ export default function OfferApiFilter({
             Max Year
           </label>
           <Dropdown.Root>
-            <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
+            <Dropdown.Trigger className="w-full mt-1 p-2 border-r border-t border-b  border-gray-300 rounded-r-md bg-white">
               <div className="flex items-center justify-between">
+                <div>≤</div>
                 <p className="mb-0 text-black">{maxYear || "All"}</p>
                 <div>
                   <Icon iconType="chevron" className="w-3 text-black" />
