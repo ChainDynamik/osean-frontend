@@ -13,6 +13,7 @@ import { COUNTRIES_DATA } from "../../data/countries-data";
 import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
 import * as Switch from "@radix-ui/react-switch";
 import CustomSlider from "../CustomSlider/CustomSlider";
+import * as Slider from "@radix-ui/react-slider";
 
 const kindOptions = [
   { value: "sail boat", label: "Sailboat" },
@@ -241,15 +242,30 @@ export default function OfferApiFilter({
         <label className="block text-sm font-semibold uppercase text-gray-dark">
           Price Range
         </label>
-        <CustomSlider
+        <Slider.Root
+          className="SliderRoot"
           min={2000}
           max={5520}
           step={500}
           defaultValue={priceRange}
           onValueChange={(value) => setPriceRange(value)}
-        />
+        >
+          <Slider.Track className="SliderTrack">
+            <Slider.Range className="SliderRange" />
+          </Slider.Track>
+          <Slider.Thumb className="SliderThumb" aria-label="Price" />
+        </Slider.Root>
+        {/* <CustomSlider
+          min={2000}
+          max={5520}
+          step={500}
+          
+          defaultValue={priceRange}
+          onValueChange={(value) => setPriceRange(value)}
+        /> */}
         <div className="flex justify-between mt-2">
-          <span>2000 EUR</span>
+          {/* <span>2000 EUR</span> */}
+          <span>{priceRange[0]} EUR</span>
           <span>{priceRange[1]} EUR</span>
         </div>
       </div>

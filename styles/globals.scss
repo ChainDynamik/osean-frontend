@@ -198,21 +198,23 @@ a {
 }
 
 .SliderTrack {
-  background-color: grey;
+  background-color: black;
   position: relative;
   flex-grow: 1;
   border-radius: 9999px;
-  height: 3px;
+  height: 8px;
 }
 
 .SliderRange {
-  background-color: black;
+  background-color: grey;
   position: absolute;
   height: 100%;
   border-radius: 9999px;
+  @apply transition-all duration-300 ease-in-out cursor-grab;
 }
 
 .SliderThumb {
+  @apply hover:scale-110  transition-all duration-300 ease-in-out cursor-grab;
   display: block;
   width: 20px;
   height: 20px;
