@@ -1,15 +1,14 @@
 "use client";
-import { vendorData } from "../../data/listing-details";
+import { FC, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import GallaryBlock from "../../components/GallaryBlock/GallaryBlock";
 import SubscriptionBlock from "../../components/SubscriptionBlock/SubscriptionBlock";
-
-import { useRouter } from "next/router";
-import { FC, useEffect, useState } from "react";
 import YachtDetails, {
   YachtDetailsDataType,
 } from "../../components/YachtDetails";
 import SimilarYacht from "../../components/SimilarYacht/SimilarYacht";
 import useYachts from "../../hooks/useYachts";
+import GridLayout from "../../components/GridLayout/GridLayout";
 
 export const YachtDetailsData: YachtDetailsDataType[] = [
   {
@@ -155,47 +154,50 @@ const YachtDetailsPage: FC = () => {
 
   const isLoading = yacht === undefined;
 
-  const images = yacht?.images || [];
-  const mainImage = images.find(
+  const planImage =
+    yacht?.images.find((image: any) => image.description === "Plan image")
+      ?.url || "";
+
+  const mainImage = yacht?.images.find(
     (image: any) => image.description === "Main image"
   );
-  const interiorImage = images.find(
+  const interiorImage = yacht?.images.find(
     (image: any) => image.description === "Interior image"
   );
-  const otherImages = images.filter(
+  const otherImages = yacht?.images.filter(
     (image: any) =>
       image.description !== "Main image" &&
       image.description !== "Interior image"
   );
 
-  const galleryImages = [
-    mainImage,
-    interiorImage,
-    ...otherImages.slice(0, 1),
-  ].filter(Boolean);
+  const imagesToDisplay = [mainImage, interiorImage, ...(otherImages || [])]
+    .filter(Boolean)
+    .map((image: any) => image.url);
 
-  const planImage =
-    yacht?.images.find((image: any) => image.description === "Plan image")
-      ?.url || "";
+  const maxDisplay = 3; // Number of images to display initially
+  const displayedImages = imagesToDisplay.slice(0, maxDisplay);
+  const remainingCount = imagesToDisplay.length - maxDisplay;
 
   return (
     <>
       <div className="container-fluid relative !px-10 pt-20 w-full">
         <GallaryBlock
           loading={isLoading}
-          images={galleryImages.map((image: any) => image.url)}
+          images={imagesToDisplay.slice(0, 3)}
         />
-        <div className="flex gap-2 mt-2 w-fit mx-auto mb-10">
-          {galleryImages.map((image: any, index: number) => (
-            <div
-              key={index}
-              className="w-24 h-24 bg-cover bg-center"
-              style={{ backgroundImage: `url(${image.url})` }}
-            />
+        <div className="flex gap-2 w-fit mx-auto mb-10">
+          {displayedImages.map((image, index) => (
+            <div key={index} className="relative">
+              <img
+                src={image}
+                alt={`Image ${index + 1}`}
+                className="w-16 h-16 object-cover rounded"
+              />
+            </div>
           ))}
-          {otherImages.length > 1 && (
-            <div className="w-24 h-24 flex items-center justify-center bg-gray-200">
-              +{otherImages.length - 1}
+          {remainingCount > 0 && (
+            <div className="relative flex items-center justify-center w-16 h-16 bg-gray-200 rounded">
+              <span className="text-black text-sm">+{remainingCount}</span>
             </div>
           )}
         </div>
@@ -205,6 +207,9 @@ const YachtDetailsPage: FC = () => {
           planImage={planImage}
         />
         <SimilarYacht />
+        {yacht?.images && (
+          <GridLayout images={yacht?.images.map((image: any) => image.url)} />
+        )}
       </div>
     </>
   );
