@@ -6,6 +6,7 @@ import {
   Calendar,
   Cash,
   Checkbox,
+  Chevron,
   Company,
   Door,
   Feet,
@@ -35,5 +36,6 @@ export const ICON_TYPE: {
     boat: Boat,
     berth: Berth,
     settings: Settings,
+    chevron: Chevron,
   },
 };

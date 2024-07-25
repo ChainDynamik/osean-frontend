@@ -12,8 +12,8 @@ import Select from "react-select";
 import { COUNTRIES_DATA } from "../../data/countries-data";
 import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
 import * as Switch from "@radix-ui/react-switch";
-import CustomSlider from "../CustomSlider/CustomSlider";
 import * as Slider from "@radix-ui/react-slider";
+import { Dropdown } from "../Dropdown/Dropdown";
 
 const kindOptions = [
   { value: "sail boat", label: "Sailboat" },
@@ -34,6 +34,27 @@ const countryOptions = COUNTRIES_DATA.map((country) => ({
   value: country.shortName,
   label: country.name,
 }));
+
+const yearOptions = [{ value: "all", label: "All" }].concat(
+  Array.from({ length: 30 }, (_, i) => 1990 + i).map((year) => ({
+    value: year,
+    label: year.toString(),
+  }))
+);
+
+const lengthOptions = [{ value: "all", label: "All" }].concat(
+  Array.from({ length: 16 }, (_, i) => 5 + i).map((length) => ({
+    value: length,
+    label: length.toString() + " m",
+  }))
+);
+
+const passengersOptions = [{ value: "all", label: "All" }].concat(
+  Array.from({ length: 10 }, (_, i) => 1 + i).map((passengers) => ({
+    value: passengers,
+    label: passengers.toString(),
+  }))
+);
 
 interface BookingFormProps {
   className?: string;
@@ -122,6 +143,26 @@ export default function OfferApiFilter({
       ? selectedOptions.map((option: any) => option.value)
       : [];
     setCountries(selectedCountries);
+  };
+
+  const handleYearChange = (year: number | string, type: "min" | "max") => {
+    if (type === "min") {
+      setStoreMinYear(year === "all" ? null : year);
+    } else {
+      setStoreMaxYear(year === "all" ? null : year);
+    }
+  };
+
+  const handleLengthChange = (length: number | string, type: "min" | "max") => {
+    if (type === "min") {
+      setStoreMinLength(length === "all" ? null : length);
+    } else {
+      setStoreMaxLength(length === "all" ? null : length);
+    }
+  };
+
+  const handlePassengersChange = (passengers: number | string) => {
+    setPassengersOnBoard(passengers === "all" ? null : passengers);
   };
 
   return (
@@ -246,7 +287,7 @@ export default function OfferApiFilter({
           className="SliderRoot"
           min={2000}
           max={5520}
-          step={500}
+          step={100}
           defaultValue={priceRange}
           onValueChange={(value) => setPriceRange(value)}
         >
@@ -257,94 +298,114 @@ export default function OfferApiFilter({
         </Slider.Root>
 
         <div className="flex justify-between mt-2">
-          {/* <span>2000 EUR</span> */}
           <span>{priceRange[0]} EUR</span>
           <span>{priceRange[1]} EUR</span>
         </div>
       </div>
       <div className="flex justify-between gap-4 items-center">
-        <div className="mt-4">
+        <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Min Length
           </label>
-          <input
-            type="number"
-            value={minLength || ""}
-            onChange={(e) => setStoreMinLength(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
+          <Dropdown.Root>
+            <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
+              <div>{minLength || "All"}</div>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {lengthOptions.map((option) => (
+                <Dropdown.Item
+                  key={option.value}
+                  onSelect={() => handleLengthChange(option.value, "min")}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Max Length
           </label>
-          <input
-            type="number"
-            value={maxLength || ""}
-            onChange={(e) => setStoreMaxLength(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
+          <Dropdown.Root>
+            <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
+              <div>{maxLength || "All"}</div>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {lengthOptions.map((option) => (
+                <Dropdown.Item
+                  key={option.value}
+                  onSelect={() => handleLengthChange(option.value, "max")}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         </div>
       </div>
       <div className="flex justify-between gap-4 items-center">
-        <div className="mt-4">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Min Berths
-          </label>
-          <input
-            type="number"
-            value={minBerths || ""}
-            onChange={(e) => setStoreMinBerths(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
-        </div>
-        <div className="mt-4">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Max Berths
-          </label>
-          <input
-            type="number"
-            value={maxBerths || ""}
-            onChange={(e) => setStoreMaxBerths(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
-        </div>
-      </div>
-      <div className="flex justify-between gap-4 items-center">
-        <div className="mt-4">
+        <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Min Year
           </label>
-          <input
-            type="number"
-            value={minYear || ""}
-            onChange={(e) => setStoreMinYear(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
+          <Dropdown.Root>
+            <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
+              <div>{minYear || "All"}</div>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {yearOptions.map((option) => (
+                <Dropdown.Item
+                  key={option.value}
+                  onSelect={() => handleYearChange(option.value, "min")}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Max Year
           </label>
-          <input
-            type="number"
-            value={maxYear || ""}
-            onChange={(e) => setStoreMaxYear(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
+          <Dropdown.Root>
+            <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
+              <div>{maxYear || "All"}</div>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {yearOptions.map((option) => (
+                <Dropdown.Item
+                  key={option.value}
+                  onSelect={() => handleYearChange(option.value, "max")}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         </div>
       </div>
       <div className="flex justify-between gap-4 items-center">
-        <div className="mt-4">
+        <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Passengers On Board
           </label>
-          <input
-            type="number"
-            value={passengersOnBoard || ""}
-            onChange={(e) => setPassengersOnBoard(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
+          <Dropdown.Root>
+            <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
+              <div>{passengersOnBoard || "All"}</div>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {passengersOptions.map((option) => (
+                <Dropdown.Item
+                  key={option.value}
+                  onSelect={() => handlePassengersChange(option.value)}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         </div>
       </div>
     </form>

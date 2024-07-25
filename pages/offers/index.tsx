@@ -226,8 +226,7 @@ export default function Offers() {
       );
     const matchesKindFilter =
       kindFilters.length === 0 || kindFilters.includes(kind.toLowerCase());
-    const withinPriceRange =
-      +data.offer.price >= priceRange[0] && +data.offer.price <= priceRange[1];
+    const withinPriceRange = +data.offer.price >= priceRange[0];
 
     return (
       withinMinLength &&
