@@ -255,14 +255,7 @@ export default function OfferApiFilter({
           </Slider.Track>
           <Slider.Thumb className="SliderThumb" aria-label="Price" />
         </Slider.Root>
-        {/* <CustomSlider
-          min={2000}
-          max={5520}
-          step={500}
-          
-          defaultValue={priceRange}
-          onValueChange={(value) => setPriceRange(value)}
-        /> */}
+
         <div className="flex justify-between mt-2">
           {/* <span>2000 EUR</span> */}
           <span>{priceRange[0]} EUR</span>
