@@ -155,6 +155,25 @@ const YachtDetailsPage: FC = () => {
 
   const isLoading = yacht === undefined;
 
+  const images = yacht?.images || [];
+  const mainImage = images.find(
+    (image: any) => image.description === "Main image"
+  );
+  const interiorImage = images.find(
+    (image: any) => image.description === "Interior image"
+  );
+  const otherImages = images.filter(
+    (image: any) =>
+      image.description !== "Main image" &&
+      image.description !== "Interior image"
+  );
+
+  const galleryImages = [
+    mainImage,
+    interiorImage,
+    ...otherImages.slice(0, 1),
+  ].filter(Boolean);
+
   const planImage =
     yacht?.images.find((image: any) => image.description === "Plan image")
       ?.url || "";
@@ -164,8 +183,22 @@ const YachtDetailsPage: FC = () => {
       <div className="container-fluid relative !px-10 pt-20 w-full">
         <GallaryBlock
           loading={isLoading}
-          images={yacht?.images.slice(0, 3).map((image: any) => image.url)}
+          images={galleryImages.map((image: any) => image.url)}
         />
+        <div className="flex gap-2 mt-2 w-fit mx-auto mb-10">
+          {galleryImages.map((image: any, index: number) => (
+            <div
+              key={index}
+              className="w-24 h-24 bg-cover bg-center"
+              style={{ backgroundImage: `url(${image.url})` }}
+            />
+          ))}
+          {otherImages.length > 1 && (
+            <div className="w-24 h-24 flex items-center justify-center bg-gray-200">
+              +{otherImages.length - 1}
+            </div>
+          )}
+        </div>
         <YachtDetails
           details={yacht}
           loading={isLoading}
