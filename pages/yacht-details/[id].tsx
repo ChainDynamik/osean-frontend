@@ -9,6 +9,7 @@ import YachtDetails, {
 import SimilarYacht from "../../components/SimilarYacht/SimilarYacht";
 import useYachts from "../../hooks/useYachts";
 import GridLayout from "../../components/GridLayout/GridLayout";
+import ImageGridPreview from "../../components/ImageGridPreview/ImageGridPreview";
 
 export const YachtDetailsData: YachtDetailsDataType[] = [
   {
@@ -185,31 +186,33 @@ const YachtDetailsPage: FC = () => {
           loading={isLoading}
           images={imagesToDisplay.slice(0, 3)}
         />
-        <div className="flex gap-2 w-fit mx-auto mb-10">
-          {displayedImages.map((image, index) => (
-            <div key={index} className="relative">
-              <img
-                src={image}
-                alt={`Image ${index + 1}`}
-                className="w-16 h-16 object-cover rounded"
-              />
-            </div>
-          ))}
-          {remainingCount > 0 && (
-            <div className="relative flex items-center justify-center w-16 h-16 bg-gray-200 rounded">
-              <span className="text-black text-sm">+{remainingCount}</span>
-            </div>
-          )}
-        </div>
+        <ImageGridPreview images={yacht?.images.map((image: any) => image.url)}>
+          <div className="flex gap-2 w-fit mx-auto mb-10">
+            {displayedImages.map((image, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={image}
+                  alt={`Image ${index + 1}`}
+                  className="w-16 h-16 object-cover rounded"
+                />
+              </div>
+            ))}
+            {remainingCount > 0 && (
+              <div className="relative flex items-center justify-center w-16 h-16 bg-gray-200 rounded">
+                <span className="text-black text-sm">+{remainingCount}</span>
+              </div>
+            )}
+          </div>
+        </ImageGridPreview>
         <YachtDetails
           details={yacht}
           loading={isLoading}
           planImage={planImage}
         />
         <SimilarYacht />
-        {yacht?.images && (
+        {/* {yacht?.images && (
           <GridLayout images={yacht?.images.map((image: any) => image.url)} />
-        )}
+        )} */}
       </div>
     </>
   );
