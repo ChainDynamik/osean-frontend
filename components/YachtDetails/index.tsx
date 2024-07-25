@@ -5,6 +5,7 @@ import BookingForm from "../BookingForm/BookingForm";
 import { Extra, useSelectedExtrasStore } from "../../util/store/extraStore";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css"; // Import styles
+import Icon from "../icon-selector/icon-selector";
 
 interface YachtDetailsProps {
   details: BookingManagerYacht | null;
@@ -69,14 +70,17 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
       <div className="w-full">
         <div className="mx-auto py-10">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold">
-              {loading ? <Skeleton width={200} /> : details?.name}
+            <h1 className="text-3xl text-primary font-bold">
+              {loading ? <Skeleton width={200} /> : details?.model}
             </h1>
             <p className="text-lg">
               {loading ? (
                 <Skeleton width={300} />
               ) : (
-                `${details?.maxPeopleOnBoard} guests • ${details?.cabins} cabins • ${details?.wc} bathrooms`
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="location" className="w-4 text-black" />
+                  <p className="mb-0">{details?.homeBase}</p>
+                </div>
               )}
             </p>
           </div>
@@ -87,6 +91,69 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
               details?.descriptions?.[0].text || "N/A"
             )}
           </p>
+          {/*  */}
+          <div className="flex gap-8 justify-between">
+            <div className="border-t border-b-black/50 pt-4 h-fit grid grid-cols-2 gap-x-10 gap-y-4 mb-16 mt-4">
+              <div className="flex gap-4 items-center">
+                <div>
+                  <Icon iconType="cabin" className="w-4" />
+                </div>
+                <p className="mb-0 text-black">4 Cabins</p>
+              </div>
+              <div className="flex gap-4 items-center">
+                <div>
+                  <Icon iconType="calendar" className="w-4" />
+                </div>
+                <p className="mb-0 text-black">2023</p>
+              </div>
+              <div className="flex gap-4 items-center">
+                <div>
+                  <Icon iconType="bed" className="w-4" />
+                </div>
+                <p className="mb-0 text-black">8 + 2 Berths</p>
+              </div>
+              <div className="flex gap-4 items-center">
+                <div>
+                  <Icon iconType="mainsail" className="w-4" />
+                </div>
+                <p className="mb-0 text-black">Battened mainsail</p>
+              </div>
+              <div className="flex gap-4 items-center">
+                <div>
+                  <Icon iconType="shower" className="w-4" />
+                </div>
+                <p className="mb-0 text-black">4 showers</p>
+              </div>
+              <div className="flex gap-4 items-center">
+                <div>
+                  <Icon iconType="breadth" className="w-4" />
+                </div>
+                <p className="mb-0 text-black">38 ft (11.73 m)</p>
+              </div>
+              <div className="flex gap-4 items-center">
+                <div>
+                  <Icon iconType="wc" className="w-4" />
+                </div>
+                <p className="mb-0 text-black">4 wc</p>
+              </div>
+              <div className="flex gap-4 items-center">
+                <div>
+                  <Icon iconType="length" className="w-4" />
+                </div>
+                <p className="mb-0 text-black">1.50 m</p>
+              </div>
+            </div>
+            {/*  */}
+            {planImage && (
+              <div className="mt-4 w-fit">
+                <h3 className="text-sm w-fit font-semibold mb-2">Plan Image</h3>
+                <img src={planImage} alt="Plan" className="w-[22rem] h-auto" />
+              </div>
+            )}
+            {/*  */}
+          </div>
+
+          {/*  */}
           <div>
             <h2 className="text-2xl font-semibold mb-4">On Board Equipment</h2>
             <div className="grid grid-cols-2 gap-4">
@@ -178,12 +245,6 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                   onClick={() => setIsViewMoreExtras(!isViewMoreExtras)}
                 >
                   {isViewMoreExtras ? "View Less" : "View More"}
-                </div>
-              )}
-              {planImage && (
-                <div className="mt-4">
-                  <h3 className="text-xl font-semibold mb-2">Plan Image</h3>
-                  <img src={planImage} alt="Plan" className="w-full h-auto" />
                 </div>
               )}
             </>

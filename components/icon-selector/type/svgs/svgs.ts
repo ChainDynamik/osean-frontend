@@ -13,3 +13,8 @@ export { default as Boat } from "../../../../assets/svgs/boat.svg";
 export { default as Berth } from "../../../../assets/svgs/berth.svg";
 export { default as Settings } from "../../../../assets/svgs/settings.svg";
 export { default as Chevron } from "../../../../assets/svgs/chevron.svg";
+export { default as Breadth } from "../../../../assets/svgs/breadth.svg";
+export { default as WC } from "../../../../assets/svgs/wc.svg";
+export { default as Cabin } from "../../../../assets/svgs/cabin.svg";
+export { default as Length } from "../../../../assets/svgs/length.svg";
+export { default as Mainsail } from "../../../../assets/svgs/mainsail.svg";

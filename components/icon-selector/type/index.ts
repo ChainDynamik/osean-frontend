@@ -3,6 +3,8 @@ import {
   Bed,
   Berth,
   Boat,
+  Breadth,
+  Cabin,
   Calendar,
   Cash,
   Checkbox,
@@ -11,9 +13,12 @@ import {
   Door,
   Feet,
   Gift,
+  Length,
   Location,
+  Mainsail,
   Settings,
   Shower,
+  WC,
 } from "./svgs/svgs";
 
 export const ICON_TYPE: {
@@ -37,5 +42,10 @@ export const ICON_TYPE: {
     berth: Berth,
     settings: Settings,
     chevron: Chevron,
+    cabin: Cabin,
+    wc: WC,
+    breadth: Breadth,
+    mainsail: Mainsail,
+    length: Length,
   },
 };
