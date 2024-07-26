@@ -207,7 +207,7 @@ const YachtDetailsPage: FC = () => {
         </ImageGridPreview>
         {/*  */}
         <YachtDetails details={yacht} loading={isLoading} />
-        {/* <SimilarYacht /> */}
+        <SimilarYacht />
         {/* {yacht?.images && (
           <GridLayout images={yacht?.images.map((image: any) => image.url)} />
         )} */}

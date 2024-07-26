@@ -4,6 +4,7 @@ import Section from "../../components/Section/Section";
 import YachtCard from "../../components/YachtCard/YachtCard";
 import useYachts from "../../hooks/useYachts";
 import ReserveOffer from "../../components/ReserveOffer/ReserveOffer";
+import SailYourWay from "../../components/SailYourWay/SailYourWay";
 
 function BoatGrid() {
   const { yachts } = useYachts();
@@ -100,6 +101,8 @@ export default function TopBoatsPage() {
         </div>
       </div>
       <section className="py-16 mt-0 px-4 max-w-[1200px] mx-auto">
+        <SailYourWay />
+
         <div className="mb-12">
           <h3>Top Boat Rentals</h3>
           <p>Unsatiable It Considered Invitation He Traveling Insensible.</p>

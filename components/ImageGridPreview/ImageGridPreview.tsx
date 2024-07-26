@@ -20,12 +20,6 @@ interface ImageGridPreviewProps {
   children?: ReactNode;
   enrollId?: string;
   images: string;
-  price: number;
-  nights: number;
-  discount: number;
-  cleaningFee: number;
-  serviceFee: number;
-  totalFee: number;
 }
 
 export default function ImageGridPreview({
