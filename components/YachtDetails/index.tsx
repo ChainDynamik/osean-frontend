@@ -66,9 +66,9 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   )?.url;
 
   return (
-    <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16">
+    <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16 mt-14 mb-16">
       <div className="w-full">
-        <div className="mx-auto py-10">
+        <div className="mx-auto pb-10">
           <div className="mb-6">
             <h1 className="text-3xl text-primary font-bold">
               {loading ? <Skeleton width={200} /> : details?.model}
@@ -154,6 +154,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
           </div>
 
           {/*  */}
+
           <div>
             <h2 className="text-2xl font-semibold mb-4">On Board Equipment</h2>
             <div className="grid grid-cols-2 gap-4">
@@ -195,6 +196,21 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
             {isViewMore ? "View Less" : "View More"}
           </div>
         </div>
+        {/*  */}
+
+        <Box mt="9" borderWidth="1px" borderRadius="lg" overflow="hidden" p="6">
+          <Text fontWeight="bold" mb={3.5} className="text-black">
+            OBLIGATORY EXTRAS
+          </Text>
+          <CheckboxGroup colorScheme="blue">
+            <Stack mt="1" spacing="1">
+              <Checkbox isChecked={true}>
+                Chorter packoge (end cleaning, bed linen & towels - one
+                sel/person/week - exiTo gos bottle Outboard Engine) - 250 EUR
+              </Checkbox>
+            </Stack>
+          </CheckboxGroup>
+        </Box>
         {/*  */}
 
         {/* Products Section */}
@@ -255,35 +271,6 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
         {/* <SelectedExtras /> */}
 
         {/* Owner Info Section */}
-        <div className="mt-10">
-          <h2 className="text-2xl font-semibold mb-4">Owner Info</h2>
-          {loading ? (
-            <>
-              <Skeleton circle={true} height={64} width={64} />
-              <Skeleton width={150} height={24} />
-              <Skeleton width={100} height={20} />
-            </>
-          ) : (
-            <div className="flex flex-col gap-10">
-              <div className="flex gap-4 items-center">
-                <img
-                  src="/avatar.jpg"
-                  alt="Owner"
-                  className="w-16 h-16 rounded-full"
-                />
-                <div className="flex flex-col">
-                  <p className="font-semibold !mb-0">{details?.company}</p>
-                  <div className="flex items-center">
-                    <span className="text-yellow-500 flex">4.99★</span>
-                    <span className="ml-2 text-gray-600">(20 reviews)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* <Button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">Send a message</Button> */}
-            </div>
-          )}
-        </div>
       </div>
       <div className="hidden w-full max-w-sm pb-11 lg:block xl:max-w-md 3xl:max-w-lg">
         {/* <div className="sticky right-0 top-28 4xl:top-40"> */}

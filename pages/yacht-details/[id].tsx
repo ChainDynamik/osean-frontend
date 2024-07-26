@@ -188,7 +188,7 @@ const YachtDetailsPage: FC = () => {
         />
         {/*  */}
         <ImageGridPreview images={yacht?.images.map((image: any) => image.url)}>
-          <div className="flex gap-2 w-fit mx-auto mb-10">
+          <div className="flex gap-2 w-fit mx-auto mb-10 mt-4">
             {displayedImages.map((image, index) => (
               <div key={index} className="relative">
                 <img
@@ -206,11 +206,7 @@ const YachtDetailsPage: FC = () => {
           </div>
         </ImageGridPreview>
         {/*  */}
-        <YachtDetails
-          details={yacht}
-          loading={isLoading}
-          planImage={planImage}
-        />
+        <YachtDetails details={yacht} loading={isLoading} />
         {/* <SimilarYacht /> */}
         {/* {yacht?.images && (
           <GridLayout images={yacht?.images.map((image: any) => image.url)} />

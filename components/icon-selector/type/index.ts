@@ -7,6 +7,7 @@ import {
   Cabin,
   Calendar,
   Cash,
+  Check,
   Checkbox,
   Chevron,
   Company,
@@ -47,5 +48,6 @@ export const ICON_TYPE: {
     breadth: Breadth,
     mainsail: Mainsail,
     length: Length,
+    check: Check,
   },
 };

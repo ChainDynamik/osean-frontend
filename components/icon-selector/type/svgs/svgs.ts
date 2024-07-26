@@ -18,3 +18,4 @@ export { default as WC } from "../../../../assets/svgs/wc.svg";
 export { default as Cabin } from "../../../../assets/svgs/cabin.svg";
 export { default as Length } from "../../../../assets/svgs/length.svg";
 export { default as Mainsail } from "../../../../assets/svgs/mainsail.svg";
+export { default as Check } from "../../../../assets/svgs/check.svg";

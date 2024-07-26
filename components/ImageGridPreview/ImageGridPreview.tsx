@@ -19,6 +19,7 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 interface ImageGridPreviewProps {
   children?: ReactNode;
   enrollId?: string;
+  images: string;
   price: number;
   nights: number;
   discount: number;
@@ -29,7 +30,6 @@ interface ImageGridPreviewProps {
 
 export default function ImageGridPreview({
   children,
-
   images,
 }: ImageGridPreviewProps) {
   type PaymentMethodType = "card" | "wire";
