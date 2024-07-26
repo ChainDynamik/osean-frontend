@@ -6,6 +6,8 @@ import { Extra, useSelectedExtrasStore } from "../../util/store/extraStore";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css"; // Import styles
 import Icon from "../icon-selector/icon-selector";
+import Image from "next/image";
+import PreviewImage from "../PreviewImage/PreviewImage";
 
 interface YachtDetailsProps {
   details: BookingManagerYacht | null;
@@ -147,7 +149,15 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
             {planImage && (
               <div className="mt-4 w-fit">
                 <h3 className="text-sm w-fit font-semibold mb-2">Plan Image</h3>
-                <img src={planImage} alt="Plan" className="w-[22rem] h-auto" />
+                <PreviewImage src={planImage}>
+                  <Image
+                    width={200}
+                    height={200}
+                    src={planImage}
+                    alt="Plan"
+                    className="w-[22rem] h-auto"
+                  />
+                </PreviewImage>
               </div>
             )}
             {/*  */}

@@ -37,7 +37,7 @@ export default function PreviewImage({ children, src }: PreviewImageProps) {
           </Modal.Close>
           <Image
             src={src}
-            height={500}
+            height={300}
             width={500}
             alt="previe image"
             className="w-full"
