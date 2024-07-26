@@ -4,6 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import Icon from "../icon-selector/icon-selector";
 import { format } from "date-fns";
 import Button from "../Button/Button";
+import PreviewImage from "../PreviewImage/PreviewImage";
 
 export type OffersCardProps = {
   yacht: string;
@@ -84,14 +85,19 @@ const OffersCard: React.FC<OffersCardProps> = ({
       <div className="flex gap-4">
         <div className="relative w-[350px] h-full border-[1.5px] rounded-l-lg overflow-hidden aspect-video">
           {loading ? (
-            <Skeleton height={125} />
+            <Skeleton height={180} />
           ) : (
-            <img
-              className="w-full h-full object-cover aspect-video"
-              src={imageUrl}
-              alt={yacht}
-            />
+            <PreviewImage src={imageUrl}>
+              <img
+                className="w-full h-full object-cover aspect-video"
+                src={imageUrl}
+                alt={yacht}
+              />
+            </PreviewImage>
           )}
+          <span className="bg-negative px-2 rounded-lg inline-block left-2 text-white font-extrabold absolute top-2">
+            -{discountPercentage}%
+          </span>
         </div>
         <div className="w-full py-3 pr-4">
           <p className="text-lg text-primary mb-[0.7rem]">

@@ -248,6 +248,7 @@ export default function BookingForm({
         overflow="hidden"
         p="2"
         pl="4"
+        mt="5"
         className="text-sm font-extrabold bg-black/5"
       >
         A 1000 EURO security deposit will be required by the renter at the base
