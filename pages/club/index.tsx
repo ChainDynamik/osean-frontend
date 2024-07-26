@@ -87,20 +87,34 @@ export default function TopBoatsPage() {
     <main className="mt-[5.5rem]">
       <div className="yacht-page-header h-[calc(100vh-110px)] w-full">
         <div className="max-w-[1200px] mx-auto flex items-center relative h-full w-full">
-          <ReserveOffer isRoute className="absolute left-8 bottom-8" />
+          <ReserveOffer
+            isRoute
+            className="absolute max-h-fit max-sm:w-[90%] max-sm:top-8 max-sm:left-1/2 left-8 max:sm-translate-x-1/2 bottom-8"
+          />
           {/* <BookingForm /> */}
-          <div className="absolute right-0 bottom-0">
+          <div className="max-md:w-4/5 max-md:-translate-x-1/2 max-md:-bottom-8 max-md:left-1/2 absolute max-lghidden right-0 bottom-8">
             <Image
               height={200}
               width={400}
               quality={100}
               alt="discount banner"
-              src="/discounts.jpg"
+              src="/discount-image.jpg"
+              className="rounded-xl shadow-xl"
             />
           </div>
         </div>
       </div>
       <section className="py-16 mt-0 px-4 max-w-[1200px] mx-auto">
+        {/* <div className="abs">
+          <Image
+            height={200}
+            width={400}
+            quality={100}
+            alt="discount banner"
+            src="/discount.jpg"
+          />
+        </div> */}
+
         <SailYourWay />
 
         <div className="mb-12">
