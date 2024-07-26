@@ -100,25 +100,27 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                 <div>
                   <Icon iconType="cabin" className="w-4" />
                 </div>
-                <p className="mb-0 text-black">4 Cabins</p>
+                <p className="mb-0 text-black">{details?.cabins} Cabins</p>
               </div>
               <div className="flex gap-4 items-center">
                 <div>
                   <Icon iconType="calendar" className="w-4" />
                 </div>
-                <p className="mb-0 text-black">2023</p>
+                <p className="mb-0 text-black">{details?.year}</p>
               </div>
               <div className="flex gap-4 items-center">
                 <div>
                   <Icon iconType="bed" className="w-4" />
                 </div>
-                <p className="mb-0 text-black">8 + 2 Berths</p>
+                <p className="mb-0 text-black">{details?.berths} Berths</p>
               </div>
               <div className="flex gap-4 items-center">
                 <div>
                   <Icon iconType="mainsail" className="w-4" />
                 </div>
-                <p className="mb-0 text-black">Battened mainsail</p>
+                <p className="mb-0 text-black">
+                  {details?.mainsailType} mainsail
+                </p>
               </div>
               <div className="flex gap-4 items-center">
                 <div>
@@ -130,19 +132,21 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                 <div>
                   <Icon iconType="breadth" className="w-4" />
                 </div>
-                <p className="mb-0 text-black">38 ft (11.73 m)</p>
+                <p className="mb-0 text-black">
+                  {details?.length} ft ({details?.length * 0.3048} m)
+                </p>
               </div>
               <div className="flex gap-4 items-center">
                 <div>
                   <Icon iconType="wc" className="w-4" />
                 </div>
-                <p className="mb-0 text-black">4 wc</p>
+                <p className="mb-0 text-black">{details?.wc} wc</p>
               </div>
               <div className="flex gap-4 items-center">
                 <div>
                   <Icon iconType="length" className="w-4" />
                 </div>
-                <p className="mb-0 text-black">1.50 m</p>
+                <p className="mb-0 text-black">{details?.draught} m</p>
               </div>
             </div>
             {/*  */}
