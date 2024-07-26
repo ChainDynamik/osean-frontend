@@ -95,7 +95,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
           </p>
           {/*  */}
           <div className="flex gap-8 justify-between">
-            <div className="border-t border-b-black/50 pt-4 h-fit grid grid-cols-2 gap-x-10 gap-y-4 mb-16 mt-4">
+            <div className="border-t border-b-black/50 pt-4 h-fit grid xl:grid-cols-2 gap-x-10 gap-y-4 mb-16 mt-4">
               <div className="flex gap-4 items-center">
                 <div>
                   <Icon iconType="cabin" className="w-4" />
@@ -151,7 +151,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
             </div>
             {/*  */}
             {planImage && (
-              <div className="mt-4 w-fit">
+              <div className="mt-4 w-1/2 xl:w-fit">
                 <h3 className="text-sm w-fit font-semibold mb-2">Plan Image</h3>
                 <PreviewImage src={planImage}>
                   <Image
@@ -159,7 +159,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                     height={200}
                     src={planImage}
                     alt="Plan"
-                    className="w-[22rem] h-auto"
+                    className="w-full xl:w-[22rem] h-auto"
                   />
                 </PreviewImage>
               </div>
@@ -171,7 +171,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
 
           <div>
             <h2 className="text-2xl font-semibold mb-4">On Board Equipment</h2>
-            <div className="grid grid-cols-3 gap-y-8 gap-4">
+            <div className="grid grid-cols-2 xl:grid-cols-3 gap-y-8 gap-4">
               {/*  */}
               <div className="flex flex-col gap-2">
                 <p className="mb-0 font-bold text-black">Misc.</p>
