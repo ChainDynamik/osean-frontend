@@ -16,6 +16,7 @@ import { ChevronLeftIcon } from "../../assets/icons-components/chevronLeft";
 import { ChevronRightIcon } from "../../assets/icons-components/chevronRight";
 import ActionIcon from "../../assets/icons-components/action-icon";
 import { cn } from "../../util";
+import PreviewImage from "../PreviewImage/PreviewImage";
 
 export type ListingItemTypes = {
   id: number;
@@ -80,14 +81,16 @@ export default function YachtCard({
             >
               {slides?.map((slide, index) => (
                 <SwiperSlide key={`slide-${index}`}>
-                  <Image
-                    className="aspect-[34/20] pt-2 !rounded-[0.5rem] aspectvideo bg-gray-lighter"
-                    src={slide}
-                    width={816}
-                    height={600}
-                    alt="boat"
-                    priority
-                  />
+                  <PreviewImage src={slide}>
+                    <Image
+                      className="aspect-[34/20] pt-2 !rounded-[0.5rem] aspectvideo bg-gray-lighter"
+                      src={slide}
+                      width={816}
+                      height={600}
+                      alt="boat"
+                      priority
+                    />
+                  </PreviewImage>
                 </SwiperSlide>
               ))}
             </Swiper>

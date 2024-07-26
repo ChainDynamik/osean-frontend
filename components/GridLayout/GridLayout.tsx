@@ -1,6 +1,7 @@
 import React from "react";
 import Masonry from "react-masonry-css";
 import { cn } from "../../util";
+import PreviewImage from "../PreviewImage/PreviewImage";
 // import "./MasonryGrid.css";
 
 interface Image {
@@ -45,11 +46,13 @@ const GridLayout: React.FC<GridLayoutProps> = ({ images }) => {
         >
           {galleryImages?.map((image, index) => (
             <div key={index} className="w-full">
-              <img
-                src={image}
-                alt={`Yacht Image ${index + 1}`}
-                className="w-full h-auto rounded-lg"
-              />
+              <PreviewImage src={image}>
+                <img
+                  src={image}
+                  alt={`Yacht Image ${index + 1}`}
+                  className="w-full h-auto rounded-lg"
+                />
+              </PreviewImage>
             </div>
           ))}
         </Masonry>

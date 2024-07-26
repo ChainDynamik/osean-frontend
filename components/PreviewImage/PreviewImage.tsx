@@ -2,48 +2,24 @@
 
 import React, { ReactNode, useState } from "react";
 import Modal from "../Modal/Modal";
-import Button from "../Button/Button";
 import Image from "next/image";
-import BlueCardAnimation from "../../assets/lottie/blue-coin.json";
-import OseanModal from "../OseanModal/OseanModal";
 import dynamic from "next/dynamic";
-import CardModal from "../CardModal/CardModal";
-import { useTransactionStore } from "../../util/store";
-import { useSelectedExtrasStore } from "../../util/store/extraStore";
-import Icon from "../icon-selector/icon-selector";
-import GridLayout from "../GridLayout/GridLayout";
 
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-interface ImageGridPreviewProps {
+interface PreviewImageProps {
   children?: ReactNode;
-  images: string;
+  src: string;
 }
 
-export default function ImageGridPreview({
-  children,
-  images,
-}: ImageGridPreviewProps) {
-  type PaymentMethodType = "card" | "wire";
-  const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(
-    null
-  );
-
-  const handlePaymentChoice = (choice: PaymentMethodType) => {
-    setPaymentMethod(choice);
-  };
-
-  const selectedExtras = useSelectedExtrasStore(
-    (state) => state.selectedExtras
-  );
-
+export default function PreviewImage({ children, src }: PreviewImageProps) {
   return (
     <Modal.Root>
       <Modal.Trigger>{children}</Modal.Trigger>
 
-      <Modal.Content className={`w-full h-screen max-h-none`}>
-        <div className="relative bg-white pt-4 min-h-screen pb-10 px-10 rounded-md shadow-lg w-full">
+      <Modal.Content className={`!min-w-[0] !w-fit`}>
+        <div className="relative w-[80vw] bg-white py-4 px-4 rounded-md shadow-lg">
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">
             <svg
               width="100%"
@@ -59,7 +35,14 @@ export default function ImageGridPreview({
               />
             </svg>
           </Modal.Close>
-          <GridLayout images={images} />
+          <Image
+            src={src}
+            height={500}
+            width={500}
+            alt="previe image"
+            className="w-full"
+            // className="w-[70vw]"
+          />
         </div>
       </Modal.Content>
     </Modal.Root>
