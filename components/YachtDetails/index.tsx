@@ -157,7 +157,159 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
 
           <div>
             <h2 className="text-2xl font-semibold mb-4">On Board Equipment</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-y-8 gap-4">
+              {/*  */}
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Misc.</p>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    {" "}
+                    Guides & Maps
+                  </p>
+                </div>
+
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Safety equipment
+                  </p>
+                </div>
+              </div>
+              {/*  */}
+              {/*  */}
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Leisure</p>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    {" "}
+                    Snorkeling gears
+                  </p>
+                </div>
+              </div>
+              {/*  */}
+              {/*  */}
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Kitchen</p>
+
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    {" "}
+                    Electric refrigerator
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80"> Stove</p>
+                </div>
+              </div>
+              {/*  */}
+              {/*  */}
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Electronics</p>
+
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    {" "}
+                    220V converter
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Anemometer
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    {" "}
+                    Autopilot
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Chart plotter
+                  </p>
+                </div>
+
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80"> GPS</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">Sounder</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    {" "}
+                    Speedometer
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">VHF DSC</p>
+                </div>
+              </div>
+              {/*  */}
+              {/*  */}
+
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Deck equipment</p>
+
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80"> Bimini</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Cockpit table
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80"> Bimini</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Deck hand shower
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Electric Windlass
+                  </p>
+                </div>
+              </div>
+              {/*  */}
+              {/*  */}
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Comfort</p>
+
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    {" "}
+                    Fans in cabins
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">Hot water</p>
+                </div>
+              </div>
+              {/*  */}
+            </div>
+            {/* <div className="grid grid-cols-2 gap-4">
               {loading
                 ? Array.from({ length: 8 }).map((_, index) => (
                     <div key={index} className="flex items-center space-x-2">
@@ -171,7 +323,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                       <span>{item}</span>
                     </div>
                   ))}
-            </div>
+            </div> */}
           </div>
         </div>
         {/* Specifications Section */}
