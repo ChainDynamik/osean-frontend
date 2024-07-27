@@ -173,7 +173,7 @@ export default function OfferApiFilter({
         handleReserve();
       }}
       className={cn(
-        "max-w-md rounded-xl border border-gray-lighter bg-white p-8 shadow-card",
+        "rounded-xl border border-gray-lighter bg-white p-8 shadow-card",
         className
       )}
     >

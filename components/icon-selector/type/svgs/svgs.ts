@@ -19,3 +19,5 @@ export { default as Cabin } from "../../../../assets/svgs/cabin.svg";
 export { default as Length } from "../../../../assets/svgs/length.svg";
 export { default as Mainsail } from "../../../../assets/svgs/mainsail.svg";
 export { default as Check } from "../../../../assets/svgs/check.svg";
+export { default as Filter } from "../../../../assets/svgs/filter.svg";
+export { default as Search } from "../../../../assets/svgs/search.svg";

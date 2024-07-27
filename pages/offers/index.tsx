@@ -11,6 +11,7 @@ import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
 import { CustomDropdown } from "../../components/CustomDropdown/CustomDropdown";
+import Icon from "../../components/icon-selector/icon-selector";
 
 type Extra = {
   id: number;
@@ -277,7 +278,7 @@ export default function Offers() {
   ));
 
   return (
-    <main className="!px-10 pb-16 !mt-[5.5rem]">
+    <main className="!px-6 md:!px-10 pb-16 !mt-[9rem] md:!mt-[5.5rem] relative">
       {/* <div className="flex md:w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7 gap-4 flex-wrap">
         <p className="mb-0">{sortedOffers.length} Boats</p>
         <div className="flex gap-4 items-center">
@@ -289,11 +290,11 @@ export default function Offers() {
           />
         </div>
       </div> */}
-      <div className="flex gap-8">
-        <div className="max-lg:hidden w-[30%] min-w-[30%]">
+      <div className="flex gap-12 max-w-[1220px] mx-auto relative">
+        <div className="max-lg:hidden min-w-[30%]">
           <OfferApiFilter />
         </div>
-        <div className="flex w-full items-center flex-col gap-8 mx-auto max-w-[750px]">
+        <div className="flex w-full items-center flex-col gap-8 mx-auto max-w-[750px] relative">
           {!loading && sortedOffers.length === 0 && (
             <div className="flex flex-col gap-4">
               <p className="text-lg font-semibold mb-0 ">
@@ -304,6 +305,23 @@ export default function Offers() {
               </button>
             </div>
           )}
+          <div className="flex md:hidden bg-white z-50 fixed top-24 left-1/2 -translate-x-1/2 items-center border border-primary rounded-xl w-max">
+            <div className="py-2.5 px-3">
+              <Icon
+                iconType="search"
+                className="w-5 text-primary
+              "
+              />
+            </div>
+            <p className="mb-0 text-xs pr-3">Where would you like to cruise?</p>
+            <div className="py-2.5 px-2.5 border-l border-l-primary">
+              <Icon
+                iconType="filter"
+                className="w-5 text-primary
+              "
+              />
+            </div>
+          </div>
           <div className="flex w-full ml-auto justify-between items-center !mb-7 gap-4 flex-wrap">
             <p className="mb-0">{sortedOffers.length} Boats</p>
             <div className="flex gap-4 items-center">
@@ -312,6 +330,7 @@ export default function Offers() {
                 options={sortOptions}
                 selectedOption={sortOption}
                 onSelect={setSortOption}
+                xx
               />
             </div>
           </div>
