@@ -164,9 +164,13 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                 </PreviewImage>
               </div>
             )}
+
             {/*  */}
           </div>
-
+          {/*  */}
+          <div className="lg:hidden mb-12">
+            <BookingForm price={500} averageRating={2.31} totalReviews={312} />
+          </div>
           {/*  */}
 
           <div>
