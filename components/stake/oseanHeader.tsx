@@ -1,5 +1,7 @@
 import React from "react";
 import { ConnectWallet } from "@thirdweb-dev/react";
+import useScreenSize from "../../util/hooks/useScreenSize";
+import { cn } from "../../util";
 export const OseanHeaderLinks: React.FC = () => {
   return (
     <>
@@ -59,10 +61,13 @@ export const OseanHeaderLinks: React.FC = () => {
 };
 
 export const OseanHeader: React.FC = () => {
+  const { isTablet } = useScreenSize();
   function toggleNav() {
-    document
-      .querySelectorAll("#navbarCollapse")[0]
-      .classList.toggle("collapse");
+    if (isTablet) {
+      document
+        .querySelectorAll("#navbarCollapse")[0]
+        .classList.toggle("collapse");
+    }
   }
   return (
     <>
@@ -103,7 +108,12 @@ export const OseanHeader: React.FC = () => {
             >
               <span className="navbar-toggler-icon" />
             </button>
-            <div className="navbar-collapse" id="navbarCollapse">
+            <div
+              className={cn("navbar-collapse", {
+                collapse: isTablet,
+              })}
+              id="navbarCollapse"
+            >
               <div id="navigation" className="navbar-nav ml-auto">
                 <ul className="navbar-nav mt-1">
                   <li
