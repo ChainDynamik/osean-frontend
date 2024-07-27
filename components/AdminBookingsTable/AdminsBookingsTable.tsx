@@ -1,25 +1,5 @@
+// dummyEnrollments.ts
 "use client";
-import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Input,
-  Box,
-  Text,
-  Button,
-} from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import Fuse from "fuse.js";
-import { useMoralis } from "react-moralis";
-import Icon from "../icon-selector/icon-selector";
-import InvoiceModal from "../AdminInvoiceModal/AdminInvoiceModal";
-
-// Dummy enrollments data
 const dummyEnrollments = [
   {
     user: {
@@ -134,6 +114,35 @@ const dummyEnrollments = [
   // Add more dummy enrollments as needed
 ];
 
+// AdminsBookingsTable.tsx
+
+import React, { useEffect, useState } from "react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Input,
+  Box,
+  Text,
+  Button,
+} from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import Fuse from "fuse.js";
+// import InvoiceModal from "../AdminInvoiceModal/AdminInvoiceModal";
+// import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
+import { toast } from "sonner";
+import { useMoralis } from "react-moralis";
+// import DetailsModal from "../DetailsModal/DetailsModal";
+import Icon from "../icon-selector/icon-selector";
+import { cn } from "../../util";
+import InvoiceModal from "../AdminInvoiceModal/AdminInvoiceModal";
+import DetailsModal from "../DetailsModal/DetailsModal";
+import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
+
 const tableHeader = [
   {
     name: "Booking ID",
@@ -226,7 +235,6 @@ const AdminsBookingsTable: React.FC = () => {
           borderColor="gray.300"
           maxH="600px"
           overflowY="auto"
-          overflowX="auto"
         >
           <Table>
             <Thead bg="gray.700">
@@ -252,6 +260,10 @@ const AdminsBookingsTable: React.FC = () => {
               {membersData.map((enrollment) => {
                 const noUploadedInvoice =
                   !enrollment.invoiceURL || enrollment.invoiceURL === "";
+                const ActionComponent = !enrollment.invoiceURL
+                  ? InvoiceModal
+                  : ConfirmDeleteModal;
+
                 return (
                   <Tr
                     key={enrollment.objectId}
@@ -289,9 +301,10 @@ const AdminsBookingsTable: React.FC = () => {
                       borderColor="gray.300"
                       minWidth="200px"
                     >
-                      {new Date(
+                      {/* {new Date(
                         enrollment.course.startDate.iso
-                      ).toLocaleString()}
+                      ).toLocaleString()} */}
+                      {enrollment.course.startDate.iso}
                     </Td>
 
                     <Td
@@ -317,32 +330,16 @@ const AdminsBookingsTable: React.FC = () => {
                     >
                       {enrollment.isPaid ? "Paid" : "Awaiting payment"}
                     </Td>
-
-                    <Td
-                      align="center"
-                      color="black"
-                      fontWeight="500"
-                      fontSize="1.2rem"
-                      border="2px"
-                      borderColor="gray.300"
-                      minWidth="100px"
-                    >
-                      {!enrollment.invoiceURL && (
-                        <InvoiceModal
-                          studentEnrollmentId={enrollment.objectId}
-                          fetchEnrollments={() => {}}
-                        >
-                          <Button
-                            colorScheme={enrollment.invoiceURL ? "red" : "blue"}
-                            className="mx-auto whitespace-nowrap font-medium"
-                          >
-                            {enrollment.invoiceURL
-                              ? "Delete Invoice"
-                              : "Upload Invoice"}
-                          </Button>
-                        </InvoiceModal>
-                      )}
-                      {enrollment.invoiceURL && (
+                    <ActionComponent>
+                      <Td
+                        align="center"
+                        color="black"
+                        fontWeight="500"
+                        fontSize="1.2rem"
+                        border="2px"
+                        borderColor="gray.300"
+                        minWidth="100px"
+                      >
                         <Button
                           colorScheme={enrollment.invoiceURL ? "red" : "blue"}
                           className="mx-auto whitespace-nowrap font-medium"
@@ -351,8 +348,8 @@ const AdminsBookingsTable: React.FC = () => {
                             ? "Delete Invoice"
                             : "Upload Invoice"}
                         </Button>
-                      )}
-                    </Td>
+                      </Td>
+                    </ActionComponent>
 
                     <Td
                       align="center"
