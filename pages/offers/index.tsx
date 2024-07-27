@@ -278,8 +278,8 @@ export default function Offers() {
 
   return (
     <main className="!px-10 pb-16 !mt-[5.5rem]">
-      <div className="flex w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7">
-        <p>{sortedOffers.length} Boats</p>
+      {/* <div className="flex md:w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7 gap-4 flex-wrap">
+        <p className="mb-0">{sortedOffers.length} Boats</p>
         <div className="flex gap-4 items-center">
           <p className="mb-0 text-black">Sort by:</p>
           <CustomDropdown
@@ -288,12 +288,12 @@ export default function Offers() {
             onSelect={setSortOption}
           />
         </div>
-      </div>
+      </div> */}
       <div className="flex gap-8">
-        <div className="w-[30%] min-w-[30%]">
+        <div className="max-lg:hidden w-[30%] min-w-[30%]">
           <OfferApiFilter />
         </div>
-        <div className="flex w-full items-center flex-col gap-8">
+        <div className="flex w-full items-center flex-col gap-8 mx-auto max-w-[750px]">
           {!loading && sortedOffers.length === 0 && (
             <div className="flex flex-col gap-4">
               <p className="text-lg font-semibold mb-0 ">
@@ -304,7 +304,17 @@ export default function Offers() {
               </button>
             </div>
           )}
-
+          <div className="flex w-full ml-auto justify-between items-center !mb-7 gap-4 flex-wrap">
+            <p className="mb-0">{sortedOffers.length} Boats</p>
+            <div className="flex gap-4 items-center">
+              <p className="mb-0 text-black">Sort by:</p>
+              <CustomDropdown
+                options={sortOptions}
+                selectedOption={sortOption}
+                onSelect={setSortOption}
+              />
+            </div>
+          </div>
           {loading && loadingCards}
 
           {!loading &&

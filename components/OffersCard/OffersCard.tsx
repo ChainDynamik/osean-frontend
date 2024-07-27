@@ -82,8 +82,8 @@ const OffersCard: React.FC<OffersCardProps> = ({
           </span>
         </p>
       </div> */}
-      <div className="flex gap-4">
-        <div className="relative w-[350px] h-full border-[1.5px] rounded-l-lg overflow-hidden aspect-video">
+      <div className="flex gap-4  max-md:flex-col">
+        <div className="relative max-md:h-[160px] max-h-[200px] lg:w-[350px] lg:h-full border-[1.5px] rounded-l-lg overflow-hidden aspect-video">
           {loading ? (
             <Skeleton height={180} />
           ) : (
@@ -99,11 +99,11 @@ const OffersCard: React.FC<OffersCardProps> = ({
             -{discountPercentage}%
           </span>
         </div>
-        <div className="w-full py-3 pr-4">
+        <div className="w-full py-3 pr-4 max-md:pl-4">
           <p className="text-lg text-primary mb-[0.7rem]">
             {model} ({year})
           </p>
-          <div className="flex justify-between">
+          <div className="flex justify-between max-md:flex-col">
             <div>
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-0.5">
@@ -155,7 +155,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
               </div>
               {/*  */}
               <div className="flex gap-4 justify-between">
-                <div className="grid grid-cols-2 gap-y-3 gap-x-4 mt-3 h-fit">
+                <div className="grid grid-cols-2 gap-y-3 gap-x-4 mt-3 h-fit max-mdflex max-mdflex-col">
                   <div className="flex gap-1 items-center">
                     <Icon
                       iconType="anchor"
@@ -218,7 +218,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
               </div>
             </div>
             {/*  */}
-            <div className="flex flex-col">
+            <div className="flex flex-col max-md:mt-4">
               <p className="text-xs text-black mb-0 line-through">
                 Original price -{" "}
                 <span className="text-green-500">
