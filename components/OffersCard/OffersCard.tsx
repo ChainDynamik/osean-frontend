@@ -91,7 +91,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
           <p className="text-lg text-primary mb-[0.7rem]">
             {loading ? <Skeleton width={100} /> : `${model} (${year})`}
           </p>
-          <div className="flex justify-between max-md:flex-col">
+          <div className="flex justify-between max-md:flex-col gap-4 max-[1200px]:flex-col">
             <div>
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-0.5">
@@ -130,7 +130,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   </p>
                 </div>
               </div>
-              <div className="flex gap-4 justify-between mt-3 h-fit max-mdflex max-mdflex-col">
+              <div className="flex gap-4 justify-between mt-3 h-fit max-mdflex max-mdflex-col max-[1250px]:grid max-[1250px]:grid-cols-2 max-[1250px]:gap-2">
                 <div className="flex gap-1 items-center">
                   <Icon
                     iconType="anchor"
@@ -141,10 +141,12 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   </p>
                 </div>
                 <div className="flex gap-1 items-center">
-                  <Icon
-                    iconType="gift"
-                    className="w-4 -translate-y-[1px] text-black"
-                  />
+                  <div>
+                    <Icon
+                      iconType="gift"
+                      className="w-4 -translate-y-[1px] text-black"
+                    />
+                  </div>
                   <p className="mb-0 capitalize text-black text-xs">
                     {loading ? (
                       <Skeleton width={100} />
@@ -178,7 +180,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 </div>
               </div>
             </div>
-            <div className="flex flex-col max-md:mt-4">
+            <div className="flex flex-col">
               <p className="text-xs text-black mb-0 line-through">
                 Original price -{" "}
                 <span className="text-green-500">

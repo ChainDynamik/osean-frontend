@@ -288,7 +288,7 @@ export default function Offers() {
       <div className="flex gap-12 max-w-[1220px] mx-auto relative">
         <div
           className={cn(
-            "max-lg:fixed max-lg:max-w-[450px] max-lg:translate-x-[300%] transition-all duration-300 ease-in-out max-lghidden bottom-0 max-lg:min-h-dvh max-lg:z-[9999] max-lg:top-0 max-lg:right-0 max-lg:w-[90%] lg:min-w-[30%] lg:w-[435px]  max-lg:overflow-scroll",
+            "max-lg:fixed max-lg:max-w-[450px] max-lg:translate-x-[300%] transition-all duration-300 ease-in-out max-lg:bottom-0 max-lg:min-h-dvh max-lg:z-[9999] max-lg:top-0 max-lg:right-0 max-lg:w-[90%] lg:w-[435px] lg:w[30%]  max-lg:overflow-scroll",
             {
               "max-lg:translate-x-[0]": mobileFilterIsOpen,
             }
@@ -305,7 +305,7 @@ export default function Offers() {
           <OfferApiFilter />
         </div>
 
-        <div className="flex w-full items-center flex-col gap-1 md:gap-8 mx-auto max-w-[750px] relative">
+        <div className="flex w-full lg:w-[calc(100%-435px)] items-center flex-col gap-1 md:gap-8 mx-auto max-w-[750px] relative">
           <div
             onClick={() => {
               setMobileFilterIsOpen(true);
