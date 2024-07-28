@@ -308,7 +308,7 @@ export default function OfferApiFilter({
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Min Length
           </label>
-          <Dropdown.Root>
+          <Dropdown.Root modal={false}>
             <Dropdown.Trigger className="w-full mt-1 p-2 border-l border-t border-b border-gray-300 rounded-l-md bg-white">
               <div className="flex items-center justify-between">
                 <p className="mb-0 text-black">
@@ -336,7 +336,7 @@ export default function OfferApiFilter({
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Max Length
           </label>
-          <Dropdown.Root>
+          <Dropdown.Root modal={false}>
             <Dropdown.Trigger className="w-full mt-1 p-2 border-r border-t border-b  border-gray-300 rounded-r-md bg-white">
               <div className="flex items-center justify-between">
                 <p className="mb-0 text-black">
@@ -366,7 +366,7 @@ export default function OfferApiFilter({
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Min Year
           </label>
-          <Dropdown.Root>
+          <Dropdown.Root modal={false}>
             <Dropdown.Trigger className="w-full mt-1 p-2 border-l border-t border-b border-gray-300 rounded-l-md bg-white">
               <div className="flex items-center justify-between">
                 <div>≥</div>
@@ -392,7 +392,7 @@ export default function OfferApiFilter({
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Max Year
           </label>
-          <Dropdown.Root>
+          <Dropdown.Root modal={false}>
             <Dropdown.Trigger className="w-full mt-1 p-2 border-r border-t border-b  border-gray-300 rounded-r-md bg-white">
               <div className="flex items-center justify-between">
                 <div>≤</div>
@@ -420,7 +420,7 @@ export default function OfferApiFilter({
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             People
           </label>
-          <Dropdown.Root>
+          <Dropdown.Root modal={false}>
             <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
               <div className="flex items-center justify-between">
                 <p className="mb-0 text-black">{passengersOnBoard || "All"}</p>
