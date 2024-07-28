@@ -21,3 +21,4 @@ export { default as Mainsail } from "../../../../assets/svgs/mainsail.svg";
 export { default as Check } from "../../../../assets/svgs/check.svg";
 export { default as Filter } from "../../../../assets/svgs/filter.svg";
 export { default as Search } from "../../../../assets/svgs/search.svg";
+export { default as Cancel } from "../../../../assets/svgs/cancel.svg";

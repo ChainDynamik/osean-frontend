@@ -10,8 +10,13 @@ import OffersCard, {
 import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
-import { CustomDropdown } from "../../components/CustomDropdown/CustomDropdown";
 import Icon from "../../components/icon-selector/icon-selector";
+import { Dropdown } from "../../components/Dropdown/Dropdown";
+import useStopScroll from "../../util/hooks/useStopScroll";
+import OfferApiFilterModal from "../../components/OfferApiFilterModal/OfferApiFilterModal";
+import { cn } from "../../util";
+import Overlay from "../../components/Overlay/overlay";
+import Button from "../../components/Button/Button";
 
 type Extra = {
   id: number;
@@ -276,9 +281,18 @@ export default function Offers() {
       company=""
     />
   ));
+  // useStopScroll(true);
+
+  const [mobileFilterIsOpen, setMobileFilterIsOpen] = useState(false);
 
   return (
     <main className="!px-6 md:!px-10 pb-16 !mt-[9rem] md:!mt-[5.5rem] relative">
+      <Overlay
+        isOpen={mobileFilterIsOpen}
+        onClick={() => {
+          setMobileFilterIsOpen(false);
+        }}
+      />
       {/* <div className="flex md:w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7 gap-4 flex-wrap">
         <p className="mb-0">{sortedOffers.length} Boats</p>
         <div className="flex gap-4 items-center">
@@ -291,21 +305,35 @@ export default function Offers() {
         </div>
       </div> */}
       <div className="flex gap-12 max-w-[1220px] mx-auto relative">
-        <div className="max-lg:hidden min-w-[30%]">
+        <div
+          className={cn(
+            "max-lg:fixed translate-x-[300%] transition-all duration-300 ease-in-out max-lghidden bottom-0 max-lg:min-h-dvh max-lg:z-[9999] max-lg:top-0 max-lg:right-0 max-lg:w-[95%] lg:min-w-[30%]  overflow-scroll",
+            {
+              "translate-x-[0]": mobileFilterIsOpen,
+            }
+          )}
+        >
+          <div
+            onClick={() => {
+              setMobileFilterIsOpen(false);
+            }}
+            className="absolute right-4 top-4"
+          >
+            <Icon iconType="cancel" className="w-7 text-black" />
+          </div>
           <OfferApiFilter />
         </div>
-        <div className="flex w-full items-center flex-col gap-8 mx-auto max-w-[750px] relative">
-          {!loading && sortedOffers.length === 0 && (
-            <div className="flex flex-col gap-4">
-              <p className="text-lg font-semibold mb-0 ">
-                No results, please configure filters
-              </p>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Get Quote
-              </button>
-            </div>
-          )}
-          <div className="flex md:hidden bg-white z-50 fixed top-24 left-1/2 -translate-x-1/2 items-center border border-primary rounded-xl w-max">
+        {/* <div className="max-lg:fixed max-lg:hidden bottom-0 max-lg:min-h-dvh max-lg:z-[9999] max-lg:top-0 max-lg:right-0 max-lg:w-[90%] lg:min-w-[30%]  overflow-scroll ">
+          <OfferApiFilter />
+        </div> */}
+        <div className="flex w-full items-center flex-col gap-1 md:gap-8 mx-auto max-w-[750px] relative">
+          {/* <OfferApiFilterModal> */}
+          <div
+            onClick={() => {
+              setMobileFilterIsOpen(true);
+            }}
+            className="flex md:hidden bg-white z-50 fixed top-24 left-1/2 -translate-x-1/2 items-center border border-primary rounded-xl w-max"
+          >
             <div className="py-2.5 px-3">
               <Icon
                 iconType="search"
@@ -322,18 +350,53 @@ export default function Offers() {
               />
             </div>
           </div>
+          {/* </OfferApiFilterModal> */}
           <div className="flex w-full ml-auto justify-between items-center !mb-7 gap-4 flex-wrap">
             <p className="mb-0">{sortedOffers.length} Boats</p>
             <div className="flex gap-4 items-center">
-              <p className="mb-0 text-black">Sort by:</p>
-              <CustomDropdown
-                options={sortOptions}
-                selectedOption={sortOption}
-                onSelect={setSortOption}
-                xx
-              />
+              <p className="mb-0 text-black whitespace-nowrap">Sort by:</p>
+
+              <Dropdown.Root modal={false}>
+                <Dropdown.Trigger className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-3 py-1 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-sm">
+                  <div>
+                    {!sortOption ? "Default" : sortOption}
+                    <svg
+                      className="-mr-1 ml-2 h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </Dropdown.Trigger>
+                <Dropdown.Content className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                  {sortOptions.map((option) => (
+                    <Dropdown.Item
+                      key={option.value}
+                      className="block px-4 py-2 !bg-white text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left max-sm:text-sm"
+                      onClick={() => setSortOption(option.value)}
+                    >
+                      {option.label}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Content>
+              </Dropdown.Root>
             </div>
           </div>
+          {!loading && sortedOffers.length === 0 && (
+            <div className="flex flex-col gap-4">
+              <p className="text-lg font-semibold mb-0 ">
+                No results, please configure filters
+              </p>
+              <Button className="w-fit mx-auto">Get Quote</Button>
+            </div>
+          )}
           {loading && loadingCards}
 
           {!loading &&

@@ -6,6 +6,7 @@ import {
   Breadth,
   Cabin,
   Calendar,
+  Cancel,
   Cash,
   Check,
   Checkbox,
@@ -53,5 +54,6 @@ export const ICON_TYPE: {
     check: Check,
     search: Search,
     filter: Filter,
+    cancel: Cancel,
   },
 };
