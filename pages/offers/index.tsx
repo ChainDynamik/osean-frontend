@@ -307,7 +307,7 @@ export default function Offers() {
       <div className="flex gap-12 max-w-[1220px] mx-auto relative">
         <div
           className={cn(
-            "max-lg:fixed max-lg:max-w-[450px] max-lg:translate-x-[300%] transition-all duration-300 ease-in-out max-lghidden bottom-0 max-lg:min-h-dvh max-lg:z-[9999] max-lg:top-0 max-lg:right-0 max-lg:w-[90%] lg:min-w-[30%]  max-lg:overflow-scroll",
+            "max-lg:fixed max-lg:max-w-[450px] max-lg:translate-x-[300%] transition-all duration-300 ease-in-out max-lghidden bottom-0 max-lg:min-h-dvh max-lg:z-[9999] max-lg:top-0 max-lg:right-0 max-lg:w-[90%] lg:min-w-[30%] lg:w-[435px]  max-lg:overflow-scroll",
             {
               "max-lg:translate-x-[0]": mobileFilterIsOpen,
             }
