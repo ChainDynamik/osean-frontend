@@ -150,7 +150,7 @@ const YachtDetailsPage: FC = () => {
     return <p>Listing not found</p>;
   }
 
-  const isLoading = yacht === undefined;
+  const isLoading = yacht === undefined || yacht.length === 0;
 
   const planImage =
     yacht?.images.find((image: any) => image.description === "Plan image")
@@ -191,12 +191,12 @@ const YachtDetailsPage: FC = () => {
                 <img
                   src={image}
                   alt={`Image ${index + 1}`}
-                  className="w-24 h-24 object-cover rounded"
+                  className="w-16 h-16 sm:w-24 sm:h-24 object-cover rounded"
                 />
               </div>
             ))}
             {remainingCount > 0 && (
-              <div className="relative flex items-center justify-center w-24 h-24 bg-gray-200 rounded">
+              <div className="relative flex items-center justify-center w-16 h-16 sm:w-24 sm:h-24 bg-gray-200 rounded">
                 <span className="text-black text-sm">+{remainingCount}</span>
               </div>
             )}

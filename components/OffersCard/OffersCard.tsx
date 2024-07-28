@@ -67,25 +67,11 @@ const OffersCard: React.FC<OffersCardProps> = ({
   };
 
   return (
-    <div className="w-full max-md:mb-6 ring-primary !text-black flex gap-3 flex-col rounded-lg  shadow-card border-[0.5px] border-black">
-      {/* <div className="w-full flex max-xl:flex-col">
-        <p className="text-lg mb-0 text-red-500 ">
-          <span className="ml-2">
-            {loading ? (
-              <Skeleton width={50} />
-            ) : (
-              `(${formatDateTime(dateFrom)} - `
-            )}
-          </span>
-          <span>
-            {loading ? <Skeleton width={50} /> : formatDateTime(dateTo)})
-          </span>
-        </p>
-      </div> */}
-      <div className="flex md:gap-4  max-md:flex-col">
+    <div className="w-full max-md:mb-6 ring-primary !text-black flex gap-3 flex-col rounded-lg shadow-card border-[0.5px] border-black">
+      <div className="flex md:gap-4 max-md:flex-col">
         <div className="relative md:min-h-full max-md:h-[160px] max-h-[200px] lg:w-[350px] lg:h-full border-[1.5px] rounded-l-lg overflow-hidden aspect-video">
           {loading ? (
-            <Skeleton height={180} />
+            <Skeleton height="100%" />
           ) : (
             <PreviewImage src={imageUrl}>
               <img
@@ -95,24 +81,24 @@ const OffersCard: React.FC<OffersCardProps> = ({
               />
             </PreviewImage>
           )}
-          <span className="bg-negative px-2 rounded-lg inline-block left-2 text-white font-extrabold absolute top-2">
-            -{discountPercentage}%
-          </span>
+          {!loading && (
+            <span className="bg-negative px-2 rounded-lg inline-block left-2 text-white font-extrabold absolute top-2">
+              -{discountPercentage}%
+            </span>
+          )}
         </div>
         <div className="w-full py-3 pr-4 max-md:pl-4">
           <p className="text-lg text-primary mb-[0.7rem]">
-            {model} ({year})
+            {loading ? <Skeleton width={100} /> : `${model} (${year})`}
           </p>
           <div className="flex justify-between max-md:flex-col">
             <div>
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-0.5">
-                  <div>
-                    <Icon
-                      iconType="location"
-                      className="w-4 -translate-y-[1px] text-black"
-                    />
-                  </div>
+                  <Icon
+                    iconType="location"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
                   <p className="mb-0 text-black text-xs">
                     {loading ? (
                       <Skeleton width={100} />
@@ -123,10 +109,8 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     )}
                   </p>
                 </div>
-                {/*  */}
               </div>
-              {/* here */}
-              <div className="flex items-center gap-2 ml-1 mt-2 motion-safe:">
+              <div className="flex items-center gap-2 ml-1 mt-2">
                 <div className="flex gap-1 items-center">
                   <span className="bg-black/70 rounded-full size-1.5"></span>
                   <p className="mb-0 text-black text-xs">
@@ -135,111 +119,89 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 </div>
                 <div className="flex gap-1 items-center">
                   <span className="bg-black/70 rounded-full size-1.5"></span>
-
                   <p className="mb-0 text-black text-xs">
                     {loading ? <Skeleton width={30} /> : "3 baths"}
                   </p>
                 </div>
-                {/*  */}
                 <div className="flex gap-1 items-center">
                   <span className="bg-black/70 rounded-full size-1.5"></span>
-
                   <p className="mb-0 text-black text-xs">
-                    {loading ? (
-                      <Skeleton width={30} />
-                    ) : (
-                      <span>{people} people</span>
-                    )}
+                    {loading ? <Skeleton width={30} /> : `${people} people`}
                   </p>
                 </div>
               </div>
-              {/*  */}
-              <div className="flex gap-4 justify-between">
-                <div className="grid grid-cols-2 gap-y-3 gap-x-4 mt-3 h-fit max-mdflex max-mdflex-col">
-                  <div className="flex gap-1 items-center">
-                    <Icon
-                      iconType="anchor"
-                      className="w-4 -translate-y-[1px] text-black"
-                    />
-
-                    <p className="mb-0 text-black text-xs">
-                      {loading ? <Skeleton width={50} /> : <span>{kind}</span>}
-                    </p>
-                  </div>
-                  {/*  */}
-
-                  {/*  */}
-                  <div className="flex gap-1 items-center">
-                    <Icon
-                      iconType="gift"
-                      className="w-4 -translate-y-[1px] text-black"
-                    />
-
+              <div className="flex gap-4 justify-between mt-3 h-fit max-mdflex max-mdflex-col">
+                <div className="flex gap-1 items-center">
+                  <Icon
+                    iconType="anchor"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                  <p className="mb-0 text-black text-xs">
+                    {loading ? <Skeleton width={50} /> : <span>{kind}</span>}
+                  </p>
+                </div>
+                <div className="flex gap-1 items-center">
+                  <Icon
+                    iconType="gift"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                  <p className="mb-0 capitalize text-black text-xs">
                     {loading ? (
                       <Skeleton width={100} />
                     ) : (
-                      products?.map((product, index) => (
-                        <p
-                          key={index}
-                          className="mb-0 capitalize text-black text-xs"
-                        >
+                      products.map((product, index) => (
+                        <span key={index}>
                           {product}
                           {index < products.length - 1 && ","}
-                        </p>
+                        </span>
                       ))
                     )}
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <Icon
-                      iconType="feet"
-                      className="w-4 -translate-y-[1px] text-black"
-                    />
-
-                    <p className="mb-0 text-black text-xs">
-                      {loading ? (
-                        <Skeleton width={50} />
-                      ) : (
-                        <span>{length}m</span>
-                      )}
-                    </p>
-                  </div>
-
-                  <div className="flex gap-1 items-center">
-                    <Icon
-                      iconType="calendar"
-                      className="w-4 -translate-y-[1px] text-black"
-                    />
-
-                    <p className="mb-0 text-black text-xs">
-                      {loading ? <Skeleton width={50} /> : <span>{year}</span>}
-                    </p>
-                  </div>
+                  </p>
+                </div>
+                <div className="flex gap-1 items-center">
+                  <Icon
+                    iconType="feet"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                  <p className="mb-0 text-black text-xs">
+                    {loading ? <Skeleton width={50} /> : <span>{length}m</span>}
+                  </p>
+                </div>
+                <div className="flex gap-1 items-center">
+                  <Icon
+                    iconType="calendar"
+                    className="w-4 -translate-y-[1px] text-black"
+                  />
+                  <p className="mb-0 text-black text-xs">
+                    {loading ? <Skeleton width={50} /> : <span>{year}</span>}
+                  </p>
                 </div>
               </div>
             </div>
-            {/*  */}
             <div className="flex flex-col max-md:mt-4">
               <p className="text-xs text-black mb-0 line-through">
                 Original price -{" "}
                 <span className="text-green-500">
-                  {startPrice}
+                  {loading ? <Skeleton width={50} /> : startPrice}
                   {currency === "EUR" ? "€" : currency === "USD" ? "$" : ""}
                 </span>
               </p>
               <p className="mb-0 text-sm text-black ">
                 Discount -{" "}
-                <span className="text-green-500 ">{discountPercentage}%</span>
+                <span className="text-green-500">
+                  {loading ? <Skeleton width={50} /> : discountPercentage}%
+                </span>
               </p>
               <p className=" mb-0 text-sm text-black ">
                 Price -{" "}
                 <span className="text-green-500">
-                  {price}
+                  {loading ? <Skeleton width={50} /> : price}
                   {currency === "EUR" ? "€" : currency === "USD" ? "$" : ""}
                 </span>
               </p>
               <Link className="mt-2" href={`/yacht-details/${id}`}>
                 <Button variant="outline" className="p-2.5 text-sm">
-                  View Details
+                  {loading ? <Skeleton width={100} /> : "View Details"}
                 </Button>
               </Link>
             </div>

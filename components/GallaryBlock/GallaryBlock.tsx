@@ -33,7 +33,7 @@ export default function GallaryBlock({ images, loading }: GallaryBlockProps) {
                   alt={`pic-${index}`}
                   fill
                   priority
-                  sizes="(min-width: 320) 100vw, 100vw"
+                  sizes="(min-width: 320px) 100vw, 100vw"
                   className="object-cover"
                 />
               </PreviewImage>
