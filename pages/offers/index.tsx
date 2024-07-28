@@ -286,7 +286,7 @@ export default function Offers() {
   const [mobileFilterIsOpen, setMobileFilterIsOpen] = useState(false);
 
   return (
-    <main className="!px-6 md:!px-10 pb-16 !mt-[9rem] md:!mt-[5.5rem] relative">
+    <main className="!px-6 md:!px-10 pb-16 !mt-[9rem] lg:!mt-[5.5rem] relative">
       <Overlay
         isOpen={mobileFilterIsOpen}
         onClick={() => {
@@ -307,9 +307,9 @@ export default function Offers() {
       <div className="flex gap-12 max-w-[1220px] mx-auto relative">
         <div
           className={cn(
-            "max-lg:fixed max-md:translate-x-[300%] transition-all duration-300 ease-in-out max-lghidden bottom-0 max-lg:min-h-dvh max-lg:z-[9999] max-lg:top-0 max-lg:right-0 max-lg:w-[90%] lg:min-w-[30%]  overflow-scroll",
+            "max-lg:fixed max-lg:max-w-[450px] max-lg:translate-x-[300%] transition-all duration-300 ease-in-out max-lghidden bottom-0 max-lg:min-h-dvh max-lg:z-[9999] max-lg:top-0 max-lg:right-0 max-lg:w-[90%] lg:min-w-[30%]  max-lg:overflow-scroll",
             {
-              "max-md:translate-x-[0]": mobileFilterIsOpen,
+              "max-lg:translate-x-[0]": mobileFilterIsOpen,
             }
           )}
         >
@@ -317,9 +317,9 @@ export default function Offers() {
             onClick={() => {
               setMobileFilterIsOpen(false);
             }}
-            className="absolute right-4 top-4"
+            className="lg:hidden absolute right-4 top-4"
           >
-            <Icon iconType="cancel" className="w-7 text-black" />
+            <Icon iconType="cancel" className="w-7  text-black" />
           </div>
           <OfferApiFilter />
         </div>
@@ -332,7 +332,7 @@ export default function Offers() {
             onClick={() => {
               setMobileFilterIsOpen(true);
             }}
-            className="flex md:hidden bg-white z-50 fixed top-24 left-1/2 -translate-x-1/2 items-center border border-primary rounded-xl w-max"
+            className="flex lg:hidden w-4/5 max-w-[400px] bg-white z-50 fixed top-24 left-1/2 -translate-x-1/2 items-center border border-primary rounded-xl w-"
           >
             <div className="py-2.5 px-3">
               <Icon
@@ -341,7 +341,9 @@ export default function Offers() {
               "
               />
             </div>
-            <p className="mb-0 text-xs pr-3">Where would you like to cruise?</p>
+            <p className="mb-0 w-full text-xs pr-3">
+              Where would you like to cruise?
+            </p>
             <div className="py-2.5 px-2.5 border-l border-l-primary">
               <Icon
                 iconType="filter"

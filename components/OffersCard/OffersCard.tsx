@@ -67,7 +67,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   };
 
   return (
-    <div className="w-full ring-primary !text-black flex gap-3 flex-col rounded-lg  shadow-card border-[0.5px] border-black">
+    <div className="w-full max-md:mb-6 ring-primary !text-black flex gap-3 flex-col rounded-lg  shadow-card border-[0.5px] border-black">
       {/* <div className="w-full flex max-xl:flex-col">
         <p className="text-lg mb-0 text-red-500 ">
           <span className="ml-2">
@@ -82,8 +82,8 @@ const OffersCard: React.FC<OffersCardProps> = ({
           </span>
         </p>
       </div> */}
-      <div className="flex gap-4  max-md:flex-col">
-        <div className="relative max-md:h-[160px] max-h-[200px] lg:w-[350px] lg:h-full border-[1.5px] rounded-l-lg overflow-hidden aspect-video">
+      <div className="flex md:gap-4  max-md:flex-col">
+        <div className="relative md:min-h-full max-md:h-[160px] max-h-[200px] lg:w-[350px] lg:h-full border-[1.5px] rounded-l-lg overflow-hidden aspect-video">
           {loading ? (
             <Skeleton height={180} />
           ) : (
