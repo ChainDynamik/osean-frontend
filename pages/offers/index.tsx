@@ -12,8 +12,6 @@ import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
 import Icon from "../../components/icon-selector/icon-selector";
 import { Dropdown } from "../../components/Dropdown/Dropdown";
-import useStopScroll from "../../util/hooks/useStopScroll";
-import OfferApiFilterModal from "../../components/OfferApiFilterModal/OfferApiFilterModal";
 import { cn } from "../../util";
 import Overlay from "../../components/Overlay/overlay";
 import Button from "../../components/Button/Button";
@@ -71,12 +69,9 @@ export default function Offers() {
   const [offers, setOffers] = useState<OfferWithBoat[]>([]);
   const [sortOption, setSortOption] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const { yachts, fetchChrisBoats, getBoatById } = useYachts();
+  const { yachts, getBoatById } = useYachts();
 
   const {
-    startDate,
-    endDate,
-    amount,
     currency,
     minLength,
     maxLength,
@@ -91,12 +86,11 @@ export default function Offers() {
     priceRange,
   } = useOfferApiFilterState();
 
-  const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
+  const { tripStart, tripEnd } = useTripStore();
 
   async function fetchOffers() {
     const dateFrom = tripStart ? format(tripStart, "yyyy-MM-dd") : "2024-08-17";
     const dateTo = tripEnd ? format(tripEnd, "yyyy-MM-dd") : "2024-08-24";
-    console.log(dateFrom, dateTo, "date format-");
 
     let queryString = `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00&companyId=2672`;
 
@@ -179,9 +173,6 @@ export default function Offers() {
     countries,
     priceRange,
   ]);
-
-  console.log(offers, "query offers");
-  console.log(+priceRange[0], +priceRange[1], "wakanda");
 
   const mapOfferToProps = (
     offer: Reservation,
@@ -293,17 +284,7 @@ export default function Offers() {
           setMobileFilterIsOpen(false);
         }}
       />
-      {/* <div className="flex md:w-[calc(100%-(30%+2rem))] ml-auto justify-between items-center !mb-7 gap-4 flex-wrap">
-        <p className="mb-0">{sortedOffers.length} Boats</p>
-        <div className="flex gap-4 items-center">
-          <p className="mb-0 text-black">Sort by:</p>
-          <CustomDropdown
-            options={sortOptions}
-            selectedOption={sortOption}
-            onSelect={setSortOption}
-          />
-        </div>
-      </div> */}
+
       <div className="flex gap-12 max-w-[1220px] mx-auto relative">
         <div
           className={cn(
@@ -323,11 +304,8 @@ export default function Offers() {
           </div>
           <OfferApiFilter />
         </div>
-        {/* <div className="max-lg:fixed max-lg:hidden bottom-0 max-lg:min-h-dvh max-lg:z-[9999] max-lg:top-0 max-lg:right-0 max-lg:w-[90%] lg:min-w-[30%]  overflow-scroll ">
-          <OfferApiFilter />
-        </div> */}
+
         <div className="flex w-full items-center flex-col gap-1 md:gap-8 mx-auto max-w-[750px] relative">
-          {/* <OfferApiFilterModal> */}
           <div
             onClick={() => {
               setMobileFilterIsOpen(true);
@@ -352,7 +330,6 @@ export default function Offers() {
               />
             </div>
           </div>
-          {/* </OfferApiFilterModal> */}
           <div className="flex w-full ml-auto justify-between items-center !mb-7 gap-4 flex-wrap">
             <p className="mb-0">{sortedOffers.length} Boats</p>
             <div className="flex gap-4 items-center">

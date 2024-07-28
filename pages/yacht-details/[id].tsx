@@ -136,7 +136,6 @@ const YachtDetailsPage: FC = () => {
 
   async function getYachtDetails() {
     console.log(`Fetching yacht details for ${id}`);
-    console.log(yachts);
     const yachtDetails = yachts.find((yacht) => yacht.id === Number(id));
     console.log(yachtDetails, yachts, id, "logging");
 
@@ -146,8 +145,6 @@ const YachtDetailsPage: FC = () => {
   useEffect(() => {
     if (yachts && id) getYachtDetails();
   }, [yachts, id]);
-
-  console.log(yacht, "my yacht");
 
   if (!listing) {
     return <p>Listing not found</p>;

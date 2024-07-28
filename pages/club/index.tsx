@@ -9,8 +9,6 @@ import SailYourWay from "../../components/SailYourWay/SailYourWay";
 function BoatGrid() {
   const { yachts } = useYachts();
 
-  console.log(yachts, "my yachts");
-
   const getOrderedImages = (images: any) => {
     const mainImage = images.find(
       (image: any) => image.description === "Main image"
@@ -57,7 +55,6 @@ function BoatGrid() {
         ? loadingCards
         : yachts?.map((item) => {
             const slides = getOrderedImages(item.images); // Get the ordered images
-            console.log(item, "details");
 
             return (
               <YachtCard

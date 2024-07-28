@@ -48,7 +48,6 @@ export default function YachtCard({
   length,
   loading = false, // Default loading to false
 }: ListingItemTypes) {
-  console.log(price, "id of yacht");
   const RouteComponent = loading ? "div" : "Link";
 
   return (
@@ -97,9 +96,6 @@ export default function YachtCard({
           )}
 
           <div
-            onClick={() => {
-              console.log("I was clicked");
-            }}
             className={clsx(
               `!border-gray-200 !bg-gray-100 !text-gray-400 cursor-pointer px-2.5 py-2 aspect-square rounded-full boat_${id}-listing-item-button-prev absolute left-4 top-1/2 z-10 -translate-y-1/2 opacity-80 shadow-md !transition-all duration-300 focus:!ring-0 items-center justify-center md:flex md:group-hover/item:opacity-100`
             )}
@@ -109,9 +105,6 @@ export default function YachtCard({
             </div>{" "}
           </div>
           <div
-            onClick={() => {
-              console.log("I was clicked");
-            }}
             className={clsx(
               ` !border-gray-200 !bg-gray-100 !text-gray-400 cursor-pointer px-2.5 py-2 aspect-square rounded-full boat_${id}-listing-item-button-next absolute right-4 top-1/2 z-10 -translate-y-1/2 opacity-80 shadow-md !transition-all duration-300 focus:!ring-0 items-center justify-center md:flex md:group-hover/item:opacity-100`
             )}

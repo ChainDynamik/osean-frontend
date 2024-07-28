@@ -32,7 +32,6 @@ export default function TransactionOutcomeModal({
     setOseanModalIsOpen,
     setPaymentModal,
   } = useTransactionStore();
-  console.log(network, "cur netw");
 
   return (
     <Modal.Root
