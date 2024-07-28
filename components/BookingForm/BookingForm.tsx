@@ -66,7 +66,7 @@ export default function BookingForm({
     <form
       onSubmit={(e) => e.preventDefault()}
       className={clsx(
-        "rounded-xl border border-gray-lighter bg-white p-8 shadow-card",
+        "rounded-xl border border-gray-lighter bg-white p-4 md:p-8 shadow-card",
         className
       )}
     >

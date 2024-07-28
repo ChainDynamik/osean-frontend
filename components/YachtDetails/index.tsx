@@ -93,7 +93,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
               details?.descriptions?.[0].text || "N/A"
             )}
           </p>
-          <div className="flex gap-8 justify-between">
+          <div className="flex max-md:flex-col md:gap-8 justify-between">
             <div className="border-t border-b-black/50 pt-4 h-fit grid xl:grid-cols-2 gap-x-10 gap-y-4 mb-16 mt-4">
               {loading ? (
                 <>
@@ -165,7 +165,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
               <Skeleton width={200} height={200} />
             ) : (
               planImage && (
-                <div className="mt-4 w-1/2 xl:w-fit">
+                <div className="mt-4 w-4/5 md:w-1/2 xl:w-fit">
                   <h3 className="text-sm w-fit font-semibold mb-2">
                     Plan Image
                   </h3>

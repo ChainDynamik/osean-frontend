@@ -178,7 +178,7 @@ const YachtDetailsPage: FC = () => {
 
   return (
     <>
-      <div className="container-fluid relative !px-10 pt-20 w-full">
+      <div className="container-fluid relative !px-5 md:!px-10 pt-20 w-full">
         <GallaryBlock
           loading={isLoading}
           images={imagesToDisplay.slice(0, 3)}
