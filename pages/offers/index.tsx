@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
@@ -16,6 +17,7 @@ import { cn } from "../../util";
 import Overlay from "../../components/Overlay/overlay";
 import Button from "../../components/Button/Button";
 import ReactPaginate from "react-paginate";
+import useScreenSize from "../../util/hooks/useScreenSize";
 
 type Extra = {
   id: number;
@@ -74,6 +76,7 @@ export default function Offers() {
   const [loading, setLoading] = useState<boolean>(true);
   const { yachts, getBoatById } = useYachts();
   const [currentPage, setCurrentPage] = useState(0);
+  const { isMobile } = useScreenSize();
 
   const {
     currency,
@@ -210,12 +213,7 @@ export default function Offers() {
   };
 
   const filteredOffers = offers.filter((data) => {
-    //  const { berths, year } = data.boat || {};
-    const kind = data?.boat?.kind;
-    const berths = data?.boat?.berths;
-    const year = data?.boat?.year;
-    const length = data?.boat?.length;
-    //  const { berths, year, kind } = data.boat || {};
+    const { berths, year, kind, length } = data.boat || {};
 
     const withinMinLength = minLength ? length >= minLength : true;
     const withinMaxLength = maxLength ? length <= maxLength : true;
@@ -232,7 +230,7 @@ export default function Offers() {
         )
       );
     const matchesKindFilter =
-      kindFilters.length === 0 || kindFilters.includes(kind.toLowerCase());
+      kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
     const withinPriceRange = +data.offer.price >= priceRange[0];
 
     return (
@@ -418,8 +416,8 @@ export default function Offers() {
               );
             })}
           <ReactPaginate
-            previousLabel={"← Previous"}
-            nextLabel={"Next →"}
+            previousLabel={`${isMobile ? "←" : "← Previous"}`}
+            nextLabel={`${isMobile ? "→" : "Next →"}`}
             pageCount={Math.ceil(sortedOffers.length / ITEMS_PER_PAGE)}
             onPageChange={handlePageClick}
             containerClassName={"pagination"}
@@ -427,6 +425,8 @@ export default function Offers() {
             nextLinkClassName={"pagination__link"}
             disabledClassName={"pagination__link--disabled"}
             activeClassName={"pagination__link--active"}
+            marginPagesDisplayed={isMobile ? 1 : 2}
+            pageRangeDisplayed={isMobile ? 2 : 5}
           />
         </div>
       </div>

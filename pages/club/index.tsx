@@ -6,12 +6,14 @@ import ReserveOffer from "../../components/ReserveOffer/ReserveOffer";
 import SailYourWay from "../../components/SailYourWay/SailYourWay";
 import ReactPaginate from "react-paginate";
 import { useState } from "react";
+import useScreenSize from "../../util/hooks/useScreenSize";
 
 const ITEMS_PER_PAGE = 12; // Number of items per page
 
 function BoatGrid() {
   const { yachts } = useYachts();
   const [currentPage, setCurrentPage] = useState(0);
+  const { isMobile } = useScreenSize();
 
   const getOrderedImages = (images: any) => {
     const mainImage = images.find(
@@ -91,8 +93,8 @@ function BoatGrid() {
       {!isLoading && (
         <div className="flex justify-center pt-8 items-center">
           <ReactPaginate
-            previousLabel={"← Previous"}
-            nextLabel={"Next →"}
+            previousLabel={`${isMobile ? "←" : "← Previous"}`}
+            nextLabel={`${isMobile ? "→" : "Next →"}`}
             pageCount={Math.ceil(yachts.length / ITEMS_PER_PAGE)}
             onPageChange={handlePageClick}
             containerClassName={"pagination"}
@@ -100,6 +102,8 @@ function BoatGrid() {
             nextLinkClassName={"pagination__link"}
             disabledClassName={"pagination__link--disabled"}
             activeClassName={"pagination__link--active"}
+            marginPagesDisplayed={isMobile ? 1 : 2}
+            pageRangeDisplayed={isMobile ? 2 : 5}
           />
         </div>
       )}
