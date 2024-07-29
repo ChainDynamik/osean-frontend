@@ -5,6 +5,8 @@ const STATEMENT = "Sign this message to connect your wallet to OseanDAO";
 const URI = "https://oseandao.com";
 const EXPIRATION_TIME = "2025-01-01T00:00:00.000Z";
 const TIMEOUT = 15;
+const Web3 = require("web3");
+const web3 = new Web3();
 
 const beforeApiRequest = async (ts1: any, ts2: any, ts3: any) => {
   // implement Rate Limiting Logic

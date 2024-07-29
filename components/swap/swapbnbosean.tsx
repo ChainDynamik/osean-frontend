@@ -28,6 +28,7 @@ export default function SwapBNBForOSEAN() {
   const { contract: osean } = useContract("0x722cb8e411d40942c0f581b919ecce3e4d759602");
   const { contract: wbnb } = useContract("0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", );
   const { mutateAsync: approve } = useContractWrite(osean, "approve");
+  
   const { contract: univ2 } = useContract("0x10ED43C718714eb63d5aA57B78B54704E256024E");
   const { mutateAsync: swap } = useContractWrite(univ2, "swapExactETHForTokensSupportingFeeOnTransferTokens");
   const allowed = useContractRead(osean, "allowance", [address, "0x10ED43C718714eb63d5aA57B78B54704E256024E"]);

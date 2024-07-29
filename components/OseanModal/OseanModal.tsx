@@ -85,7 +85,7 @@ export default function OseanModal({
 
   async function pay() {
     try {
-      const txValue = toWei(quote?.get("requiredEthAmount"));
+      const txValue = toWei(quote?.get("requiredEthAmount")?.toString());
       const uid = quote?.get("smartContractQuoteUid") as bigint;
 
       await payOrder({
@@ -344,7 +344,11 @@ export default function OseanModal({
                         //   }, 1000);
                         // }}
                         // className={`${isLoading && "opacity-50"}`}
-                        onClick={pay}
+                        onClick={async (e: any) => {
+                          e.preventDefault();
+
+                          await pay();
+                        }}
                       >
                         Pay {quote?.get("requiredEthAmount")?.toFixed(6)} ETH
                         {/* {isLoading ? "Loading..." : `Pay ${discountedFee.toFixed(2)}`} */}
