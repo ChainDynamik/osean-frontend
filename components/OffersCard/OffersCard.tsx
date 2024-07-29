@@ -124,9 +124,12 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   </p>
                 </div>
                 <div className="flex gap-1 items-center">
-                  <span className="bg-black/70 rounded-full size-1.5"></span>
+                  {people && (
+                    <span className="bg-black/70 rounded-full size-1.5"></span>
+                  )}
                   <p className="mb-0 text-black text-xs">
-                    {loading ? <Skeleton width={30} /> : `${people} people`}
+                    {loading && <Skeleton width={30} />}
+                    {people && `${people} people`}
                   </p>
                 </div>
               </div>
@@ -202,7 +205,10 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 </span>
               </p>
               <Link className="mt-2" href={`/yacht-details/${id}`}>
-                <Button variant="outline" className="p-2.5 text-sm">
+                <Button
+                  variant="outline"
+                  className="p-2.5 text-sm whitespace-nowrap"
+                >
                   {loading ? <Skeleton width={100} /> : "View Details"}
                 </Button>
               </Link>

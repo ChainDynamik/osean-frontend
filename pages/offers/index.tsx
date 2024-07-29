@@ -15,6 +15,7 @@ import { Dropdown } from "../../components/Dropdown/Dropdown";
 import { cn } from "../../util";
 import Overlay from "../../components/Overlay/overlay";
 import Button from "../../components/Button/Button";
+import ReactPaginate from "react-paginate";
 
 type Extra = {
   id: number;
@@ -65,11 +66,14 @@ const sortOptions = [
   { value: "highestPrice", label: "Highest Price" },
 ];
 
+const ITEMS_PER_PAGE = 5; // Number of items per page
+
 export default function Offers() {
   const [offers, setOffers] = useState<OfferWithBoat[]>([]);
   const [sortOption, setSortOption] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const { yachts, getBoatById } = useYachts();
+  const [currentPage, setCurrentPage] = useState(0);
 
   const {
     currency,
@@ -183,30 +187,36 @@ export default function Offers() {
     );
 
     return {
-      id: offer.yachtId,
+      id: offer?.yachtId,
       products: productNames,
-      yacht: offer.yacht,
-      startBase: offer.startBase,
-      endBase: offer.endBase,
-      price: offer.price,
-      startPrice: offer.startPrice,
-      currency: offer.currency,
-      dateFrom: offer.dateFrom,
-      dateTo: offer.dateTo,
-      people: boat.maxPeopleOnBoard,
-      length: boat.length,
-      name: boat.name,
-      model: boat.model,
-      company: boat.company,
-      berths: boat.berths,
-      cabins: boat.cabins,
-      year: boat.year,
-      kind: boat.kind,
+      yacht: offer?.yacht,
+      startBase: offer?.startBase,
+      endBase: offer?.endBase,
+      price: offer?.price,
+      startPrice: offer?.startPrice,
+      currency: offer?.currency,
+      dateFrom: offer?.dateFrom,
+      dateTo: offer?.dateTo,
+      people: boat?.maxPeopleOnBoard,
+      length: boat?.length,
+      name: boat?.name,
+      model: boat?.model,
+      company: boat?.company,
+      berths: boat?.berths,
+      cabins: boat?.cabins,
+      year: boat?.year,
+      kind: boat?.kind,
     };
   };
 
   const filteredOffers = offers.filter((data) => {
-    const { length, berths, year, kind } = data.boat;
+    //  const { berths, year } = data.boat || {};
+    const kind = data?.boat?.kind;
+    const berths = data?.boat?.berths;
+    const year = data?.boat?.year;
+    const length = data?.boat?.length;
+    //  const { berths, year, kind } = data.boat || {};
+
     const withinMinLength = minLength ? length >= minLength : true;
     const withinMaxLength = maxLength ? length <= maxLength : true;
     const withinMinBerths = minBerths ? berths >= minBerths : true;
@@ -272,7 +282,13 @@ export default function Offers() {
       company=""
     />
   ));
-  // useStopScroll(true);
+
+  const handlePageClick = (data: { selected: number }) => {
+    setCurrentPage(data.selected);
+  };
+
+  const offset = currentPage * ITEMS_PER_PAGE;
+  const currentPageData = sortedOffers.slice(offset, offset + ITEMS_PER_PAGE);
 
   const [mobileFilterIsOpen, setMobileFilterIsOpen] = useState(false);
 
@@ -380,7 +396,7 @@ export default function Offers() {
 
           {!loading &&
             sortedOffers.length > 0 &&
-            sortedOffers.map((data, index) => {
+            currentPageData.map((data, index) => {
               const boatObject = data.boat;
               const offerObject = data.offer;
 
@@ -390,6 +406,7 @@ export default function Offers() {
                 (image) => image.description === "Main image"
               );
               const imageUrl = mainImage ? mainImage.url : "";
+              console.log(sortedOffers, "my offers");
 
               return (
                 <OffersCard
@@ -400,6 +417,17 @@ export default function Offers() {
                 />
               );
             })}
+          <ReactPaginate
+            previousLabel={"← Previous"}
+            nextLabel={"Next →"}
+            pageCount={Math.ceil(sortedOffers.length / ITEMS_PER_PAGE)}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination"}
+            previousLinkClassName={"pagination__link"}
+            nextLinkClassName={"pagination__link"}
+            disabledClassName={"pagination__link--disabled"}
+            activeClassName={"pagination__link--active"}
+          />
         </div>
       </div>
     </main>
