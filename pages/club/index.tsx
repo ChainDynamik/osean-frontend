@@ -1,13 +1,17 @@
 "use client";
 import Image from "next/image";
-import Section from "../../components/Section/Section";
 import YachtCard from "../../components/YachtCard/YachtCard";
 import useYachts from "../../hooks/useYachts";
 import ReserveOffer from "../../components/ReserveOffer/ReserveOffer";
 import SailYourWay from "../../components/SailYourWay/SailYourWay";
+import ReactPaginate from "react-paginate";
+import { useState } from "react";
+
+const ITEMS_PER_PAGE = 12; // Number of items per page
 
 function BoatGrid() {
   const { yachts } = useYachts();
+  const [currentPage, setCurrentPage] = useState(0);
 
   const getOrderedImages = (images: any) => {
     const mainImage = images.find(
@@ -49,33 +53,57 @@ function BoatGrid() {
     />
   ));
 
-  return (
-    <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 3xl:gap-y-10">
-      {isLoading
-        ? loadingCards
-        : yachts?.map((item) => {
-            const slides = getOrderedImages(item.images); // Get the ordered images
+  const handlePageClick = (data: { selected: number }) => {
+    setCurrentPage(data.selected);
+  };
 
-            return (
-              <YachtCard
-                loading={false}
-                cabins={item.cabins}
-                length={item.length}
-                berths={item.berths}
-                key={item.id}
-                id={item.id}
-                slides={slides}
-                title={item.kind}
-                name={item.name}
-                caption={item.model}
-                slug="slug"
-                location={item.homeBase}
-                price={item.deposit + "€"}
-                boatManufacturingDate={item.year.toString()}
-              />
-            );
-          })}
-    </div>
+  const offset = currentPage * ITEMS_PER_PAGE;
+  const currentPageData = yachts?.slice(offset, offset + ITEMS_PER_PAGE);
+
+  return (
+    <>
+      <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 3xl:gap-y-10">
+        {isLoading
+          ? loadingCards
+          : currentPageData?.map((item) => {
+              const slides = getOrderedImages(item.images); // Get the ordered images
+
+              return (
+                <YachtCard
+                  loading={false}
+                  cabins={item.cabins}
+                  length={item.length}
+                  berths={item.berths}
+                  key={item.id}
+                  id={item.id}
+                  slides={slides}
+                  title={item.kind}
+                  name={item.name}
+                  caption={item.model}
+                  slug="slug"
+                  location={item.homeBase}
+                  price={item.deposit + "€"}
+                  boatManufacturingDate={item.year.toString()}
+                />
+              );
+            })}
+      </div>
+      {!isLoading && (
+        <div className="flex justify-center pt-8 items-center">
+          <ReactPaginate
+            previousLabel={"← Previous"}
+            nextLabel={"Next →"}
+            pageCount={Math.ceil(yachts.length / ITEMS_PER_PAGE)}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination"}
+            previousLinkClassName={"pagination__link"}
+            nextLinkClassName={"pagination__link"}
+            disabledClassName={"pagination__link--disabled"}
+            activeClassName={"pagination__link--active"}
+          />
+        </div>
+      )}
+    </>
   );
 }
 
