@@ -36,11 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 var Moralis = require("moralis").default;
+var Web3 = require("web3").Web3;
 var DOMAIN = "oseandao.com";
 var STATEMENT = "Sign this message to connect your wallet to OseanDAO";
 var URI = "https://oseandao.com";
 var EXPIRATION_TIME = "2025-01-01T00:00:00.000Z";
 var TIMEOUT = 15;
+var web3 = new Web3();
 var beforeApiRequest = function (ts1, ts2, ts3) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/];
@@ -1048,21 +1050,71 @@ Parse.Cloud.define("getServerTime", function () {
 // END DEFAULT
 // END DEFAULT
 // END DEFAULT
+function getSettingsKey(key) {
+    return __awaiter(this, void 0, void 0, function () {
+        var query, settings;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    query = new Parse.Query("Global");
+                    query.equalTo("key", key);
+                    return [4 /*yield*/, query.first()];
+                case 1:
+                    settings = _a.sent();
+                    if (!settings) {
+                        throw new Error("Settings key ".concat(key, " not found"));
+                    }
+                    return [2 /*return*/, settings.get("value")];
+            }
+        });
+    });
+}
 Parse.Cloud.define("generateQuoteEth", function (request) { return __awaiter(_this, void 0, void 0, function () {
-    var amountUsd, user, Quote, quote;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var Quote_1, query, existingQuote, amountUsd, user, ethPrice, _a, amountInEth, amountInWei, expirationTime, signer, message, account, signature, Quote, quote;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
+                Quote_1 = Parse.Object.extend("Quote");
+                query = new Parse.Query(Quote_1);
+                query.equalTo("status", "pending");
+                query.equalTo("requiredSigner", request.user.get("ethAddress"));
+                query.greaterThanOrEqualTo("expirationTime", Math.floor(Date.now() / 1000));
+                return [4 /*yield*/, query.first()];
+            case 1:
+                existingQuote = _b.sent();
+                if (existingQuote) {
+                    return [2 /*return*/, existingQuote.toJSON()];
+                }
                 amountUsd = request.params.amountUsd;
                 user = request.user;
-                Quote = Parse.Object.extend("QuoteQueue");
+                _a = Number;
+                return [4 /*yield*/, getSettingsKey("eth-unit-price")];
+            case 2:
+                ethPrice = _a.apply(void 0, [_b.sent()]);
+                amountInEth = Number(amountUsd) / ethPrice;
+                amountInWei = web3.utils.toWei(amountInEth, "ether");
+                expirationTime = Math.floor(Date.now() / 1000) + 300;
+                signer = user.get("ethAddress");
+                message = "".concat(amountInWei, "_").concat(expirationTime, "_").concat(signer);
+                account = web3.eth.accounts.privateKeyToAccount(process.env.BACKEND_WALLET_PRIVATE_KEY);
+                console.log("Signer wallet: ".concat(account.address));
+                return [4 /*yield*/, web3.eth.accounts.sign(message, process.env.BACKEND_WALLET_PRIVATE_KEY)];
+            case 3:
+                signature = _b.sent();
+                Quote = Parse.Object.extend("Quote");
                 quote = new Quote();
                 quote.set("amountUsd", amountUsd);
-                quote.set("status", "pending");
-                quote.set("user", user);
-                return [4 /*yield*/, quote.save(null, { useMasterKey: true })];
-            case 1:
-                _a.sent();
+                quote.set("amountInWei", amountInWei);
+                quote.set("amountInEth", amountInEth);
+                quote.set("ethUnitPrice", ethPrice);
+                quote.set("expirationTime", expirationTime);
+                quote.set("requiredSigner", signer);
+                quote.set("signature", signature.signature);
+                quote.set("message", message);
+                quote.set("signatureRaw", signature);
+                return [4 /*yield*/, quote.save()];
+            case 4:
+                _b.sent();
                 return [2 /*return*/, quote.toJSON()];
         }
     });

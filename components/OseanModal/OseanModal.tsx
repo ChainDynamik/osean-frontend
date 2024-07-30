@@ -21,6 +21,11 @@ import { oseanOrderManagementABI } from "../../abi";
 import { ethereum, sepolia } from "thirdweb/chains";
 import { ethers5Adapter } from "thirdweb/adapters/ethers5";
 
+import { Web3 } from "web3";
+const web3 = new Web3();
+
+import Countdown from "react-countdown";
+
 const options = [
   {
     value: "Ethereum",
@@ -34,6 +39,65 @@ const options = [
   },
 ];
 
+// {
+//   "amountUsd": 10,
+//   "amountInWei": "2857142857142857",
+//   "amountInEth": 0.002857142857142857,
+//   "ethUnitPrice": 3500,
+//   "expirationTime": 1722381316,
+//   "requiredSigner": "0xaa477e690cb9a37f66e6c3657d9d43e235baf463",
+//   "signature": "0xe9c12fc7e590419e25127bc7d77eef8771d4ac42df16263fa1cd0ba470a25ed655e19d601435ae942ecd35e390b0e5aae71e6ef9a7dbdd23e8132eb2a16a9f471c",
+//   "message": "2857142857142857_1722381316_0xaa477e690cb9a37f66e6c3657d9d43e235baf463",
+//   "signatureRaw": {
+//       "message": "2857142857142857_1722381316_0xaa477e690cb9a37f66e6c3657d9d43e235baf463",
+//       "messageHash": "0x2922ba052bb869c0c4797407ed4003882c70deb56b47af25599cefdfa1c4c457",
+//       "v": "0x1c",
+//       "r": "0xe9c12fc7e590419e25127bc7d77eef8771d4ac42df16263fa1cd0ba470a25ed6",
+//       "s": "0x55e19d601435ae942ecd35e390b0e5aae71e6ef9a7dbdd23e8132eb2a16a9f47",
+//       "signature": "0xe9c12fc7e590419e25127bc7d77eef8771d4ac42df16263fa1cd0ba470a25ed655e19d601435ae942ecd35e390b0e5aae71e6ef9a7dbdd23e8132eb2a16a9f471c"
+//   },
+//   "createdAt": "2024-07-30T23:10:16.403Z",
+//   "updatedAt": "2024-07-30T23:10:16.403Z",
+//   "objectId": "yO4oJtH1IY"
+// }
+
+export type OSMQuote = {
+  amountUsd: number;
+  amountInWei: string;
+  amountInEth: number;
+  ethUnitPrice: number;
+  expirationTime: number;
+  requiredSigner: string;
+  signature: string;
+  message: string;
+  signatureRaw: {
+    message: string;
+    messageHash: string;
+    v: string;
+    r: string;
+    s: string;
+    signature: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  objectId: string;
+};
+
+const renderer = ({ hours, minutes, seconds, completed }: any) => {
+  const hoursPadded = hours.toString().padStart(2, "0");
+  const minutesPadded = minutes.toString().padStart(2, "0");
+  const secondsPadded = seconds.toString().padStart(2, "0");
+
+  if (completed) {
+    return <p>Transaction expired</p>;
+  } else {
+    return (
+      <p>
+        {hoursPadded}:{minutesPadded}:{secondsPadded}
+      </p>
+    );
+  }
+};
 export default function OseanModal({
   children,
   enrollId,
@@ -47,53 +111,65 @@ export default function OseanModal({
   const [coin, setCoin] = useState("$OSEAN");
   const [showNetworkDropdown, setShowNetworkDropdown] = useState(false);
   const [showCoinDropdown, setShowCoinDropdown] = useState(false);
-  const { transactionOpen, setOseanModalIsOpen, oseanModalIsOpen } = useTransactionStore();
   // const [isLoading, setIsLoading] = useState<null | boolean>(null);
   // console.log(options);
 
+  const { transactionOpen, toggleTransactionModal, setOseanModalIsOpen, setPaymentModal, oseanModalIsOpen } =
+    useTransactionStore();
+
   const { contract: oom } = useContract(process.env.NEXT_PUBLIC_OOM_CONTRACT_ADDRESS);
-  const { mutateAsync: payOrder } = useContractWrite(oom, "payOrder");
+  const { mutateAsync: fullfillOrderEth } = useContractWrite(oom, "fullfillOrderEth");
 
   const amountUsd = 10;
 
   const [loadingText, setLoadingText] = useState("Preparing quote... | Queue: 1/1");
 
-  const [quote, setQuote] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function startQuoteStatusDaemon(quoteId: string) {
-    while (true) {
-      const query = new Moralis.Query("QuoteQueue");
-      query.equalTo("objectId", quoteId);
-      const result = await query.first();
+  const [quote, setQuote] = useState<OSMQuote>();
 
-      if (result?.get("status") === "processed") {
-        setQuote(result);
-        break;
-      }
+  console.log(quote);
 
-      await sleep(4000);
+  async function verifyQuoteSettled(quote: OSMQuote) {
+    console.log(`Verifying quote ${quote.objectId} settled`);
+    const query = new Moralis.Query("Quote");
+    query.equalTo("objectId", quote.objectId);
+    const result = await query.first();
+
+    if (result?.get("status") === "settled") {
+      console.log("Quote settled");
+      setIsLoading(false);
+      toggleTransactionModal(true);
     }
   }
 
   async function fetchQuote() {
     const quote = await Moralis.Cloud.run("generateQuoteEth", { amountUsd });
 
-    const { objectId } = quote;
+    setQuote(quote);
 
-    startQuoteStatusDaemon(objectId);
+    setIsFetchingQuote(false);
   }
 
   async function pay() {
+    setIsLoading(true);
     try {
-      const txValue = toWei(quote?.get("requiredEthAmount")?.toString());
-      const uid = quote?.get("smartContractQuoteUid") as bigint;
+      const txValue = quote?.amountInWei as string;
+      const message = quote?.message as string;
+      const messageHash = quote?.signatureRaw.messageHash;
+      const v = quote?.signatureRaw.v;
+      const r = quote?.signatureRaw.r;
+      const s = quote?.signatureRaw.s;
+      const referenceQuoteId = quote?.objectId;
 
-      await payOrder({
-        args: [uid],
+      await fullfillOrderEth({
+        args: [message, messageHash, v, r, s, referenceQuoteId],
         overrides: { value: txValue },
       });
     } catch (e: any) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -104,21 +180,23 @@ export default function OseanModal({
   const discountedFee = fee - discount;
 
   useEffect(() => {
-    async function checkIfQuoteReceived() {
-      if (quote && quote.get("status") === "processed") {
-        await sleep(2000);
-        setIsFetchingQuote(false);
-      }
-    }
-
-    checkIfQuoteReceived();
-  }, [quote]);
-
-  useEffect(() => {
     if (oseanModalIsOpen) {
       fetchQuote();
     }
   }, [oseanModalIsOpen]);
+
+  useEffect(() => {
+    if (quote) {
+      const interval = setInterval(() => {
+        verifyQuoteSettled(quote);
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
+        console.log("cleared");
+      };
+    }
+  }, [quote]);
 
   return (
     <Modal.Root
@@ -313,19 +391,27 @@ export default function OseanModal({
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col">
                     <label className="block text-sm font-medium text-gray-700">Currency conversion</label>
-                    <p className="text-sm text-gray-500">
-                      1 ETH = ${quote?.get("ethereumUnitPrice")?.toLocaleString()}
-                    </p>
+                    <p className="text-sm text-gray-500">1 ETH = ${quote?.ethUnitPrice}</p>
+                    {quote && (
+                      <p className="text-sm text-gray-500">
+                        Expires in{" "}
+                        <Countdown
+                          date={quote?.expirationTime * 1000}
+                          renderer={renderer}
+                        />
+                        <p>{quote?.objectId}</p>
+                      </p>
+                    )}
                   </div>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col ">
                     <label className="block text-sm font-medium text-gray-700">Discounts:</label>
                     <p className="text-sm !font-bold text-green-500">20% Discount (${discount.toFixed(2)})</p>
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="block text-sm font-medium text-gray-700">Amount to pay</label>
-                    <p className="text-sm text-gray-900">{quote?.get("requiredEthAmount")?.toFixed(6)} ETH</p>
+                    <p className="text-sm text-gray-900">{quote?.amountInEth} ETH</p>
                   </div>
                   <div className="flex flex-col gap-4">
                     <TransactionOutcomeModal
@@ -334,6 +420,7 @@ export default function OseanModal({
                       discount={discount}
                     >
                       <Button
+                        isLoading={isLoading}
                         // onClick={() => {
                         //   setIsLoading(true);
                         //   setTimeout(() => {
@@ -350,7 +437,7 @@ export default function OseanModal({
                           await pay();
                         }}
                       >
-                        Pay {quote?.get("requiredEthAmount")?.toFixed(6)} ETH
+                        Pay {quote!.amountInEth.toFixed(6)} ETH
                         {/* {isLoading ? "Loading..." : `Pay ${discountedFee.toFixed(2)}`} */}
                         {/* <div className="flex gap-1 ml-2 items-center">
                           <Image

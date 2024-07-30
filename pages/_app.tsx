@@ -72,7 +72,7 @@ export const client = createThirdwebClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [selectedChain, setSelectedChain] = useState("binance");
+  const [selectedChain, setSelectedChain] = useState("sepolia");
 
   const client = createThirdwebClient({
     clientId: process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID as string,

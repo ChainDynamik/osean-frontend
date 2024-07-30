@@ -60,6 +60,7 @@
     "prettier-plugin-solidity": "^1.0.0-beta.13",
     "rc-rate": "^2.13.0",
     "react": "^18.2",
+    "react-countdown": "^2.3.5",
     "react-datepicker": "^7.2.0",
     "react-dom": "^18.2",
     "react-hook-form": "^7.50.1",
@@ -79,7 +80,7 @@
     "ts-loader": "^9.5.1",
     "ts-node": "^10.7.0",
     "typechain": "^8.0.0",
-    "web3": "^4.2.2",
+    "web3": "^4.11.1",
     "zustand": "^4.5.4"
   },
   "devDependencies": {

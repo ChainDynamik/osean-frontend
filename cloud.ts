@@ -1,11 +1,12 @@
 const Moralis = require("moralis").default;
 const Parse = require("parse/node");
+const { Web3 } = require("web3");
+
 const DOMAIN = "oseandao.com";
 const STATEMENT = "Sign this message to connect your wallet to OseanDAO";
 const URI = "https://oseandao.com";
 const EXPIRATION_TIME = "2025-01-01T00:00:00.000Z";
 const TIMEOUT = 15;
-const Web3 = require("web3");
 const web3 = new Web3();
 
 const beforeApiRequest = async (ts1: any, ts2: any, ts3: any) => {
@@ -484,17 +485,70 @@ Parse.Cloud.define("getServerTime", () => {
 // END DEFAULT
 // END DEFAULT
 
+async function getSettingsKey(key: string) {
+  const query = new Parse.Query("Global");
+  query.equalTo("key", key);
+  const settings = await query.first();
+
+  if (!settings) {
+    throw new Error(`Settings key ${key} not found`);
+  }
+
+  return settings.get("value");
+}
+
 Parse.Cloud.define("generateQuoteEth", async (request: any) => {
+  // Check if there is a pending, not expired/settled quote for this user
+  {
+    const Quote = Parse.Object.extend("Quote");
+    const query = new Parse.Query(Quote);
+    query.equalTo("status", "pending");
+    query.equalTo("requiredSigner", request.user.get("ethAddress"));
+    query.greaterThanOrEqualTo("expirationTime", Math.floor(Date.now() / 1000));
+    const existingQuote = await query.first();
+
+    if (existingQuote) {
+      return existingQuote.toJSON();
+    }
+  }
+
   const { amountUsd } = request.params;
   const user = request.user;
 
-  // Create a quote in QuoteQueue
-  const Quote = Parse.Object.extend("QuoteQueue");
+  const ethPrice = Number(await getSettingsKey("eth-unit-price"));
+  const amountInEth = Number(amountUsd) / ethPrice;
+
+  const amountInWei = web3.utils.toWei(amountInEth, "ether");
+
+  // 5 minutes from now
+  const expirationTime = Math.floor(Date.now() / 1000) + 300;
+
+  const signer = user.get("ethAddress");
+
+  // amountInWei_quoteExpiryTime_signer
+  // const message = `1000000000000000000_999999999999_0x5B38Da6a701c568545dCfcB03FcB875f56beddC4`;
+
+  const message = `${amountInWei}_${expirationTime}_${signer}`;
+
+  const account = web3.eth.accounts.privateKeyToAccount(process.env.BACKEND_WALLET_PRIVATE_KEY);
+
+  console.log(`Signer wallet: ${account.address}`);
+
+  const signature = await web3.eth.accounts.sign(message, process.env.BACKEND_WALLET_PRIVATE_KEY);
+
+  // Save this quote in the database
+  const Quote = Parse.Object.extend("Quote");
   const quote = new Quote();
   quote.set("amountUsd", amountUsd);
-  quote.set("status", "pending");
-  quote.set("user", user);
-  await quote.save(null, { useMasterKey: true });
+  quote.set("amountInWei", amountInWei);
+  quote.set("amountInEth", amountInEth);
+  quote.set("ethUnitPrice", ethPrice);
+  quote.set("expirationTime", expirationTime);
+  quote.set("requiredSigner", signer);
+  quote.set("signature", signature.signature);
+  quote.set("message", message);
+  quote.set("signatureRaw", signature);
+  await quote.save();
 
   return quote.toJSON();
 });

@@ -3,9 +3,9 @@
 import clsx from "clsx";
 import { forwardRef } from "react";
 import { cn } from "../../util";
+import { Spinner } from "@chakra-ui/react";
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Set the loading status of button */
   isLoading?: boolean;
   /** Set the original html type of button */
@@ -16,18 +16,7 @@ export interface ButtonProps
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      children,
-      className,
-      isLoading,
-      type = "button",
-      variant = "primary",
-      disabled,
-      ...buttonProps
-    },
-    ref
-  ) => {
+  ({ children, className, isLoading, type = "button", variant = "primary", disabled, ...buttonProps }, ref) => {
     return (
       <button
         ref={ref}
@@ -46,7 +35,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading ? (
           <>
-            <span className="invisible opacity-0">{children}</span>
+            <Spinner />
+            <span className="ml-2">Loading...</span>
           </>
         ) : (
           <>{children}</>
