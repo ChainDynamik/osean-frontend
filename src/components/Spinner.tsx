@@ -1,8 +1,6 @@
-import React, { HTMLAttributes, ReactElement } from 'react';
+import React, { HTMLAttributes, ReactElement } from "react";
 
-export function Spinner({
-  className,
-}: HTMLAttributes<HTMLDivElement>): ReactElement {
+export function Spinner({ className }: HTMLAttributes<HTMLDivElement>): ReactElement {
   return (
     <div className={className}>
       <svg
@@ -10,10 +8,18 @@ export function Spinner({
         height="64"
         viewBox="0 0 44 44"
         xmlns="http://www.w3.org/2000/svg"
-        stroke="#fff"
+        stroke="black"
       >
-        <g fill="none" fillRule="evenodd" strokeWidth="2">
-          <circle cx="22" cy="22" r="1">
+        <g
+          fill="none"
+          fillRule="evenodd"
+          strokeWidth="2"
+        >
+          <circle
+            cx="22"
+            cy="22"
+            r="1"
+          >
             <animate
               attributeName="r"
               begin="0s"
@@ -35,7 +41,11 @@ export function Spinner({
               repeatCount="indefinite"
             />
           </circle>
-          <circle cx="22" cy="22" r="1">
+          <circle
+            cx="22"
+            cy="22"
+            r="1"
+          >
             <animate
               attributeName="r"
               begin="-0.9s"

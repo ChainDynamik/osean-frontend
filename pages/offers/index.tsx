@@ -5,9 +5,7 @@ import { format } from "date-fns";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
-import OffersCard, {
-  OffersCardProps,
-} from "../../components/OffersCard/OffersCard";
+import OffersCard, { OffersCardProps } from "../../components/OffersCard/OffersCard";
 import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
@@ -141,7 +139,7 @@ export default function Offers() {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
         },
       });
-
+      // tsst
       const offers: Reservation[] = request.data;
 
       const offersWithBoats = offers.map((offer) => {

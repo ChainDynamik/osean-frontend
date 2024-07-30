@@ -25,6 +25,7 @@ import useYachts from "../hooks/useYachts";
 // import GallaryBlock from "../components/GallaryBlock/GallaryBlock";
 import { MoralisProvider, useMoralis } from "react-moralis";
 import Moralis from "moralis-v1";
+import { createThirdwebClient } from "thirdweb";
 
 const ThirdwebMoralisLinker = () => {
   const { user, authenticate, isInitialized } = useMoralis();
@@ -66,8 +67,16 @@ const ThirdwebMoralisLinker = () => {
   return <>p</>;
 };
 
+export const client = createThirdwebClient({
+  clientId: process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID as string,
+});
+
 function MyApp({ Component, pageProps }: AppProps) {
   const [selectedChain, setSelectedChain] = useState("binance");
+
+  const client = createThirdwebClient({
+    clientId: process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID as string,
+  });
 
   const { fetchChrisBoats } = useYachts();
 
