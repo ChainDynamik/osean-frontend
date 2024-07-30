@@ -17,6 +17,7 @@ interface BookingFormProps {
   averageRating: number;
   totalReviews: number;
   className?: string;
+  securityDeposit: number;
 }
 
 export default function BookingForm({
@@ -24,14 +25,13 @@ export default function BookingForm({
   averageRating,
   totalReviews,
   className,
+  securityDeposit,
 }: BookingFormProps) {
   const [focus, setFocus] = useState<boolean>(false);
   const [nights, setNights] = useState<number>(1); // Initial number of nights
 
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
-  const selectedExtras = useSelectedExtrasStore(
-    (state) => state.selectedExtras
-  );
+  const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
   const toggleExtra = useSelectedExtrasStore((state) => state.toggleExtra);
 
   const handleIncreaseNights = () => {
@@ -41,34 +41,20 @@ export default function BookingForm({
     if (nights > 1) setNights(nights - 1);
   };
 
-  const getTotalPrice = (
-    price: number,
-    nights: number,
-    selectedExtras: { price: number }[]
-  ) => {
-    const extrasTotal = selectedExtras.reduce(
-      (total, extra) => total + extra.price,
-      0
-    );
+  const getTotalPrice = (price: number, nights: number, selectedExtras: { price: number }[]) => {
+    const extrasTotal = selectedExtras.reduce((total, extra) => total + extra.price, 0);
     return price * nights + extrasTotal;
   };
 
   const discount = 117; // Example value, update as needed
   const cleaningFee = 100; // Example value, update as needed
   const serviceFee = 65; // Example value, update as needed
-  const totalFee =
-    getTotalPrice(price, nights, selectedExtras) -
-    discount +
-    cleaningFee +
-    serviceFee;
+  const totalFee = getTotalPrice(price, nights, selectedExtras) - discount + cleaningFee + serviceFee;
 
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className={clsx(
-        "rounded-xl border border-gray-lighter bg-white p-4 md:p-8 shadow-card",
-        className
-      )}
+      className={clsx("rounded-xl border border-gray-lighter bg-white p-4 md:p-8 shadow-card", className)}
     >
       {/* <div className="flex items-center justify-between gap-3">
         <p className="text-xl font-bold text-gray-dark xl:text-[22px]">
@@ -102,9 +88,7 @@ export default function BookingForm({
           )}
         ></span>
         <div className="p-2">
-          <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
-            Trip Start
-          </span>
+          <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">Trip Start</span>
           <DatePicker
             selected={tripStart}
             onChange={(date) => setTripStart(date)}
@@ -112,9 +96,7 @@ export default function BookingForm({
           />
         </div>
         <div className="p-2">
-          <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
-            Trip End
-          </span>
+          <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">Trip End</span>
           <DatePicker
             selected={tripEnd}
             onChange={(date) => setTripEnd(date)}
@@ -197,15 +179,28 @@ export default function BookingForm({
           </p>
         </div>
       </Box>
-      <Box mt="9" borderWidth="1px" borderRadius="lg" overflow="hidden" p="6">
-        <Text fontWeight="bold" mb={3.5} className="text-black">
+      <Box
+        mt="9"
+        borderWidth="1px"
+        borderRadius="lg"
+        overflow="hidden"
+        p="6"
+      >
+        <Text
+          fontWeight="bold"
+          mb={3.5}
+          className="text-black"
+        >
           OBLIGATORY EXTRAS
         </Text>
         <CheckboxGroup colorScheme="blue">
-          <Stack mt="1" spacing="1">
+          <Stack
+            mt="1"
+            spacing="1"
+          >
             <Checkbox isChecked={true}>
-              Chorter packoge (end cleaning, bed linen & towels - one
-              sel/person/week - exiTo gos bottle Outboard Engine) - 250 EUR
+              Chorter packoge (end cleaning, bed linen & towels - one sel/person/week - exiTo gos bottle Outboard
+              Engine) - 250 EUR
             </Checkbox>
           </Stack>
         </CheckboxGroup>
@@ -221,7 +216,10 @@ export default function BookingForm({
           >
             <p className="text-lg mb-2.5 mt-1.5 font-bold text-black">EXTRAS</p>
             <CheckboxGroup colorScheme="blue">
-              <Stack mt="1" spacing="1">
+              <Stack
+                mt="1"
+                spacing="1"
+              >
                 {selectedExtras.map((extra) => (
                   <Checkbox
                     key={extra.id}
@@ -251,7 +249,7 @@ export default function BookingForm({
         mt="5"
         className="text-sm font-extrabold bg-black/5"
       >
-        A 1000 EURO security deposit will be required by the renter at the base
+        A {securityDeposit?.toLocaleString()} EUR security deposit will be required by the renter at the base
       </Box>
     </form>
   );

@@ -8,6 +8,7 @@ import SimilarYacht from "../../components/SimilarYacht/SimilarYacht";
 import useYachts from "../../hooks/useYachts";
 import GridLayout from "../../components/GridLayout/GridLayout";
 import ImageGridPreview from "../../components/ImageGridPreview/ImageGridPreview";
+import { fetchBoatDataFromDb } from "../../helpers";
 
 export const YachtDetailsData: YachtDetailsDataType[] = [
   {
@@ -116,19 +117,17 @@ const YachtDetailsPage: FC = () => {
 
   const [yacht, setYacht] = useState<any>();
 
-  const { yachts } = useYachts();
-
   async function getYachtDetails() {
     console.log(`Fetching yacht details for ${id}`);
-    const yachtDetails = yachts.find((yacht) => yacht.id === Number(id));
-    console.log(yachtDetails, yachts, id, "logging");
+
+    const yachtDetails = await fetchBoatDataFromDb(id!.toString());
 
     setYacht(yachtDetails);
   }
 
   useEffect(() => {
-    if (yachts && id) getYachtDetails();
-  }, [yachts, id]);
+    if (id) getYachtDetails();
+  }, [id]);
 
   if (!listing) {
     return <p>Listing not found</p>;

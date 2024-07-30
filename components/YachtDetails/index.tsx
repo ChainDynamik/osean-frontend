@@ -31,15 +31,15 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
     { label: "Model", value: details?.model },
     { label: "Year", value: details?.year },
     { label: "Kind", value: details?.kind },
-    { label: "Draught", value: details?.draught },
-    { label: "Beam", value: details?.beam },
-    { label: "Length", value: details?.length },
-    { label: "Water Capacity", value: details?.waterCapacity },
-    { label: "Fuel Capacity", value: details?.fuelCapacity },
+    { label: "Draught", value: details?.draught + " m" },
+    { label: "Beam", value: details?.beam + " m" },
+    { label: "Length", value: details?.boatLength + " m" },
+    { label: "Water Capacity", value: details?.waterCapacity + " L" },
+    { label: "Fuel Capacity", value: details?.fuelCapacity + " L" },
     { label: "Engine", value: details?.engine },
-    { label: "Deposit", value: details?.deposit },
-    { label: "Deposit With Waiver", value: details?.depositWithWaiver },
-    { label: "Currency", value: details?.currency },
+    { label: "Security Deposit", value: details?.deposit + " " + details?.currency },
+    { label: "Security Deposit With Waiver", value: details?.depositWithWaiver + " " + details?.currency },
+    // { label: "Currency", value: details?.currency },
     { label: "Berths", value: details?.berths },
     {
       label: "Required Skipper License",
@@ -206,13 +206,16 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
               )
             )}
           </div>
-          <div className="lg:hidden mb-12">
-            <BookingForm
-              price={500}
-              averageRating={2.31}
-              totalReviews={312}
-            />
-          </div>
+          {details?.deposit && (
+            <div className="lg:hidden mb-12">
+              <BookingForm
+                price={500}
+                averageRating={2.31}
+                totalReviews={312}
+                securityDeposit={details?.deposit}
+              />
+            </div>
+          )}
           <div>
             <h2 className="text-2xl font-semibold mb-4">On Board Equipment</h2>
             <div className="grid grid-cols-2 xl:grid-cols-3 gap-y-8 gap-4">

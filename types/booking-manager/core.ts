@@ -13,7 +13,7 @@ export type BookingManagerYacht = {
   company: string;
   draught: number;
   beam: number;
-  length: number;
+  boatLength: number;
   waterCapacity: number;
   fuelCapacity: number;
   engine: string;

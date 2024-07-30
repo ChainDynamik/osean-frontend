@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import Button from "../Button/Button";
 import PreviewImage from "../PreviewImage/PreviewImage";
 import { useMoralis } from "react-moralis";
+import { fetchBoatDataFromDb } from "../../helpers";
 
 export type OffersCardProps = {
   yacht: string;
@@ -50,25 +51,12 @@ const OffersCard: React.FC<OffersCardProps> = ({
   const imageUrl = mainImage ? mainImage.url : "";
 
   useEffect(() => {
-    async function fetchBoatDataFromDb(modelIds: number[]) {
-      const query = new Moralis.Query("Yacht");
-      query.containedIn("bookingManagerId", modelIds);
-      query.limit(100_000);
-      const result = await query.find();
-
-      if (result) {
-        return result.map((res) => res.toJSON());
-      } else {
-        return null;
-      }
-    }
-
     async function fetchData() {
       if (isInitialized) {
-        const data = await fetchBoatDataFromDb([id]);
+        const data = await fetchBoatDataFromDb(id.toString());
         console.log(data, "individual my");
 
-        setBoatData(data[0]);
+        setBoatData(data);
         setLoadingBoatData(false);
       }
     }
