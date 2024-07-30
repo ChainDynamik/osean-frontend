@@ -16,6 +16,7 @@ import Overlay from "../../components/Overlay/overlay";
 import Button from "../../components/Button/Button";
 import ReactPaginate from "react-paginate";
 import useScreenSize from "../../util/hooks/useScreenSize";
+import { useMoralis } from "react-moralis";
 
 type Extra = {
   id: number;
@@ -76,6 +77,33 @@ export default function Offers() {
   const [currentPage, setCurrentPage] = useState(0);
   const { isMobile } = useScreenSize();
 
+  const { Moralis, isInitialized } = useMoralis();
+
+  async function fetchYachtDataFromDb(modelId: number) {
+    const query = new Moralis.Query("Yacht");
+    query.equalTo("modelId", modelId);
+    const result = await query.first();
+
+    if (result) {
+      return result.toJSON();
+    } else {
+      return null;
+    }
+  }
+
+  async function fetchYachtDataFromDbMultiple(modelIds: number[]) {
+    const query = new Moralis.Query("Yacht");
+    query.containedIn("bookingManagerId", modelIds);
+    query.limit(100_000);
+    const result = await query.find();
+
+    if (result) {
+      return result.map((res) => res.toJSON());
+    } else {
+      return null;
+    }
+  }
+
   const {
     currency,
     minLength,
@@ -97,7 +125,7 @@ export default function Offers() {
     const dateFrom = tripStart ? format(tripStart, "yyyy-MM-dd") : "2024-08-17";
     const dateTo = tripEnd ? format(tripEnd, "yyyy-MM-dd") : "2024-08-24";
 
-    let queryString = `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
+    let queryString = `/api/fetchOffers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
 
     if (currency) {
       queryString += `&currency=${currency}`;
@@ -136,14 +164,19 @@ export default function Offers() {
     try {
       const request = await axios.get(queryString, {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
+          Authorization: `Bearer ${process.env.BOOKING_MANAGER_API_KEY}`,
         },
       });
       // tsst
       const offers: Reservation[] = request.data;
 
+      const allBoatIds = offers.map((offer) => offer.yachtId);
+      const allBoats = await fetchYachtDataFromDbMultiple(allBoatIds);
+
+      console.log(allBoats);
+
       const offersWithBoats = offers.map((offer) => {
-        const boat = getBoatById(offer.yachtId);
+        const boat = allBoats.find((b: any) => b.bookingManagerId === offer.yachtId);
 
         return {
           offer: offer,
@@ -179,13 +212,8 @@ export default function Offers() {
     priceRange,
   ]);
 
-  const mapOfferToProps = (
-    offer: Reservation,
-    boat: BookingManagerYacht
-  ): OffersCardProps => {
-    const productNames = boat.products.map((product) =>
-      product.name.toLowerCase()
-    );
+  const mapOfferToProps = (offer: Reservation, boat: BookingManagerYacht): OffersCardProps => {
+    const productNames = boat?.products?.map((product) => product.name.toLowerCase());
 
     return {
       id: offer?.yachtId,
@@ -199,7 +227,7 @@ export default function Offers() {
       dateFrom: offer?.dateFrom,
       dateTo: offer?.dateTo,
       people: boat?.maxPeopleOnBoard,
-      length: boat?.length,
+      length: boat?.boatLength,
       name: boat?.name,
       model: boat?.model,
       company: boat?.company,
@@ -222,13 +250,8 @@ export default function Offers() {
     const matchesCurrencyFilter = data.offer.currency === currency;
     const matchesProductFilter =
       productFilters.length === 0 ||
-      productFilters.some((filter) =>
-        data.boat.products.some(
-          (product) => product.name.toLowerCase() === filter
-        )
-      );
-    const matchesKindFilter =
-      kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
+      productFilters.some((filter) => data.boat.products.some((product) => product.name.toLowerCase() === filter));
+    const matchesKindFilter = kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
     const withinPriceRange = +data.offer.price >= priceRange[0];
 
     return (
@@ -312,7 +335,10 @@ export default function Offers() {
             }}
             className="lg:hidden absolute right-4 top-4"
           >
-            <Icon iconType="cancel" className="w-7  text-black" />
+            <Icon
+              iconType="cancel"
+              className="w-7  text-black"
+            />
           </div>
           <OfferApiFilter />
         </div>
@@ -331,9 +357,7 @@ export default function Offers() {
               "
               />
             </div>
-            <p className="mb-0 w-full text-xs pr-3">
-              Where would you like to cruise?
-            </p>
+            <p className="mb-0 w-full text-xs pr-3">Where would you like to cruise?</p>
             <div className="py-2.5 px-2.5 border-l border-l-primary">
               <Icon
                 iconType="filter"
@@ -382,9 +406,7 @@ export default function Offers() {
           </div>
           {!loading && sortedOffers.length === 0 && (
             <div className="flex flex-col gap-4">
-              <p className="text-lg font-semibold mb-0 ">
-                No results, please configure filters
-              </p>
+              <p className="text-lg font-semibold mb-0 ">No results, please configure filters</p>
               <Button className="w-fit mx-auto">Get Quote</Button>
             </div>
           )}
@@ -398,11 +420,8 @@ export default function Offers() {
 
               const offerBoatObject = mapOfferToProps(offerObject, boatObject);
 
-              const mainImage = boatObject?.images.find(
-                (image) => image.description === "Main image"
-              );
+              const mainImage = boatObject?.images.find((image) => image.description === "Main image");
               const imageUrl = mainImage ? mainImage.url : "";
-              console.log(sortedOffers, "my offers");
 
               return (
                 <OffersCard

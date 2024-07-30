@@ -53,10 +53,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   people,
   loading,
 }) => {
-  const calculateDiscountPercentage = (
-    startPrice: number,
-    price: number
-  ): number => {
+  const calculateDiscountPercentage = (startPrice: number, price: number): number => {
     return Math.round(((startPrice - price) / startPrice) * 100);
   };
 
@@ -113,20 +110,14 @@ const OffersCard: React.FC<OffersCardProps> = ({
               <div className="flex items-center gap-2 ml-1 mt-2">
                 <div className="flex gap-1 items-center">
                   <span className="bg-black/70 rounded-full size-1.5"></span>
-                  <p className="mb-0 text-black text-xs">
-                    {loading ? <Skeleton width={30} /> : `${cabins} cab`}
-                  </p>
+                  <p className="mb-0 text-black text-xs">{loading ? <Skeleton width={30} /> : `${cabins} cab`}</p>
                 </div>
                 <div className="flex gap-1 items-center">
                   <span className="bg-black/70 rounded-full size-1.5"></span>
-                  <p className="mb-0 text-black text-xs">
-                    {loading ? <Skeleton width={30} /> : "3 baths"}
-                  </p>
+                  <p className="mb-0 text-black text-xs">{loading ? <Skeleton width={30} /> : "3 baths"}</p>
                 </div>
                 <div className="flex gap-1 items-center">
-                  {people && (
-                    <span className="bg-black/70 rounded-full size-1.5"></span>
-                  )}
+                  {people && <span className="bg-black/70 rounded-full size-1.5"></span>}
                   <p className="mb-0 text-black text-xs">
                     {loading && <Skeleton width={30} />}
                     {people && `${people} people`}
@@ -139,9 +130,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     iconType="anchor"
                     className="w-4 -translate-y-[1px] text-black"
                   />
-                  <p className="mb-0 text-black text-xs">
-                    {loading ? <Skeleton width={50} /> : <span>{kind}</span>}
-                  </p>
+                  <p className="mb-0 text-black text-xs">{loading ? <Skeleton width={50} /> : <span>{kind}</span>}</p>
                 </div>
                 <div className="flex gap-1 items-center">
                   <div>
@@ -154,7 +143,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     {loading ? (
                       <Skeleton width={100} />
                     ) : (
-                      products.map((product, index) => (
+                      products?.map((product, index) => (
                         <span key={index}>
                           {product}
                           {index < products.length - 1 && ","}
@@ -177,9 +166,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     iconType="calendar"
                     className="w-4 -translate-y-[1px] text-black"
                   />
-                  <p className="mb-0 text-black text-xs">
-                    {loading ? <Skeleton width={50} /> : <span>{year}</span>}
-                  </p>
+                  <p className="mb-0 text-black text-xs">{loading ? <Skeleton width={50} /> : <span>{year}</span>}</p>
                 </div>
               </div>
             </div>
@@ -193,9 +180,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
               </p>
               <p className="mb-0 text-sm text-black ">
                 Discount -{" "}
-                <span className="text-green-500">
-                  {loading ? <Skeleton width={50} /> : discountPercentage}%
-                </span>
+                <span className="text-green-500">{loading ? <Skeleton width={50} /> : discountPercentage}%</span>
               </p>
               <p className=" mb-0 text-sm text-black ">
                 Price -{" "}
@@ -204,7 +189,10 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   {currency === "EUR" ? "€" : currency === "USD" ? "$" : ""}
                 </span>
               </p>
-              <Link className="mt-2" href={`/yacht-details/${id}`}>
+              <Link
+                className="mt-2"
+                href={`/yacht-details/${id}`}
+              >
                 <Button
                   variant="outline"
                   className="p-2.5 text-sm whitespace-nowrap"
