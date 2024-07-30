@@ -18,7 +18,10 @@ interface FetchOffersQuery {
   countries?: string[];
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const {
     tripStart,
     tripEnd,
@@ -56,13 +59,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     queryString += `&maxBerths=${maxBerths}`;
   }
   if (minYear) {
-    queryString += `&minYear=${minYear}`;
+    queryString += `&minYearOfBuild=${minYear}`;
   }
   if (maxYear) {
-    queryString += `&maxYear=${maxYear}`;
+    queryString += `&maxYearOfBuild=${maxYear}`;
   }
   if (productFilters && productFilters.length > 0) {
-    queryString += `&product=${productFilters.join(",")}`;
+    queryString += `&productName=${productFilters}`;
   }
   if (kindFilters && kindFilters.length > 0) {
     queryString += `&kind=${kindFilters.join(",")}`;

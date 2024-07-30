@@ -5,7 +5,9 @@ import { format } from "date-fns";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
-import OffersCard, { OffersCardProps } from "../../components/OffersCard/OffersCard";
+import OffersCard, {
+  OffersCardProps,
+} from "../../components/OffersCard/OffersCard";
 import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
@@ -143,13 +145,13 @@ export default function Offers() {
       queryString += `&maxBerths=${maxBerths}`;
     }
     if (minYear) {
-      queryString += `&minYear=${minYear}`;
+      queryString += `&minYearOfBuild=${minYear}`;
     }
     if (maxYear) {
-      queryString += `&maxYear=${maxYear}`;
+      queryString += `&maxYearOfBuild=${maxYear}`;
     }
-    if (productFilters.length > 0) {
-      queryString += `&product=${productFilters.join(",")}`;
+    if (productFilters) {
+      queryString += `&productName=${productFilters}`;
     }
     if (kindFilters.length > 0) {
       queryString += `&kind=${kindFilters.join(",")}`;
@@ -160,6 +162,7 @@ export default function Offers() {
     if (countries.length > 0) {
       queryString += `&countries=${countries.join(",")}`;
     }
+    console.log(queryString, "new query");
 
     try {
       const request = await axios.get(queryString, {
@@ -169,24 +172,9 @@ export default function Offers() {
       });
       // tsst
       const offers: Reservation[] = request.data;
+      console.log(offers, "my offers");
 
-      const allBoatIds = offers.map((offer) => offer.yachtId);
-      const allBoats = await fetchYachtDataFromDbMultiple(allBoatIds);
-
-      console.log(allBoats);
-
-      const offersWithBoats = offers.map((offer) => {
-        const boat = allBoats.find((b: any) => b.bookingManagerId === offer.yachtId);
-
-        return {
-          offer: offer,
-          boat: boat,
-        };
-      });
-
-      console.log(offersWithBoats, "offersWithBoats");
-
-      setOffers(offersWithBoats);
+      setOffers(offers);
     } catch (error) {
       console.error("Error fetching offers:", error);
     } finally {
@@ -196,6 +184,7 @@ export default function Offers() {
 
   useEffect(() => {
     if (yachts.length) fetchOffers();
+    console.log("query string again");
   }, [
     yachts,
     tripStart,
@@ -208,18 +197,23 @@ export default function Offers() {
     minYear,
     maxYear,
     productFilters,
-    kindFilters,
+    kindFilters.length,
     passengersOnBoard,
     countries,
     priceRange,
   ]);
 
-  const mapOfferToProps = (offer: Reservation, boat: BookingManagerYacht): OffersCardProps => {
-    const productNames = boat?.products?.map((product) => product.name.toLowerCase());
+  const mapOfferToProps = (
+    offer: Reservation,
+    boat: BookingManagerYacht
+  ): OffersCardProps => {
+    const productNames = boat?.products?.map((product) =>
+      product.name.toLowerCase()
+    );
 
     return {
       id: offer?.yachtId,
-      products: productNames,
+      products: productNames || [],
       yacht: offer?.yacht,
       startBase: offer?.startBase,
       endBase: offer?.endBase,
@@ -228,14 +222,6 @@ export default function Offers() {
       currency: offer?.currency,
       dateFrom: offer?.dateFrom,
       dateTo: offer?.dateTo,
-      people: boat?.maxPeopleOnBoard,
-      length: boat?.boatLength,
-      name: boat?.name,
-      model: boat?.model,
-      company: boat?.company,
-      berths: boat?.berths,
-      cabins: boat?.cabins,
-      year: boat?.year,
       kind: boat?.kind,
     };
   };
@@ -243,39 +229,34 @@ export default function Offers() {
   const filteredOffers = offers.filter((data) => {
     const { berths, year, kind, length } = data.boat || {};
 
-    const withinMinLength = minLength ? length >= minLength : true;
-    const withinMaxLength = maxLength ? length <= maxLength : true;
-    const withinMinBerths = minBerths ? berths >= minBerths : true;
-    const withinMaxBerths = maxBerths ? berths <= maxBerths : true;
-    const withinMinYear = minYear ? year >= minYear : true;
-    const withinMaxYear = maxYear ? year <= maxYear : true;
-    const matchesCurrencyFilter = data.offer.currency === currency;
-    const matchesProductFilter =
-      productFilters.length === 0 ||
-      productFilters.some((filter) => data.boat.products.some((product) => product.name.toLowerCase() === filter));
-    const matchesKindFilter = kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
-    const withinPriceRange = +data.offer.price >= priceRange[0];
+    // const withinMinLength = minLength ? length >= minLength : true;
+    // const withinMaxLength = maxLength ? length <= maxLength : true;
+    // const withinMinBerths = minBerths ? berths >= minBerths : true;
+    // const withinMaxBerths = maxBerths ? berths <= maxBerths : true;
+    // const withinMinYear = minYear ? year >= minYear : true;
+    // const withinMaxYear = maxYear ? year <= maxYear : true;
+    // const matchesCurrencyFilter = data.offer.currency === currency;
+    // const matchesProductFilter =
+    //   productFilters.length === 0 ||
+    //   (data.boat?.products &&
+    //     productFilters.some((filter) =>
+    //       data.boat.products.some(
+    //         (product) => product.name.toLowerCase() === filter
+    //       )
+    //     ));
+    // const matchesKindFilter =
+    //   kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
+    const withinPriceRange = +data.price >= priceRange[0];
 
-    return (
-      withinMinLength &&
-      withinMaxLength &&
-      withinMinBerths &&
-      withinMaxBerths &&
-      withinMinYear &&
-      withinMaxYear &&
-      matchesCurrencyFilter &&
-      matchesProductFilter &&
-      matchesKindFilter &&
-      withinPriceRange
-    );
+    return withinPriceRange;
   });
 
   const sortedOffers = [...filteredOffers].sort((a, b) => {
     if (sortOption === "lowestPrice") {
-      return a.offer.price - b.offer.price;
+      return a.price - b.price;
     }
     if (sortOption === "highestPrice") {
-      return b.offer.price - a.offer.price;
+      return b.price - a.price;
     }
     return 0; // Default: no sorting
   });
@@ -311,6 +292,11 @@ export default function Offers() {
   const offset = currentPage * ITEMS_PER_PAGE;
   const currentPageData = sortedOffers.slice(offset, offset + ITEMS_PER_PAGE);
 
+  // Log the current page data
+  useEffect(() => {
+    console.log("Pagination active items:", currentPageData);
+  }, [currentPage, sortedOffers]);
+
   const [mobileFilterIsOpen, setMobileFilterIsOpen] = useState(false);
 
   return (
@@ -337,10 +323,7 @@ export default function Offers() {
             }}
             className="lg:hidden absolute right-4 top-4"
           >
-            <Icon
-              iconType="cancel"
-              className="w-7  text-black"
-            />
+            <Icon iconType="cancel" className="w-7  text-black" />
           </div>
           <OfferApiFilter />
         </div>
@@ -359,7 +342,9 @@ export default function Offers() {
               "
               />
             </div>
-            <p className="mb-0 w-full text-xs pr-3">Where would you like to cruise?</p>
+            <p className="mb-0 w-full text-xs pr-3">
+              Where would you like to cruise?
+            </p>
             <div className="py-2.5 px-2.5 border-l border-l-primary">
               <Icon
                 iconType="filter"
@@ -408,7 +393,9 @@ export default function Offers() {
           </div>
           {!loading && sortedOffers.length === 0 && (
             <div className="flex flex-col gap-4">
-              <p className="text-lg font-semibold mb-0 ">No results, please configure filters</p>
+              <p className="text-lg font-semibold mb-0 ">
+                No results, please configure filters
+              </p>
               <Button className="w-fit mx-auto">Get Quote</Button>
             </div>
           )}
@@ -417,20 +404,21 @@ export default function Offers() {
           {!loading &&
             sortedOffers.length > 0 &&
             currentPageData.map((data, index) => {
-              const boatObject = data.boat;
-              const offerObject = data.offer;
+              const offerObject = data;
 
-              const offerBoatObject = mapOfferToProps(offerObject, boatObject);
+              const offerBoatObject = mapOfferToProps(offerObject);
 
-              const mainImage = boatObject?.images.find((image) => image.description === "Main image");
-              const imageUrl = mainImage ? mainImage.url : "";
+              // const mainImage = boatObject?.images.find(
+              //   (image) => image.description === "Main image"
+              // );
+              // const imageUrl = mainImage ? mainImage.url : "";
 
               return (
                 <OffersCard
                   key={index}
                   loading={false}
                   {...offerBoatObject}
-                  imageUrl={imageUrl}
+                  // imageUrl={imageUrl}
                 />
               );
             })}

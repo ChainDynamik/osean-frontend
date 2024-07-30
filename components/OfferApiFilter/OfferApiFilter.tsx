@@ -104,8 +104,8 @@ export default function OfferApiFilter({
   );
   const setStoreMinYear = useOfferApiFilterState((state) => state.setMinYear);
   const setStoreMaxYear = useOfferApiFilterState((state) => state.setMaxYear);
-  const toggleProductFilter = useOfferApiFilterState(
-    (state) => state.toggleProductFilter
+  const setProductFilter = useOfferApiFilterState(
+    (state) => state.setProductFilter
   );
   const setKindFilters = useOfferApiFilterState(
     (state) => state.setKindFilters
@@ -254,8 +254,15 @@ export default function OfferApiFilter({
               <Switch.Root
                 className="SwitchRoot"
                 id="bareboat"
-                checked={productFilters.includes("bareboat")}
-                onCheckedChange={() => toggleProductFilter("bareboat")}
+                checked={productFilters === "bareboat"}
+                onCheckedChange={() => {
+                  if (productFilters !== "bareboat") {
+                    setProductFilter("bareboat");
+                  }
+                  if (productFilters === "bareboat") {
+                    setProductFilter(null);
+                  }
+                }}
               >
                 <Switch.Thumb className="SwitchThumb" />
               </Switch.Root>
@@ -271,8 +278,16 @@ export default function OfferApiFilter({
               <Switch.Root
                 className="SwitchRoot"
                 id="crewed"
-                checked={productFilters.includes("crewed")}
-                onCheckedChange={() => toggleProductFilter("crewed")}
+                checked={productFilters === "crewed"}
+                // onCheckedChange={() => setProductFilter("crewed")}
+                onCheckedChange={() => {
+                  if (productFilters !== "crewed") {
+                    setProductFilter("crewed");
+                  }
+                  if (productFilters === "crewed") {
+                    setProductFilter(null);
+                  }
+                }}
               >
                 <Switch.Thumb className="SwitchThumb" />
               </Switch.Root>
@@ -287,7 +302,7 @@ export default function OfferApiFilter({
         <Slider.Root
           className="SliderRoot"
           min={2000}
-          max={5520}
+          max={30000}
           step={100}
           defaultValue={priceRange}
           onValueChange={(value) => setPriceRange(value)}
