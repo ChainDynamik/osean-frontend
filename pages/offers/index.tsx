@@ -17,6 +17,7 @@ import Button from "../../components/Button/Button";
 import ReactPaginate from "react-paginate";
 import useScreenSize from "../../util/hooks/useScreenSize";
 import { useMoralis } from "react-moralis";
+import { useLastReturnedOffersStore } from "../../util/store/lastReturnedOffersStore";
 
 type Extra = {
   id: number;
@@ -32,7 +33,7 @@ type PaymentPlan = {
   amount: number;
 };
 
-type Reservation = {
+export type Reservation = {
   yachtId: number;
   yacht: string;
   startBaseId: number;
@@ -76,6 +77,8 @@ export default function Offers() {
   const { yachts, getBoatById } = useYachts();
   const [currentPage, setCurrentPage] = useState(0);
   const { isMobile } = useScreenSize();
+
+  const { setLastReturnedOffers } = useLastReturnedOffersStore();
 
   const {
     currency,
@@ -146,6 +149,7 @@ export default function Offers() {
       console.log(offers, "my offers");
 
       setOffers(offers);
+      setLastReturnedOffers(offers);
     } catch (error) {
       console.error("Error fetching offers:", error);
     } finally {
