@@ -1,5 +1,3 @@
-// src/components/OfferApiFilter/OfferApiFilter.tsx
-
 "use client";
 
 import React, { useState } from "react";
@@ -12,6 +10,11 @@ import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
 import Select from "react-select";
 import { COUNTRIES_DATA } from "../../data/countries-data";
+import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
+import * as Switch from "@radix-ui/react-switch";
+import * as Slider from "@radix-ui/react-slider";
+import { Dropdown } from "../Dropdown/Dropdown";
+import Icon from "../icon-selector/icon-selector";
 
 const kindOptions = [
   { value: "sail boat", label: "Sailboat" },
@@ -32,6 +35,27 @@ const countryOptions = COUNTRIES_DATA.map((country) => ({
   value: country.shortName,
   label: country.name,
 }));
+
+const yearOptions = [{ value: "all", label: "All" }].concat(
+  Array.from({ length: 30 }, (_, i) => 1990 + i).map((year) => ({
+    value: year,
+    label: year.toString(),
+  }))
+);
+
+const lengthOptions = [{ value: "all", label: "All" }].concat(
+  Array.from({ length: 16 }, (_, i) => 5 + i).map((length) => ({
+    value: length,
+    label: length.toString() + " m",
+  }))
+);
+
+const passengersOptions = [{ value: "all", label: "All" }].concat(
+  Array.from({ length: 10 }, (_, i) => 1 + i).map((passengers) => ({
+    value: passengers,
+    label: passengers.toString(),
+  }))
+);
 
 interface BookingFormProps {
   className?: string;
@@ -61,6 +85,7 @@ export default function OfferApiFilter({
     (state) => state.passengersOnBoard
   );
   const countries = useOfferApiFilterState((state) => state.countries);
+  const priceRange = useOfferApiFilterState((state) => state.priceRange);
 
   // Zustand actions
   const setStoreAmount = useOfferApiFilterState((state) => state.setAmount);
@@ -89,6 +114,7 @@ export default function OfferApiFilter({
     (state) => state.setPassengersOnBoard
   );
   const setCountries = useOfferApiFilterState((state) => state.setCountries);
+  const setPriceRange = useOfferApiFilterState((state) => state.setPriceRange);
 
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
 
@@ -120,6 +146,26 @@ export default function OfferApiFilter({
     setCountries(selectedCountries);
   };
 
+  const handleYearChange = (year: number | string, type: "min" | "max") => {
+    if (type === "min") {
+      setStoreMinYear(year === "all" ? null : year);
+    } else {
+      setStoreMaxYear(year === "all" ? null : year);
+    }
+  };
+
+  const handleLengthChange = (length: number | string, type: "min" | "max") => {
+    if (type === "min") {
+      setStoreMinLength(length === "all" ? null : length);
+    } else {
+      setStoreMaxLength(length === "all" ? null : length);
+    }
+  };
+
+  const handlePassengersChange = (passengers: number | string) => {
+    setPassengersOnBoard(passengers === "all" ? null : passengers);
+  };
+
   return (
     <form
       onSubmit={(e) => {
@@ -127,14 +173,19 @@ export default function OfferApiFilter({
         handleReserve();
       }}
       className={cn(
-        "max-w-md rounded-xl border border-gray-lighter bg-white p-8 shadow-card",
+        "rounded-xl border border-gray-lighter bg-white p-8 shadow-card",
         className
       )}
     >
-      <h2 className="text-3xl font-bold mb-6 w-4/5">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 w-4/5">
         Book your <span className="text-yellow-500">Yacht Charter</span> with{" "}
         <span className="text-blue-500">confidence</span>
       </h2>
+
+      <div className="mt-4 flex flex-col gap-2">
+        <p className="mb-0 text-black text-lg">Destination</p>
+        <CountriesDropdown />
+      </div>
       <div
         className={cn(
           "relative mt-6 grid grid-cols-2 gap-3 rounded-t-lg border border-b-0 border-gray-lighter"
@@ -145,6 +196,7 @@ export default function OfferApiFilter({
             "absolute inset-y-0 left-1/2 translate-x-1/2 border-r border-gray-lighter"
           )}
         ></span>
+
         <div className="p-2">
           <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
             Trip Start
@@ -169,10 +221,8 @@ export default function OfferApiFilter({
         </div>
       </div>
       <Button
-        size="sm"
-        rounded="lg"
         type="button"
-        variant="solid"
+        variant="secondary"
         onClick={handleUpdateTripDates}
         className="mt-4 mb-7 w-full flex flex-col gap-2 hover:!bg-black text-base !font-bold uppercase"
       >
@@ -180,34 +230,7 @@ export default function OfferApiFilter({
       </Button>
       <div className="flex flex-col gap-4 border-t-2 mt-6 border-t-gray-300">
         <div className="mt-4 flex flex-col gap-2">
-          <p className="mb-0 text-black text-lg">Currency:</p>
-          <div className="flex gap-4 items-center">
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="currency"
-                value="EUR"
-                checked={currency === "EUR"}
-                onChange={() => setCurrency("EUR")}
-                className="form-radio"
-              />
-              <span className="ml-2">EUR</span>
-            </label>
-            {/* <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="currency"
-                value="USD"
-                checked={currency === "USD"}
-                onChange={() => setCurrency("USD")}
-                className="form-radio"
-              />
-              <span className="ml-2">USD</span>
-            </label> */}
-          </div>
-        </div>
-        <div className="mt-4 flex flex-col gap-2">
-          <p className="mb-0 text-black text-lg">Kinds:</p>
+          <p className="mb-0 text-black text-lg">Types of boat:</p>
           <Select
             options={kindOptions}
             onChange={handleKindChange}
@@ -219,122 +242,204 @@ export default function OfferApiFilter({
         </div>
         <div className="mt-4 flex flex-col gap-2">
           <p className="mb-0 text-black text-lg">Products:</p>
-          <div className="flex gap-4 items-center">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
+          <div className="flex gap-4 flex-col">
+            <div className="flex items-center gap-2 justify-between">
+              <label
+                className="Label"
+                htmlFor="bareboat"
+                style={{ paddingRight: 15 }}
+              >
+                Bareboat (Without Skipper)
+              </label>
+              <Switch.Root
+                className="SwitchRoot"
+                id="bareboat"
                 checked={productFilters.includes("bareboat")}
-                onChange={() => toggleProductFilter("bareboat")}
-                className="form-checkbox"
-              />
-              <span className="ml-2">Bareboat</span>
-            </label>
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
+                onCheckedChange={() => toggleProductFilter("bareboat")}
+              >
+                <Switch.Thumb className="SwitchThumb" />
+              </Switch.Root>
+            </div>
+            <div className="flex items-center gap-2 justify-between">
+              <label
+                className="Label"
+                htmlFor="crewed"
+                style={{ paddingRight: 15 }}
+              >
+                Crewed (With Skipper)
+              </label>
+              <Switch.Root
+                className="SwitchRoot"
+                id="crewed"
                 checked={productFilters.includes("crewed")}
-                onChange={() => toggleProductFilter("crewed")}
-                className="form-checkbox"
-              />
-              <span className="ml-2">Crewed</span>
-            </label>
+                onCheckedChange={() => toggleProductFilter("crewed")}
+              >
+                <Switch.Thumb className="SwitchThumb" />
+              </Switch.Root>
+            </div>
           </div>
         </div>
-        <div className="mt-4 flex flex-col gap-2">
-          <p className="mb-0 text-black text-lg">Countries:</p>
-          <Select
-            options={countryOptions}
-            onChange={handleCountryChange}
-            isClearable
-            isMulti
-            isSearchable
-            placeholder="Select countries"
-          />
+      </div>
+      <div className="mt-4">
+        <label className="block text-sm font-semibold uppercase text-gray-dark">
+          Price Range
+        </label>
+        <Slider.Root
+          className="SliderRoot"
+          min={2000}
+          max={5520}
+          step={100}
+          defaultValue={priceRange}
+          onValueChange={(value) => setPriceRange(value)}
+        >
+          <Slider.Track className="SliderTrack">
+            <Slider.Range className="SliderRange" />
+          </Slider.Track>
+          <Slider.Thumb className="SliderThumb" aria-label="Price" />
+        </Slider.Root>
+
+        <div className="flex justify-between mt-2">
+          <span>{priceRange[0]} EUR</span>
+          <span>{priceRange[1]} EUR</span>
         </div>
       </div>
-      <div className="flex justify-between gap-4 items-center">
-        <div className="mt-4">
+      <div className="flex justify-between items-center">
+        <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Min Length
           </label>
-          <input
-            type="number"
-            value={minLength || ""}
-            onChange={(e) => setStoreMinLength(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
+          <Dropdown.Root modal={false}>
+            <Dropdown.Trigger className="w-full mt-1 p-2 border-l border-t border-b border-gray-300 rounded-l-md bg-white">
+              <div className="flex items-center justify-between">
+                <p className="mb-0 text-black">
+                  {"< "}
+                  {minLength ? `${minLength} m` : "All"}
+                </p>
+                <div>
+                  <Icon iconType="chevron" className="w-3 text-black" />
+                </div>
+              </div>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {lengthOptions.map((option) => (
+                <Dropdown.Item
+                  key={option.value}
+                  onSelect={() => handleLengthChange(option.value, "min")}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Max Length
           </label>
-          <input
-            type="number"
-            value={maxLength || ""}
-            onChange={(e) => setStoreMaxLength(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
+          <Dropdown.Root modal={false}>
+            <Dropdown.Trigger className="w-full mt-1 p-2 border-r border-t border-b  border-gray-300 rounded-r-md bg-white">
+              <div className="flex items-center justify-between">
+                <p className="mb-0 text-black">
+                  {"> "}
+                  {maxLength ? `${maxLength} m` : "All"}
+                </p>
+                <div>
+                  <Icon iconType="chevron" className="w-3 text-black" />
+                </div>
+              </div>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {lengthOptions.map((option) => (
+                <Dropdown.Item
+                  key={option.value}
+                  onSelect={() => handleLengthChange(option.value, "max")}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         </div>
       </div>
-      <div className="flex justify-between gap-4 items-center">
-        <div className="mt-4">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Min Berths
-          </label>
-          <input
-            type="number"
-            value={minBerths || ""}
-            onChange={(e) => setStoreMinBerths(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
-        </div>
-        <div className="mt-4">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Max Berths
-          </label>
-          <input
-            type="number"
-            value={maxBerths || ""}
-            onChange={(e) => setStoreMaxBerths(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
-        </div>
-      </div>
-      <div className="flex justify-between gap-4 items-center">
-        <div className="mt-4">
+      <div className="flex justify-between items-center">
+        <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Min Year
           </label>
-          <input
-            type="number"
-            value={minYear || ""}
-            onChange={(e) => setStoreMinYear(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
+          <Dropdown.Root modal={false}>
+            <Dropdown.Trigger className="w-full mt-1 p-2 border-l border-t border-b border-gray-300 rounded-l-md bg-white">
+              <div className="flex items-center justify-between">
+                <div>≥</div>
+                <p className="mb-0 text-black">{minYear || "All"}</p>
+                <div>
+                  <Icon iconType="chevron" className="w-3 text-black" />
+                </div>
+              </div>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {yearOptions.map((option) => (
+                <Dropdown.Item
+                  key={option.value}
+                  onSelect={() => handleYearChange(option.value, "min")}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
             Max Year
           </label>
-          <input
-            type="number"
-            value={maxYear || ""}
-            onChange={(e) => setStoreMaxYear(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
+          <Dropdown.Root modal={false}>
+            <Dropdown.Trigger className="w-full mt-1 p-2 border-r border-t border-b  border-gray-300 rounded-r-md bg-white">
+              <div className="flex items-center justify-between">
+                <div>≤</div>
+                <p className="mb-0 text-black">{maxYear || "All"}</p>
+                <div>
+                  <Icon iconType="chevron" className="w-3 text-black" />
+                </div>
+              </div>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {yearOptions.map((option) => (
+                <Dropdown.Item
+                  key={option.value}
+                  onSelect={() => handleYearChange(option.value, "max")}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         </div>
       </div>
       <div className="flex justify-between gap-4 items-center">
-        <div className="mt-4">
+        <div className="mt-4 w-full">
           <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Passengers On Board
+            People
           </label>
-          <input
-            type="number"
-            value={passengersOnBoard || ""}
-            onChange={(e) => setPassengersOnBoard(Number(e.target.value))}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md"
-          />
+          <Dropdown.Root modal={false}>
+            <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
+              <div className="flex items-center justify-between">
+                <p className="mb-0 text-black">{passengersOnBoard || "All"}</p>
+                <div>
+                  <Icon iconType="chevron" className="w-3 text-black" />
+                </div>
+              </div>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {passengersOptions.map((option) => (
+                <Dropdown.Item
+                  key={option.value}
+                  onSelect={() => handlePassengersChange(option.value)}
+                >
+                  {option.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         </div>
       </div>
     </form>

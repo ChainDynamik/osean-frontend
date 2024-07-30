@@ -16,12 +16,14 @@ import { ChevronLeftIcon } from "../../assets/icons-components/chevronLeft";
 import { ChevronRightIcon } from "../../assets/icons-components/chevronRight";
 import ActionIcon from "../../assets/icons-components/action-icon";
 import { cn } from "../../util";
+import PreviewImage from "../PreviewImage/PreviewImage";
 
 export type ListingItemTypes = {
   id: number;
   slides: string[];
   caption: string;
   title: string;
+  name: string;
   slug: string;
   location: string;
   price: string;
@@ -42,10 +44,10 @@ export default function YachtCard({
   boatManufacturingDate,
   cabins,
   berths,
+  name,
   length,
   loading = false, // Default loading to false
 }: ListingItemTypes) {
-  console.log(price, "id of yacht");
   const RouteComponent = loading ? "div" : "Link";
 
   return (
@@ -78,23 +80,22 @@ export default function YachtCard({
             >
               {slides?.map((slide, index) => (
                 <SwiperSlide key={`slide-${index}`}>
-                  <Image
-                    className="aspect-[34/20] pt-2 !rounded-[0.5rem] aspectvideo bg-gray-lighter"
-                    src={slide}
-                    width={816}
-                    height={600}
-                    alt="boat"
-                    priority
-                  />
+                  <PreviewImage src={slide}>
+                    <Image
+                      className="aspect-[34/20] pt-2 !rounded-[0.5rem] aspectvideo bg-gray-lighter"
+                      src={slide}
+                      width={816}
+                      height={600}
+                      alt="boat"
+                      priority
+                    />
+                  </PreviewImage>
                 </SwiperSlide>
               ))}
             </Swiper>
           )}
 
           <div
-            onClick={() => {
-              console.log("I was clicked");
-            }}
             className={clsx(
               `!border-gray-200 !bg-gray-100 !text-gray-400 cursor-pointer px-2.5 py-2 aspect-square rounded-full boat_${id}-listing-item-button-prev absolute left-4 top-1/2 z-10 -translate-y-1/2 opacity-80 shadow-md !transition-all duration-300 focus:!ring-0 items-center justify-center md:flex md:group-hover/item:opacity-100`
             )}
@@ -104,9 +105,6 @@ export default function YachtCard({
             </div>{" "}
           </div>
           <div
-            onClick={() => {
-              console.log("I was clicked");
-            }}
             className={clsx(
               ` !border-gray-200 !bg-gray-100 !text-gray-400 cursor-pointer px-2.5 py-2 aspect-square rounded-full boat_${id}-listing-item-button-next absolute right-4 top-1/2 z-10 -translate-y-1/2 opacity-80 shadow-md !transition-all duration-300 focus:!ring-0 items-center justify-center md:flex md:group-hover/item:opacity-100`
             )}
@@ -119,7 +117,7 @@ export default function YachtCard({
       </div>
       <Link href={`/yacht-details/${id}`}>
         <div className="content pt-3 text-black">
-          <div className="text-blue-800 text-lg mb-0.5 flex items-center gap-5">
+          <div className="text-blue-800 text-lg mb-0.5">
             <span className="font-bold">
               {loading ? (
                 <Skeleton width={150} />
@@ -127,6 +125,8 @@ export default function YachtCard({
                 `${caption} (${boatManufacturingDate})`
               )}
             </span>
+            <span className="inline-block mx-1.5">|</span>
+            <span>{name}</span>
           </div>
           <h4 className="text-ellipsis mb-0.5 text-gray-dark !text-lg 2xl:mb-1.5">
             {loading ? <Skeleton width={200} /> : title}

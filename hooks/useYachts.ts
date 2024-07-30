@@ -8,11 +8,14 @@ const useYachts = () => {
 
   const fetchChrisBoats = useCallback(async () => {
     try {
-      const request = await axios.get(`${BOOKING_MANAGER_API_ROOT}/yachts?companyId=2672&currency=EUR&inventory=EUR`, {
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
-        },
-      });
+      const request = await axios.get(
+        `${BOOKING_MANAGER_API_ROOT}/yachts?currency=EUR&inventory=EUR`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_BOOKING_MANAGER_API_KEY}`,
+          },
+        }
+      );
 
       const yachts: BookingManagerYacht[] = request.data;
 

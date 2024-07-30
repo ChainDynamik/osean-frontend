@@ -37,6 +37,7 @@ module.exports = {
       },
       colors: {
         primary: "#015ce6",
+        negative: "#dc2726",
       },
       fontSize: {
         h1: [

@@ -7,6 +7,7 @@ import Button from "../Button/Button";
 import { useRouter } from "next/navigation";
 import { cn } from "../../util";
 import { useTripStore } from "../../util/store/tripStore";
+import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
 
 interface BookingFormProps {
   className?: string;
@@ -48,7 +49,7 @@ export default function ReserveOffer({ className, isRoute }: BookingFormProps) {
         className
       )}
     >
-      <h2 className="text-3xl font-bold mb-6 w-4/5">
+      <h2 className="text-2xl md:text-3xl font-bold mb-6 md:w-4/5">
         Book your <span className="text-yellow-500">Yacht Charter</span> with{" "}
         <span className="text-blue-500">confidence</span>
       </h2>
@@ -85,12 +86,12 @@ export default function ReserveOffer({ className, isRoute }: BookingFormProps) {
           />
         </div>
       </div>
-
+      <div className="mt-4">
+        <CountriesDropdown />
+      </div>
       <Button
-        size="xl"
-        rounded="lg"
         type="submit"
-        variant="solid"
+        variant="secondary"
         className="mt-4 w-full hover:!bg-black !py-[14px] text-base !font-bold uppercase tracking-widest"
       >
         reserve

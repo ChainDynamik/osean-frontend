@@ -32,7 +32,7 @@ const Content = forwardRef<ContentElement, ContentProps>((props, ref) => {
     <Dialog.Portal>
       <Dialog.Overlay
         className={cn(
-          "fixed overlay inset-0 z-[9999] bg-black/40",
+          "fixed overlay inset-0 z-[99999] bg-black/40",
           overlayClassname
         )}
       />

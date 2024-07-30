@@ -5,6 +5,9 @@ import BookingForm from "../BookingForm/BookingForm";
 import { Extra, useSelectedExtrasStore } from "../../util/store/extraStore";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css"; // Import styles
+import Icon from "../icon-selector/icon-selector";
+import Image from "next/image";
+import PreviewImage from "../PreviewImage/PreviewImage";
 
 interface YachtDetailsProps {
   details: BookingManagerYacht | null;
@@ -65,18 +68,21 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   )?.url;
 
   return (
-    <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16">
+    <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16 mt-14 mb-16">
       <div className="w-full">
-        <div className="mx-auto py-10">
+        <div className="mx-auto pb-10">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold">
-              {loading ? <Skeleton width={200} /> : details?.name}
+            <h1 className="text-3xl text-primary font-bold">
+              {loading ? <Skeleton width={200} /> : details?.model}
             </h1>
             <p className="text-lg">
               {loading ? (
                 <Skeleton width={300} />
               ) : (
-                `${details?.maxPeopleOnBoard} guests • ${details?.cabins} cabins • ${details?.wc} bathrooms`
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="location" className="w-4 text-black" />
+                  <p className="mb-0">{details?.homeBase}</p>
+                </div>
               )}
             </p>
           </div>
@@ -87,26 +93,227 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
               details?.descriptions?.[0].text || "N/A"
             )}
           </p>
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">On Board Equipment</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {loading
-                ? Array.from({ length: 8 }).map((_, index) => (
-                    <div key={index} className="flex items-center space-x-2">
+          <div className="flex max-md:flex-col md:gap-8 justify-between">
+            <div className="border-t border-b-black/50 pt-4 h-fit grid xl:grid-cols-2 gap-x-10 gap-y-4 mb-16 mt-4">
+              {loading ? (
+                <>
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <div key={index} className="flex gap-4 items-center">
                       <Skeleton circle={true} height={24} width={24} />
-                      <Skeleton width={150} />
-                    </div>
-                  ))
-                : details?.equipment.map((item, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <span className="inline-block w-6 h-6 bg-gray-200"></span>
-                      <span>{item}</span>
+                      <Skeleton width={100} />
                     </div>
                   ))}
+                </>
+              ) : (
+                <>
+                  <div className="flex gap-4 items-center">
+                    <div>
+                      <Icon iconType="cabin" className="w-4" />
+                    </div>
+                    <p className="mb-0 text-black">{details?.cabins} Cabins</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <div>
+                      <Icon iconType="calendar" className="w-4" />
+                    </div>
+                    <p className="mb-0 text-black">{details?.year}</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <div>
+                      <Icon iconType="bed" className="w-4" />
+                    </div>
+                    <p className="mb-0 text-black">{details?.berths} Berths</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <div>
+                      <Icon iconType="mainsail" className="w-4" />
+                    </div>
+                    <p className="mb-0 text-black">
+                      {details?.mainsailType} mainsail
+                    </p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <div>
+                      <Icon iconType="shower" className="w-4" />
+                    </div>
+                    <p className="mb-0 text-black">4 showers</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <div>
+                      <Icon iconType="breadth" className="w-4" />
+                    </div>
+                    <p className="mb-0 text-black">
+                      {details?.length} ft ({details?.length * 0.3048} m)
+                    </p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <div>
+                      <Icon iconType="wc" className="w-4" />
+                    </div>
+                    <p className="mb-0 text-black">{details?.wc} wc</p>
+                  </div>
+                  <div className="flex gap-4 items-center">
+                    <div>
+                      <Icon iconType="length" className="w-4" />
+                    </div>
+                    <p className="mb-0 text-black">{details?.draught} m</p>
+                  </div>
+                </>
+              )}
+            </div>
+            {loading ? (
+              <Skeleton width={200} height={200} />
+            ) : (
+              planImage && (
+                <div className="mt-4 w-4/5 md:w-1/2 xl:w-fit">
+                  <h3 className="text-sm w-fit font-semibold mb-2">
+                    Plan Image
+                  </h3>
+                  <PreviewImage src={planImage}>
+                    <Image
+                      width={200}
+                      height={200}
+                      src={planImage}
+                      alt="Plan"
+                      className="w-full xl:w-[22rem] h-auto"
+                    />
+                  </PreviewImage>
+                </div>
+              )
+            )}
+          </div>
+          <div className="lg:hidden mb-12">
+            <BookingForm price={500} averageRating={2.31} totalReviews={312} />
+          </div>
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">On Board Equipment</h2>
+            <div className="grid grid-cols-2 xl:grid-cols-3 gap-y-8 gap-4">
+              {/* Static Data */}
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Misc.</p>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Guides & Maps
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Safety equipment
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Leisure</p>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Snorkeling gears
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Kitchen</p>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Electric refrigerator
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">Stove</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Electronics</p>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    220V converter
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Anemometer
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">Autopilot</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Chart plotter
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">GPS</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">Sounder</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Speedometer
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">VHF DSC</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Deck equipment</p>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">Bimini</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Cockpit table
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">Bimini</p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Deck hand shower
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Electric Windlass
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <p className="mb-0 font-bold text-black">Comfort</p>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">
+                    Fans in cabins
+                  </p>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Icon iconType="check" className="text-black w-4 " />
+                  <p className="mb-0 font-extrabold text-black/80">Hot water</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        {/* Specifications Section */}
         <div className="mt-10">
           <h2 className="text-2xl font-semibold mb-4">Specifications</h2>
           <table className="w-full text-left">
@@ -128,9 +335,27 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
             {isViewMore ? "View Less" : "View More"}
           </div>
         </div>
-        {/*  */}
-
-        {/* Products Section */}
+        <Box mt="9" borderWidth="1px" borderRadius="lg" overflow="hidden" p="6">
+          <Text fontWeight="bold" mb={3.5} className="text-black">
+            OBLIGATORY EXTRAS
+          </Text>
+          <CheckboxGroup colorScheme="blue">
+            <Stack mt="1" spacing="1">
+              {loading ? (
+                Array.from({ length: 3 }).map((_, index) => (
+                  <Checkbox key={index} isChecked={false}>
+                    <Skeleton width={250} />
+                  </Checkbox>
+                ))
+              ) : (
+                <Checkbox isChecked={true}>
+                  Chorter packoge (end cleaning, bed linen & towels - one
+                  sel/person/week - exiTo gos bottle Outboard Engine) - 250 EUR
+                </Checkbox>
+              )}
+            </Stack>
+          </CheckboxGroup>
+        </Box>
         <Box
           mt="10"
           borderWidth="1px"
@@ -180,52 +405,11 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                   {isViewMoreExtras ? "View Less" : "View More"}
                 </div>
               )}
-              {planImage && (
-                <div className="mt-4">
-                  <h3 className="text-xl font-semibold mb-2">Plan Image</h3>
-                  <img src={planImage} alt="Plan" className="w-full h-auto" />
-                </div>
-              )}
             </>
           )}
         </Box>
-
-        {/* Selected Extras Section */}
-        {/* <SelectedExtras /> */}
-
-        {/* Owner Info Section */}
-        <div className="mt-10">
-          <h2 className="text-2xl font-semibold mb-4">Owner Info</h2>
-          {loading ? (
-            <>
-              <Skeleton circle={true} height={64} width={64} />
-              <Skeleton width={150} height={24} />
-              <Skeleton width={100} height={20} />
-            </>
-          ) : (
-            <div className="flex flex-col gap-10">
-              <div className="flex gap-4 items-center">
-                <img
-                  src="/avatar.jpg"
-                  alt="Owner"
-                  className="w-16 h-16 rounded-full"
-                />
-                <div className="flex flex-col">
-                  <p className="font-semibold !mb-0">{details?.company}</p>
-                  <div className="flex items-center">
-                    <span className="text-yellow-500 flex">4.99★</span>
-                    <span className="ml-2 text-gray-600">(20 reviews)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* <Button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded">Send a message</Button> */}
-            </div>
-          )}
-        </div>
       </div>
       <div className="hidden w-full max-w-sm pb-11 lg:block xl:max-w-md 3xl:max-w-lg">
-        {/* <div className="sticky right-0 top-28 4xl:top-40"> */}
         <div className="">
           <BookingForm price={500} averageRating={2.31} totalReviews={312} />
         </div>
