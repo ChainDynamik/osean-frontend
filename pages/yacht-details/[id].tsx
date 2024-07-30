@@ -3,9 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import GallaryBlock from "../../components/GallaryBlock/GallaryBlock";
 import SubscriptionBlock from "../../components/SubscriptionBlock/SubscriptionBlock";
-import YachtDetails, {
-  YachtDetailsDataType,
-} from "../../components/YachtDetails";
+import YachtDetails, { YachtDetailsDataType } from "../../components/YachtDetails";
 import SimilarYacht from "../../components/SimilarYacht/SimilarYacht";
 import useYachts from "../../hooks/useYachts";
 import GridLayout from "../../components/GridLayout/GridLayout";
@@ -33,14 +31,7 @@ export const YachtDetailsData: YachtDetailsDataType[] = [
   Furthermore, about 14 nautical miles from the tourist port of
   oristano, there is also mal di Ventre, in Sardinian Malu Etna, a
   small island facing the coast.`,
-    equipment: [
-      "Automatic Pilot",
-      "Deck Shower",
-      "Outboard Motor",
-      "Hot Water",
-      "GPS",
-      "Cockpit Table",
-    ],
+    equipment: ["Automatic Pilot", "Deck Shower", "Outboard Motor", "Hot Water", "GPS", "Cockpit Table"],
     specifications: [
       { label: "Engine Torque", value: "111 ft-lb" },
       { label: "Engine", value: "Milwaukee-Eight 107" },
@@ -88,14 +79,7 @@ export const YachtDetailsData: YachtDetailsDataType[] = [
   Furthermore, about 14 nautical miles from the tourist port of
   oristano, there is also mal di Ventre, in Sardinian Malu Etna, a
   small island facing the coast.`,
-    equipment: [
-      "Automatic Pilot",
-      "Deck Shower",
-      "Outboard Motor",
-      "Hot Water",
-      "GPS",
-      "Cockpit Table",
-    ],
+    equipment: ["Automatic Pilot", "Deck Shower", "Outboard Motor", "Hot Water", "GPS", "Cockpit Table"],
     specifications: [
       { label: "Engine Torque", value: "111 ft-lb" },
       { label: "Engine", value: "Milwaukee-Eight 107" },
@@ -152,20 +136,12 @@ const YachtDetailsPage: FC = () => {
 
   const isLoading = yacht === undefined || yacht.length === 0;
 
-  const planImage =
-    yacht?.images.find((image: any) => image.description === "Plan image")
-      ?.url || "";
+  const planImage = yacht?.images.find((image: any) => image.description === "Plan image")?.url || "";
 
-  const mainImage = yacht?.images.find(
-    (image: any) => image.description === "Main image"
-  );
-  const interiorImage = yacht?.images.find(
-    (image: any) => image.description === "Interior image"
-  );
+  const mainImage = yacht?.images.find((image: any) => image.description === "Main image");
+  const interiorImage = yacht?.images.find((image: any) => image.description === "Interior image");
   const otherImages = yacht?.images.filter(
-    (image: any) =>
-      image.description !== "Main image" &&
-      image.description !== "Interior image"
+    (image: any) => image.description !== "Main image" && image.description !== "Interior image"
   );
 
   const imagesToDisplay = [mainImage, interiorImage, ...(otherImages || [])]
@@ -178,7 +154,7 @@ const YachtDetailsPage: FC = () => {
 
   return (
     <>
-      <div className="container-fluid relative !px-5 md:!px-10 pt-20 w-full">
+      <div className="container-fluid relative !px-5 md:!px-10 pt-20 w-full max-w-[1200px]">
         <GallaryBlock
           loading={isLoading}
           images={imagesToDisplay.slice(0, 3)}
@@ -187,7 +163,10 @@ const YachtDetailsPage: FC = () => {
         <ImageGridPreview images={yacht?.images.map((image: any) => image.url)}>
           <div className="flex gap-2 w-fit mx-auto mb-10 mt-4">
             {displayedImages.map((image, index) => (
-              <div key={index} className="relative">
+              <div
+                key={index}
+                className="relative"
+              >
                 <img
                   src={image}
                   alt={`Image ${index + 1}`}
@@ -203,7 +182,10 @@ const YachtDetailsPage: FC = () => {
           </div>
         </ImageGridPreview>
         {/*  */}
-        <YachtDetails details={yacht} loading={isLoading} />
+        <YachtDetails
+          details={yacht}
+          loading={isLoading}
+        />
         <SimilarYacht />
         {/* {yacht?.images && (
           <GridLayout images={yacht?.images.map((image: any) => image.url)} />

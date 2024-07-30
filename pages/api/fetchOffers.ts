@@ -10,18 +10,15 @@ interface FetchOffersQuery {
   maxLength?: string;
   minBerths?: string;
   maxBerths?: string;
-  minYear?: string;
-  maxYear?: string;
-  productFilters?: string[];
-  kindFilters?: string[];
+  minYearOfBuild?: string;
+  maxYearOfBuild?: string;
+  productName?: string;
+  kind?: string;
   passengersOnBoard?: string;
-  countries?: string[];
+  country?: string;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
     tripStart,
     tripEnd,
@@ -30,12 +27,12 @@ export default async function handler(
     maxLength,
     minBerths,
     maxBerths,
-    minYear,
-    maxYear,
-    productFilters,
-    kindFilters,
+    minYearOfBuild,
+    maxYearOfBuild,
+    productName,
+    kind,
     passengersOnBoard,
-    countries,
+    country,
   } = req.query as unknown as FetchOffersQuery;
 
   const dateFrom = tripStart ? tripStart : "2024-08-17";
@@ -58,24 +55,34 @@ export default async function handler(
   if (maxBerths) {
     queryString += `&maxBerths=${maxBerths}`;
   }
-  if (minYear) {
-    queryString += `&minYearOfBuild=${minYear}`;
+  if (minYearOfBuild) {
+    queryString += `&minYearOfBuild=${minYearOfBuild}`;
   }
-  if (maxYear) {
-    queryString += `&maxYearOfBuild=${maxYear}`;
+  if (maxYearOfBuild) {
+    queryString += `&maxYearOfBuild=${maxYearOfBuild}`;
   }
-  if (productFilters && productFilters.length > 0) {
-    queryString += `&productName=${productFilters}`;
+  if (productName) {
+    queryString += `&productName=${productName}`;
   }
-  if (kindFilters && kindFilters.length > 0) {
-    queryString += `&kind=${kindFilters.join(",")}`;
+  if (kind) {
+    // Kind is formattted as such: type1,type2,type3. Transform this string into an array
+    const kindArray = kind.split(",");
+    for (const kindElement of kindArray) {
+      queryString += `&kind=${kindElement}`;
+    }
   }
   if (passengersOnBoard) {
     queryString += `&passengersOnBoard=${passengersOnBoard}`;
   }
-  if (countries && countries.length > 0) {
-    queryString += `&countries=${countries.join(",")}`;
+  if (country) {
+    // Countries is formattted as such: country1,country2,country3. Transform this string into an array
+    const countriesArray = country.split(",");
+    for (const country of countriesArray) {
+      queryString += `&country=${country}`;
+    }
   }
+
+  console.log("BACKEND", queryString);
 
   try {
     const request = await axios.get(queryString, {
