@@ -225,7 +225,10 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                 {/* <p className="mb-0 font-bold text-black">Misc.</p> */}
                 {details?.equipmentIds.map((id) => {
                   return (
-                    <div className="flex gap-2 items-center">
+                    <div
+                      className="flex gap-2 items-center"
+                      key={id}
+                    >
                       <Icon
                         iconType="check"
                         className="text-black w-4 "
