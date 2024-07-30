@@ -318,6 +318,11 @@ export default function Offers() {
   const offset = currentPage * ITEMS_PER_PAGE;
   const currentPageData = sortedOffers.slice(offset, offset + ITEMS_PER_PAGE);
 
+  // Log the current page data
+  useEffect(() => {
+    console.log("Pagination active items:", currentPageData);
+  }, [currentPage, sortedOffers]);
+
   const [mobileFilterIsOpen, setMobileFilterIsOpen] = useState(false);
 
   return (
