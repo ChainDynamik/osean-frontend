@@ -5,7 +5,9 @@ import { format } from "date-fns";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
-import OffersCard, { OffersCardProps } from "../../components/OffersCard/OffersCard";
+import OffersCard, {
+  OffersCardProps,
+} from "../../components/OffersCard/OffersCard";
 import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
@@ -176,7 +178,9 @@ export default function Offers() {
       console.log(allBoats);
 
       const offersWithBoats = offers.map((offer) => {
-        const boat = allBoats.find((b: any) => b.bookingManagerId === offer.yachtId);
+        const boat = allBoats.find(
+          (b: any) => b.bookingManagerId === offer.yachtId
+        );
 
         return {
           offer: offer,
@@ -214,12 +218,17 @@ export default function Offers() {
     priceRange,
   ]);
 
-  const mapOfferToProps = (offer: Reservation, boat: BookingManagerYacht): OffersCardProps => {
-    const productNames = boat?.products?.map((product) => product.name.toLowerCase());
+  const mapOfferToProps = (
+    offer: Reservation,
+    boat: BookingManagerYacht
+  ): OffersCardProps => {
+    const productNames = boat?.products?.map((product) =>
+      product.name.toLowerCase()
+    );
 
     return {
       id: offer?.yachtId,
-      products: productNames,
+      products: productNames || [],
       yacht: offer?.yacht,
       startBase: offer?.startBase,
       endBase: offer?.endBase,
@@ -228,14 +237,6 @@ export default function Offers() {
       currency: offer?.currency,
       dateFrom: offer?.dateFrom,
       dateTo: offer?.dateTo,
-      people: boat?.maxPeopleOnBoard,
-      length: boat?.boatLength,
-      name: boat?.name,
-      model: boat?.model,
-      company: boat?.company,
-      berths: boat?.berths,
-      cabins: boat?.cabins,
-      year: boat?.year,
       kind: boat?.kind,
     };
   };
@@ -252,8 +253,14 @@ export default function Offers() {
     const matchesCurrencyFilter = data.offer.currency === currency;
     const matchesProductFilter =
       productFilters.length === 0 ||
-      productFilters.some((filter) => data.boat.products.some((product) => product.name.toLowerCase() === filter));
-    const matchesKindFilter = kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
+      (data.boat?.products &&
+        productFilters.some((filter) =>
+          data.boat.products.some(
+            (product) => product.name.toLowerCase() === filter
+          )
+        ));
+    const matchesKindFilter =
+      kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
     const withinPriceRange = +data.offer.price >= priceRange[0];
 
     return (
@@ -337,10 +344,7 @@ export default function Offers() {
             }}
             className="lg:hidden absolute right-4 top-4"
           >
-            <Icon
-              iconType="cancel"
-              className="w-7  text-black"
-            />
+            <Icon iconType="cancel" className="w-7  text-black" />
           </div>
           <OfferApiFilter />
         </div>
@@ -359,7 +363,9 @@ export default function Offers() {
               "
               />
             </div>
-            <p className="mb-0 w-full text-xs pr-3">Where would you like to cruise?</p>
+            <p className="mb-0 w-full text-xs pr-3">
+              Where would you like to cruise?
+            </p>
             <div className="py-2.5 px-2.5 border-l border-l-primary">
               <Icon
                 iconType="filter"
@@ -408,7 +414,9 @@ export default function Offers() {
           </div>
           {!loading && sortedOffers.length === 0 && (
             <div className="flex flex-col gap-4">
-              <p className="text-lg font-semibold mb-0 ">No results, please configure filters</p>
+              <p className="text-lg font-semibold mb-0 ">
+                No results, please configure filters
+              </p>
               <Button className="w-fit mx-auto">Get Quote</Button>
             </div>
           )}
@@ -422,7 +430,9 @@ export default function Offers() {
 
               const offerBoatObject = mapOfferToProps(offerObject, boatObject);
 
-              const mainImage = boatObject?.images.find((image) => image.description === "Main image");
+              const mainImage = boatObject?.images.find(
+                (image) => image.description === "Main image"
+              );
               const imageUrl = mainImage ? mainImage.url : "";
 
               return (
