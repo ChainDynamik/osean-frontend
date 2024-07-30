@@ -26,7 +26,7 @@ interface OfferApiFilterState {
   setMaxBerths: (berths: number | null) => void;
   setMinYear: (year: number | null) => void;
   setMaxYear: (year: number | null) => void;
-  setProductFilter: (product: string) => void;
+  setProductFilter: (product: string | null) => void;
   setKindFilters: (kinds: string[]) => void;
   setPassengersOnBoard: (passengers: number | null) => void;
   setCountries: (countries: string[]) => void;

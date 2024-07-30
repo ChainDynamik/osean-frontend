@@ -145,10 +145,10 @@ export default function Offers() {
       queryString += `&maxBerths=${maxBerths}`;
     }
     if (minYear) {
-      queryString += `&minYear=${minYear}`;
+      queryString += `&minYearOfBuild=${minYear}`;
     }
     if (maxYear) {
-      queryString += `&maxYear=${maxYear}`;
+      queryString += `&maxYearOfBuild=${maxYear}`;
     }
     if (productFilters) {
       queryString += `&productName=${productFilters}`;
@@ -162,6 +162,7 @@ export default function Offers() {
     if (countries.length > 0) {
       queryString += `&countries=${countries.join(",")}`;
     }
+    console.log(queryString, "new query");
 
     try {
       const request = await axios.get(queryString, {
@@ -243,8 +244,8 @@ export default function Offers() {
     //         (product) => product.name.toLowerCase() === filter
     //       )
     //     ));
-    const matchesKindFilter =
-      kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
+    // const matchesKindFilter =
+    //   kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
     const withinPriceRange = +data.price >= priceRange[0];
 
     return withinPriceRange;

@@ -255,7 +255,14 @@ export default function OfferApiFilter({
                 className="SwitchRoot"
                 id="bareboat"
                 checked={productFilters === "bareboat"}
-                onCheckedChange={() => setProductFilter("bareboat")}
+                onCheckedChange={() => {
+                  if (productFilters !== "bareboat") {
+                    setProductFilter("bareboat");
+                  }
+                  if (productFilters === "bareboat") {
+                    setProductFilter(null);
+                  }
+                }}
               >
                 <Switch.Thumb className="SwitchThumb" />
               </Switch.Root>
@@ -272,7 +279,15 @@ export default function OfferApiFilter({
                 className="SwitchRoot"
                 id="crewed"
                 checked={productFilters === "crewed"}
-                onCheckedChange={() => setProductFilter("crewed")}
+                // onCheckedChange={() => setProductFilter("crewed")}
+                onCheckedChange={() => {
+                  if (productFilters !== "crewed") {
+                    setProductFilter("crewed");
+                  }
+                  if (productFilters === "crewed") {
+                    setProductFilter(null);
+                  }
+                }}
               >
                 <Switch.Thumb className="SwitchThumb" />
               </Switch.Root>

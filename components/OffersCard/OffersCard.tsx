@@ -171,7 +171,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   </p>
                 </div>
               </div>
-              <div className="flex gap-4 justify-between mt-3 h-fit max-mdflex max-mdflex-col max-[1250px]:grid max-[1250px]:grid-cols-2 max-[1250px]:gap-2">
+              <div className="grid grid-cols-2 gap-4 justify-between mt-3 h-fit max-mdflex max-mdflex-col max-[1250px]:grid max-[1250px]:grid-cols-2 max-[1250px]:gap-2">
                 <div className="flex gap-1 items-center">
                   <Icon
                     iconType="anchor"
