@@ -150,8 +150,8 @@ export default function Offers() {
     if (maxYear) {
       queryString += `&maxYear=${maxYear}`;
     }
-    if (productFilters.length > 0) {
-      queryString += `&product=${productFilters.join(",")}`;
+    if (productFilters) {
+      queryString += `&productName=${productFilters}`;
     }
     if (kindFilters.length > 0) {
       queryString += `&kind=${kindFilters.join(",")}`;
@@ -175,7 +175,7 @@ export default function Offers() {
       const allBoatIds = offers.map((offer) => offer.yachtId);
       const allBoats = await fetchYachtDataFromDbMultiple(allBoatIds);
 
-      console.log(allBoats);
+      console.log(queryString, "query string");
 
       const offersWithBoats = offers.map((offer) => {
         const boat = allBoats.find(
@@ -200,6 +200,7 @@ export default function Offers() {
 
   useEffect(() => {
     if (yachts.length) fetchOffers();
+    console.log("query string again");
   }, [
     yachts,
     tripStart,
@@ -212,7 +213,7 @@ export default function Offers() {
     minYear,
     maxYear,
     productFilters,
-    kindFilters,
+    kindFilters.length,
     passengersOnBoard,
     countries,
     priceRange,
@@ -244,37 +245,26 @@ export default function Offers() {
   const filteredOffers = offers.filter((data) => {
     const { berths, year, kind, length } = data.boat || {};
 
-    const withinMinLength = minLength ? length >= minLength : true;
-    const withinMaxLength = maxLength ? length <= maxLength : true;
-    const withinMinBerths = minBerths ? berths >= minBerths : true;
-    const withinMaxBerths = maxBerths ? berths <= maxBerths : true;
-    const withinMinYear = minYear ? year >= minYear : true;
-    const withinMaxYear = maxYear ? year <= maxYear : true;
-    const matchesCurrencyFilter = data.offer.currency === currency;
-    const matchesProductFilter =
-      productFilters.length === 0 ||
-      (data.boat?.products &&
-        productFilters.some((filter) =>
-          data.boat.products.some(
-            (product) => product.name.toLowerCase() === filter
-          )
-        ));
+    // const withinMinLength = minLength ? length >= minLength : true;
+    // const withinMaxLength = maxLength ? length <= maxLength : true;
+    // const withinMinBerths = minBerths ? berths >= minBerths : true;
+    // const withinMaxBerths = maxBerths ? berths <= maxBerths : true;
+    // const withinMinYear = minYear ? year >= minYear : true;
+    // const withinMaxYear = maxYear ? year <= maxYear : true;
+    // const matchesCurrencyFilter = data.offer.currency === currency;
+    // const matchesProductFilter =
+    //   productFilters.length === 0 ||
+    //   (data.boat?.products &&
+    //     productFilters.some((filter) =>
+    //       data.boat.products.some(
+    //         (product) => product.name.toLowerCase() === filter
+    //       )
+    //     ));
     const matchesKindFilter =
       kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
     const withinPriceRange = +data.offer.price >= priceRange[0];
 
-    return (
-      withinMinLength &&
-      withinMaxLength &&
-      withinMinBerths &&
-      withinMaxBerths &&
-      withinMinYear &&
-      withinMaxYear &&
-      matchesCurrencyFilter &&
-      matchesProductFilter &&
-      matchesKindFilter &&
-      withinPriceRange
-    );
+    return withinPriceRange;
   });
 
   const sortedOffers = [...filteredOffers].sort((a, b) => {

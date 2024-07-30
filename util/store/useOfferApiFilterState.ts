@@ -1,5 +1,3 @@
-// src/util/store/offerApiFiltersStore.ts
-
 import { create } from "zustand";
 
 interface OfferApiFilterState {
@@ -13,7 +11,7 @@ interface OfferApiFilterState {
   maxBerths: number | null;
   minYear: number | null;
   maxYear: number | null;
-  productFilters: string[];
+  productFilters: string | null;
   kindFilters: string[];
   passengersOnBoard: number | null;
   countries: string[];
@@ -28,7 +26,7 @@ interface OfferApiFilterState {
   setMaxBerths: (berths: number | null) => void;
   setMinYear: (year: number | null) => void;
   setMaxYear: (year: number | null) => void;
-  toggleProductFilter: (product: string) => void;
+  setProductFilter: (product: string) => void;
   setKindFilters: (kinds: string[]) => void;
   setPassengersOnBoard: (passengers: number | null) => void;
   setCountries: (countries: string[]) => void;
@@ -46,7 +44,7 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   maxBerths: null,
   minYear: null,
   maxYear: null,
-  productFilters: [],
+  productFilters: null,
   kindFilters: [],
   passengersOnBoard: null,
   countries: [],
@@ -61,12 +59,10 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   setMaxBerths: (berths) => set({ maxBerths: berths }),
   setMinYear: (year) => set({ minYear: year }),
   setMaxYear: (year) => set({ maxYear: year }),
-  toggleProductFilter: (product) =>
-    set((state) => ({
-      productFilters: state.productFilters.includes(product)
-        ? state.productFilters.filter((p) => p !== product)
-        : [...state.productFilters, product],
-    })),
+  setProductFilter: (product) =>
+    set({
+      productFilters: product,
+    }),
   setKindFilters: (kinds) => set({ kindFilters: kinds }),
   setPassengersOnBoard: (passengers) => set({ passengersOnBoard: passengers }),
   setCountries: (countries) => set({ countries }),
