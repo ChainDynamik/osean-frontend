@@ -184,6 +184,8 @@ export default function Offers() {
         };
       });
 
+      console.log(offersWithBoats, "offersWithBoats");
+
       setOffers(offersWithBoats);
     } catch (error) {
       console.error("Error fetching offers:", error);
