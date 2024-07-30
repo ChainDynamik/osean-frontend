@@ -99,7 +99,7 @@ export default function Offers() {
     const dateFrom = tripStart ? format(tripStart, "yyyy-MM-dd") : "2024-08-17";
     const dateTo = tripEnd ? format(tripEnd, "yyyy-MM-dd") : "2024-08-24";
 
-    let queryString = `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
+    let queryString = `${BOOKING_MANAGER_API_ROOT}/offers?companyId=2672&dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
 
     if (currency) {
       queryString += `&currency=${currency}`;
