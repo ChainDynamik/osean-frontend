@@ -171,26 +171,9 @@ export default function Offers() {
       });
       // tsst
       const offers: Reservation[] = request.data;
+      console.log(offers, "my offers");
 
-      const allBoatIds = offers.map((offer) => offer.yachtId);
-      const allBoats = await fetchYachtDataFromDbMultiple(allBoatIds);
-
-      console.log(queryString, "query string");
-
-      const offersWithBoats = offers.map((offer) => {
-        const boat = allBoats.find(
-          (b: any) => b.bookingManagerId === offer.yachtId
-        );
-
-        return {
-          offer: offer,
-          boat: boat,
-        };
-      });
-
-      console.log(offersWithBoats, "offersWithBoats");
-
-      setOffers(offersWithBoats);
+      setOffers(offers);
     } catch (error) {
       console.error("Error fetching offers:", error);
     } finally {
@@ -262,17 +245,17 @@ export default function Offers() {
     //     ));
     const matchesKindFilter =
       kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
-    const withinPriceRange = +data.offer.price >= priceRange[0];
+    const withinPriceRange = +data.price >= priceRange[0];
 
     return withinPriceRange;
   });
 
   const sortedOffers = [...filteredOffers].sort((a, b) => {
     if (sortOption === "lowestPrice") {
-      return a.offer.price - b.offer.price;
+      return a.price - b.price;
     }
     if (sortOption === "highestPrice") {
-      return b.offer.price - a.offer.price;
+      return b.price - a.price;
     }
     return 0; // Default: no sorting
   });
@@ -420,22 +403,21 @@ export default function Offers() {
           {!loading &&
             sortedOffers.length > 0 &&
             currentPageData.map((data, index) => {
-              const boatObject = data.boat;
-              const offerObject = data.offer;
+              const offerObject = data;
 
-              const offerBoatObject = mapOfferToProps(offerObject, boatObject);
+              const offerBoatObject = mapOfferToProps(offerObject);
 
-              const mainImage = boatObject?.images.find(
-                (image) => image.description === "Main image"
-              );
-              const imageUrl = mainImage ? mainImage.url : "";
+              // const mainImage = boatObject?.images.find(
+              //   (image) => image.description === "Main image"
+              // );
+              // const imageUrl = mainImage ? mainImage.url : "";
 
               return (
                 <OffersCard
                   key={index}
                   loading={false}
                   {...offerBoatObject}
-                  imageUrl={imageUrl}
+                  // imageUrl={imageUrl}
                 />
               );
             })}

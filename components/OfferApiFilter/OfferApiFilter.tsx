@@ -287,7 +287,7 @@ export default function OfferApiFilter({
         <Slider.Root
           className="SliderRoot"
           min={2000}
-          max={5520}
+          max={30000}
           step={100}
           defaultValue={priceRange}
           onValueChange={(value) => setPriceRange(value)}
