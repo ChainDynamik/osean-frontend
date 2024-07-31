@@ -20,6 +20,7 @@ import ReactPaginate from "react-paginate";
 import useScreenSize from "../../util/hooks/useScreenSize";
 import { useMoralis } from "react-moralis";
 import { useLastReturnedOffersStore } from "../../util/store/lastReturnedOffersStore";
+import CurrencyDropdown from "../../components/CurrencyDropdown/CurrencyDropdown";
 
 type Extra = {
   id: number;
@@ -209,25 +210,6 @@ export default function Offers() {
   };
 
   const filteredOffers = offers.filter((data) => {
-    const { berths, year, kind, length } = data.boat || {};
-
-    // const withinMinLength = minLength ? length >= minLength : true;
-    // const withinMaxLength = maxLength ? length <= maxLength : true;
-    // const withinMinBerths = minBerths ? berths >= minBerths : true;
-    // const withinMaxBerths = maxBerths ? berths <= maxBerths : true;
-    // const withinMinYear = minYear ? year >= minYear : true;
-    // const withinMaxYear = maxYear ? year <= maxYear : true;
-    // const matchesCurrencyFilter = data.offer.currency === currency;
-    // const matchesProductFilter =
-    //   productFilters.length === 0 ||
-    //   (data.boat?.products &&
-    //     productFilters.some((filter) =>
-    //       data.boat.products.some(
-    //         (product) => product.name.toLowerCase() === filter
-    //       )
-    //     ));
-    // const matchesKindFilter =
-    //   kindFilters.length === 0 || kindFilters.includes(kind?.toLowerCase());
     const withinPriceRange = +data.price >= priceRange[0];
 
     return withinPriceRange;
@@ -345,7 +327,7 @@ export default function Offers() {
               <p className="mb-0 text-black whitespace-nowrap">Sort by:</p>
 
               <Dropdown.Root modal={false}>
-                <Dropdown.Trigger className="inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-3 py-1 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-sm">
+                <Dropdown.Trigger className="inline-flex justify-between rounded-md border border-gray-300 shadow-sm px-3 py-1 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-sm w-fit">
                   <div>
                     {!sortOption ? "Default" : sortOption}
                     <svg
@@ -367,7 +349,6 @@ export default function Offers() {
                   {sortOptions.map((option) => (
                     <Dropdown.Item
                       key={option.value}
-                      className="block px-4 py-2 !bg-white text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left max-sm:text-sm"
                       onClick={() => setSortOption(option.value)}
                     >
                       {option.label}
@@ -375,6 +356,8 @@ export default function Offers() {
                   ))}
                 </Dropdown.Content>
               </Dropdown.Root>
+              {/*  */}
+              <CurrencyDropdown />
             </div>
           </div>
           {!loading && sortedOffers.length === 0 && (
@@ -394,18 +377,8 @@ export default function Offers() {
 
               const offerBoatObject = mapOfferToProps(offerObject);
 
-              // const mainImage = boatObject?.images.find(
-              //   (image) => image.description === "Main image"
-              // );
-              // const imageUrl = mainImage ? mainImage.url : "";
-
               return (
-                <OffersCard
-                  key={index}
-                  loading={false}
-                  {...offerBoatObject}
-                  // imageUrl={imageUrl}
-                />
+                <OffersCard key={index} loading={false} {...offerBoatObject} />
               );
             })}
           <ReactPaginate
