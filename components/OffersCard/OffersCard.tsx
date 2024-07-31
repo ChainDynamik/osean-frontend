@@ -74,6 +74,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   };
 
   const discountPercentage = calculateDiscountPercentage(startPrice, price);
+  console.log(boatData, "my boat");
 
   return (
     <div className="w-full max-md:mb-6 ring-primary !text-black flex gap-3 flex-col rounded-lg shadow-card border-[0.5px] border-black">

@@ -313,11 +313,13 @@ export default function OfferApiFilter({
           step={100}
           defaultValue={priceRange}
           onValueChange={(value) => setPriceRange(value)}
+          minStepsBetweenThumbs={20} // Ensures that thumbs do not overlap
         >
           <Slider.Track className="SliderTrack">
             <Slider.Range className="SliderRange" />
           </Slider.Track>
-          <Slider.Thumb className="SliderThumb" aria-label="Price" />
+          <Slider.Thumb className="SliderThumb" aria-label="Price Minimum" />
+          <Slider.Thumb className="SliderThumb" aria-label="Price Maximum" />
         </Slider.Root>
 
         <div className="flex justify-between mt-2">

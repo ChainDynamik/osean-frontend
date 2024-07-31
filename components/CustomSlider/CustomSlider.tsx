@@ -1,7 +1,5 @@
-// src/components/CustomSlider/CustomSlider.tsx
 import React from "react";
 import * as Slider from "@radix-ui/react-slider";
-// import "./styles.css";
 
 interface CustomSliderProps {
   min: number;
@@ -30,7 +28,12 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
       <Slider.Track className="SliderTrack">
         <Slider.Range className="SliderRange" />
       </Slider.Track>
-      <Slider.Thumb className="SliderThumb" aria-label="Price" />
+      <Slider.Thumb className="SliderThumb" aria-label="Price Minimum" />
+      <Slider.Thumb
+        className="SliderThumb"
+        aria-label="Price Maximum"
+        tabIndex={2}
+      />
     </Slider.Root>
   );
 };

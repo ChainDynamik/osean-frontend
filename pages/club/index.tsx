@@ -113,7 +113,7 @@ function BoatGrid() {
 
 export default function TopBoatsPage() {
   return (
-    <main className="mt-[2.5rem] md:mt-[5.5rem]">
+    <main className="mt-[2.5rem] md:mt-[2.5rem]">
       <div className="yacht-page-header h-[calc(100vh-30px)]  md:h-[calc(100vh-110px)] w-full flex max-lg:items-center max-lg:justify-center">
         <div className="max-w-[1200px] mx-auto max-lg:pt-6 md:px-8 pb-8 flex items-end relative h-full w-full max-lg:items-center max-lg:justify-center max-lg:h-fit">
           <div className="flex w-full gap-8 max-lg:w-fit max-lg:items-center justify-between max-h-fit max-sm:w-[90%] items-end max-lg:flex-col">
