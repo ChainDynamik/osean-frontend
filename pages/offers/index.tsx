@@ -5,7 +5,9 @@ import { format } from "date-fns";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
-import OffersCard, { OffersCardProps } from "../../components/OffersCard/OffersCard";
+import OffersCard, {
+  OffersCardProps,
+} from "../../components/OffersCard/OffersCard";
 import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
@@ -94,7 +96,8 @@ export default function Offers() {
     countries,
     priceRange,
   } = useOfferApiFilterState();
-
+  const minCabins = useOfferApiFilterState((state) => state.minCabins);
+  const setMinCabins = useOfferApiFilterState((state) => state.setMinCabins);
   const { tripStart, tripEnd } = useTripStore();
 
   async function fetchOffers() {
@@ -132,6 +135,9 @@ export default function Offers() {
     }
     if (passengersOnBoard) {
       queryString += `&passengersOnBoard=${passengersOnBoard}`;
+    }
+    if (minCabins) {
+      queryString += `&minCabins=${minCabins}`;
     }
     if (countries.length > 0) {
       queryString += `&country=${countries.join(",")}`;
@@ -176,10 +182,16 @@ export default function Offers() {
     passengersOnBoard,
     countries,
     priceRange,
+    minCabins,
   ]);
 
-  const mapOfferToProps = (offer: Reservation, boat: BookingManagerYacht): OffersCardProps => {
-    const productNames = boat?.products?.map((product) => product.name.toLowerCase());
+  const mapOfferToProps = (
+    offer: Reservation,
+    boat: BookingManagerYacht
+  ): OffersCardProps => {
+    const productNames = boat?.products?.map((product) =>
+      product.name.toLowerCase()
+    );
 
     return {
       id: offer?.yachtId,
@@ -297,10 +309,7 @@ export default function Offers() {
             }}
             className="lg:hidden absolute right-4 top-4"
           >
-            <Icon
-              iconType="cancel"
-              className="w-7  text-black"
-            />
+            <Icon iconType="cancel" className="w-7  text-black" />
           </div>
           <OfferApiFilter />
         </div>
@@ -319,7 +328,9 @@ export default function Offers() {
               "
               />
             </div>
-            <p className="mb-0 w-full text-xs pr-3">Where would you like to cruise?</p>
+            <p className="mb-0 w-full text-xs pr-3">
+              Where would you like to cruise?
+            </p>
             <div className="py-2.5 px-2.5 border-l border-l-primary">
               <Icon
                 iconType="filter"
@@ -368,7 +379,9 @@ export default function Offers() {
           </div>
           {!loading && sortedOffers.length === 0 && (
             <div className="flex flex-col gap-4">
-              <p className="text-lg font-semibold mb-0 ">No results, please configure filters</p>
+              <p className="text-lg font-semibold mb-0 ">
+                No results, please configure filters
+              </p>
               <Button className="w-fit mx-auto">Get Quote</Button>
             </div>
           )}

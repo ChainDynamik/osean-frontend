@@ -166,6 +166,13 @@ export default function OfferApiFilter({
     setPassengersOnBoard(passengers === "all" ? null : passengers);
   };
 
+  const minCabins = useOfferApiFilterState((state) => state.minCabins);
+  const setMinCabins = useOfferApiFilterState((state) => state.setMinCabins);
+
+  const handleCabinChange = (cabins: number) => {
+    setMinCabins(cabins === minCabins ? null : cabins);
+  };
+
   return (
     <form
       onSubmit={(e) => {
@@ -428,6 +435,26 @@ export default function OfferApiFilter({
               ))}
             </Dropdown.Content>
           </Dropdown.Root>
+        </div>
+      </div>
+      <div className="mt-4">
+        <p className="text-black text-lg mb-2">Cabin Number</p>
+        <div className="flex gap-2">
+          {[1, 2, 3, 4, 5, 6].map((number) => (
+            <button
+              key={number}
+              type="button"
+              onClick={() => handleCabinChange(number)}
+              className={cn(
+                "w-1/5 aspect-square border rounded-lg",
+                minCabins === number
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-black border-gray-300"
+              )}
+            >
+              {number === 6 ? "6+" : number}
+            </button>
+          ))}
         </div>
       </div>
       <div className="flex justify-between gap-4 items-center">

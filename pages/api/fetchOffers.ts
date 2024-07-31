@@ -16,9 +16,13 @@ interface FetchOffersQuery {
   kind?: string;
   passengersOnBoard?: string;
   country?: string;
+  minCabins?: string;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const {
     tripStart,
     tripEnd,
@@ -33,6 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     kind,
     passengersOnBoard,
     country,
+    minCabins,
   } = req.query as unknown as FetchOffersQuery;
 
   const dateFrom = tripStart ? tripStart : "2024-08-17";
@@ -63,6 +68,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   if (productName) {
     queryString += `&productName=${productName}`;
+  }
+  if (minCabins) {
+    queryString += `&minCabins=${minCabins}`;
   }
   if (kind) {
     // Kind is formattted as such: type1,type2,type3. Transform this string into an array
