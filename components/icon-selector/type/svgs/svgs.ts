@@ -22,3 +22,8 @@ export { default as Check } from "../../../../assets/svgs/check.svg";
 export { default as Filter } from "../../../../assets/svgs/filter.svg";
 export { default as Search } from "../../../../assets/svgs/search.svg";
 export { default as Cancel } from "../../../../assets/svgs/cancel.svg";
+export { default as Eth } from "../../../../assets/svgs/eth.svg";
+export { default as Eur } from "../../../../assets/svgs/eur.svg";
+export { default as Usd } from "../../../../assets/svgs/usd.svg";
+export { default as Osean } from "../../../../assets/svgs/osean.svg";
+export { default as Bnb } from "../../../../assets/svgs/bnb.svg";

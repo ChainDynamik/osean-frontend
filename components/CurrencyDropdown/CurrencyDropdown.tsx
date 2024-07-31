@@ -1,21 +1,22 @@
 // src/components/CurrencyDropdown/CurrencyDropdown.tsx
 
-import React from "react";
+import React, { useState } from "react";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
+import Icon from "../icon-selector/icon-selector";
 
 const currencyOptions = [
-  { value: "EUR", label: "EUR" },
-  { value: "USD", label: "USD" },
-  { value: "ETH", label: "ETH" },
-  { value: "BNB", label: "BNB" },
-  { value: "OSEAN", label: "OSEAN" },
+  { value: "EUR", label: "EUR", icon: "eur" },
+  { value: "USD", label: "USD", icon: "usd" },
+  { value: "ETH", label: "ETH", icon: "eth" },
+  { value: "BNB", label: "BNB", icon: "bnb" },
+  { value: "OSEAN", label: "OSEAN", icon: "osean" },
 ];
 
 export default function CurrencyDropdown() {
   const currency = useOfferApiFilterState((state) => state.currency);
   const setCurrency = useOfferApiFilterState((state) => state.setCurrency);
-
+  const [activeIcon, setActiveIcon] = useState("");
   const handleCurrencyChange = (selectedValue: string) => {
     setCurrency(selectedValue);
   };
@@ -24,7 +25,10 @@ export default function CurrencyDropdown() {
     <Dropdown.Root modal={false}>
       <Dropdown.Trigger className="inline-flex justify-between rounded-md border border-gray-300 shadow-sm px-3 py-1 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-sm w-fit">
         <div>
-          {currency || "Select Currency"}
+          <div className="flex items-center gap-2">
+            <Icon iconType={activeIcon} className="w-4 text-primary" />
+            {currency || "Select Currency"}
+          </div>
           <svg
             className="-mr-1 ml-2 h-5 w-5"
             xmlns="http://www.w3.org/2000/svg"
@@ -44,9 +48,15 @@ export default function CurrencyDropdown() {
         {currencyOptions.map((option) => (
           <Dropdown.Item
             key={option.value}
-            onClick={() => handleCurrencyChange(option.value)}
+            onClick={() => {
+              handleCurrencyChange(option.value);
+              setActiveIcon(option.icon);
+            }}
           >
-            {option.label}
+            <div className="flex items-center gap-2">
+              <Icon iconType={option.icon} className="w-4 text-primary" />
+              {option.label}
+            </div>
           </Dropdown.Item>
         ))}
       </Dropdown.Content>

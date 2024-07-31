@@ -107,9 +107,9 @@ export default function Offers() {
 
     let queryString = `/api/fetchOffers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
 
-    if (currency) {
-      queryString += `&currency=${currency}`;
-    }
+    // if (currency) {
+    //   queryString += `&currency=${currency}`;
+    // }
     if (minLength) {
       queryString += `&minLength=${minLength}`;
     }
