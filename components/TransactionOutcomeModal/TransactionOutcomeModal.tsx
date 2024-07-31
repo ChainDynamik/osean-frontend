@@ -1,48 +1,38 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import CheckAnimation from "../../assets/lottie/check.json";
 import dynamic from "next/dynamic";
 import Modal from "../Modal/Modal";
 import Image from "next/image";
+import Button from "../Button/Button";
+import { cn } from "../../util";
 
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-import Button from "../Button/Button";
-import { useTransactionStore } from "../../util/store";
-import { cn } from "../../util";
-
-export default function TransactionOutcomeModal({
-  children,
-  isLoading = true,
-  discount,
-  fee,
-  network,
-}: {
-  children?: ReactNode;
+type TransactionOutcomeModalProps = {
   network: string;
   discount: number;
   fee: number;
   isLoading?: boolean | null;
-}) {
-  const {
-    transactionOpen,
-    toggleTransactionModal,
-    setOseanModalIsOpen,
-    setPaymentModal,
-  } = useTransactionStore();
+  isOpen: boolean;
+  onOpenChange: Dispatch<SetStateAction<boolean>>;
+};
 
+export default function TransactionOutcomeModal({
+  isOpen,
+  onOpenChange,
+  network,
+  discount,
+  fee,
+}: TransactionOutcomeModalProps) {
   return (
-    <Modal.Root
-    // open={transactionOpen}
-    // onOpenChange={() => {
-    //   toggleTransactionModal(!transactionOpen);
-    //   setOseanModalIsOpen(false);
-    //   setPaymentModal(false);
-    // }}
-    >
-      <Modal.Trigger>{children}</Modal.Trigger>
+    <Modal.Root open={isOpen} onOpenChange={onOpenChange}>
+      <Modal.Trigger>
+        {/* Optional: Trigger element can be placed here if needed */}
+        <div style={{ display: "none" }}></div>
+      </Modal.Trigger>
 
       <Modal.Content
         className={cn(
@@ -95,8 +85,7 @@ export default function TransactionOutcomeModal({
             <div className="mt-6 w-full">
               <div className="flex justify-between text-gray-700 mb-2">
                 <span>Network</span>
-                {/* <span>{network}</span> */}
-                <span>Polygon</span>
+                <span>{network}</span>
               </div>
               <div className="flex justify-between text-gray-700 mb-2">
                 <span>Paid in</span>

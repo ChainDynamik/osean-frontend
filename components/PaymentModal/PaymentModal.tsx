@@ -53,6 +53,15 @@ export default function PaymentModal({
   const selectedExtras = useSelectedExtrasStore(
     (state) => state.selectedExtras
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <Modal.Root open={paymentModalIsOpen} onOpenChange={setPaymentModal}>
@@ -77,6 +86,11 @@ export default function PaymentModal({
               />
             </svg>
           </Modal.Close>
+          {/* <button>
+            Switch
+          </button> */}
+          <Button onClick={handleOpenModal}>Open Modal</Button>
+
           {paymentMethod !== null && (
             <div
               onClick={() => {
