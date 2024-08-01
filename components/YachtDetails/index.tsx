@@ -41,8 +41,14 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
     { label: "Water Capacity", value: details?.waterCapacity + " L" },
     { label: "Fuel Capacity", value: details?.fuelCapacity + " L" },
     { label: "Engine", value: details?.engine },
-    { label: "Security Deposit", value: details?.deposit + " " + details?.currency },
-    { label: "Security Deposit With Waiver", value: details?.depositWithWaiver + " " + details?.currency },
+    {
+      label: "Security Deposit",
+      value: details?.deposit + " " + details?.currency,
+    },
+    {
+      label: "Security Deposit With Waiver",
+      value: details?.depositWithWaiver + " " + details?.currency,
+    },
     // { label: "Currency", value: details?.currency },
     { label: "Berths", value: details?.berths },
     {
@@ -257,28 +263,30 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
             </div>
           </div>
         </div>
-        <div className="mt-10">
-          <h2 className="text-2xl font-semibold mb-4">Specifications</h2>
-          <table className="w-full text-left">
-            {/* <tbody>
-              {visibleSpecifications.map(({ label, value }, index) => (
-                <tr
-                  key={index}
-                  className={index !== 0 ? "border-t" : ""}
-                >
-                  <td className="py-2">{label}</td>
-                  <td className="py-2">{loading ? <Skeleton width={100} /> : value}</td>
-                </tr>
-              ))}
-            </tbody> */}
-          </table>
-          <div
-            className="mt-2 text-blue-600 cursor-pointer"
-            onClick={() => setIsViewMore(!isViewMore)}
-          >
-            {isViewMore ? "View Less" : "View More"}
+        {visibleSpecifications.length > 0 && (
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold mb-4">Specifications</h2>
+            <table className="w-full text-left">
+              <tbody>
+                {visibleSpecifications.map(({ label, value }, index) => (
+                  <tr
+                    key={index}
+                    className={index !== 0 ? "border-t" : ""}
+                  >
+                    <td className="py-2">{label}</td>
+                    <td className="py-2">{loading ? <Skeleton width={100} /> : value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div
+              className="mt-2 text-blue-600 cursor-pointer"
+              onClick={() => setIsViewMore(!isViewMore)}
+            >
+              {isViewMore ? "View Less" : "View More"}
+            </div>
           </div>
-        </div>
+        )}
         <Box
           mt="9"
           borderWidth="1px"

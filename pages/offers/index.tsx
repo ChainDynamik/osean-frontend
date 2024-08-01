@@ -180,7 +180,6 @@ export default function Offers() {
     kindFilters.length,
     passengersOnBoard,
     countries,
-    priceRange,
     minCabins,
   ]);
 
@@ -205,8 +204,9 @@ export default function Offers() {
 
   const filteredOffers = offers.filter((data) => {
     const withinPriceRange = +data.price >= priceRange[0];
+    const withinPriceMaxRange = +data.price <= priceRange[1];
 
-    return withinPriceRange;
+    return withinPriceRange && withinPriceMaxRange;
   });
 
   const sortedOffers = [...filteredOffers].sort((a, b) => {

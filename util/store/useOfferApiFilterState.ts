@@ -50,7 +50,7 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   kindFilters: [],
   passengersOnBoard: null,
   countries: [],
-  priceRange: [0, 30000],
+  priceRange: [0, 200000],
   setStartDate: (date) => set({ startDate: date }),
   setEndDate: (date) => set({ endDate: date }),
   setAmount: (amount) => set({ amount }),
