@@ -231,7 +231,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
             </div>
           </div>
         </div>
-        {visibleSpecifications.length > 0 && (
+        {visibleSpecifications && visibleSpecifications.length > 0 && (
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Specifications</h2>
             <table className="w-full text-left">
