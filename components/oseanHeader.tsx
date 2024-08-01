@@ -188,6 +188,15 @@ export const OseanHeader: React.FC = () => {
                     </Link>
                   </li>
                   <li
+                    className="nav-item animated"
+                    data-animation="fadeInDown"
+                    data-animation-delay="1.4s"
+                  >
+                    <Link className="nav-link" href="/bookings">
+                      Bookings
+                    </Link>
+                  </li>
+                  <li
                     className="dropdown show mr-2 px-2 animated"
                     data-animation="fadeInDown"
                     data-animation-delay="2.0s"

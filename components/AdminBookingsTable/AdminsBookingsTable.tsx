@@ -140,7 +140,7 @@ import { useMoralis } from "react-moralis";
 import Icon from "../icon-selector/icon-selector";
 import { cn } from "../../util";
 import InvoiceModal from "../AdminInvoiceModal/AdminInvoiceModal";
-import DetailsModal from "../DetailsModal/DetailsModal";
+import DetailsModal from "../BookingsDetailsModal/DetailsModal";
 import ConfirmDeleteModal from "../ConfirmDeleteModal/ConfirmDeleteModal";
 
 const tableHeader = [
