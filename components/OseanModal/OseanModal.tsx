@@ -10,21 +10,11 @@ import { Spinner } from "../../src/components/Spinner";
 import { motion } from "framer-motion";
 import { sleep } from "../../helpers";
 import Moralis from "moralis-v1";
-import {
-  getContract,
-  prepareContractCall,
-  sendAndConfirmTransaction,
-  toWei,
-} from "thirdweb";
+import { getContract, prepareContractCall, sendAndConfirmTransaction, toWei } from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
 import { sendTransaction } from "thirdweb";
 import { createWallet } from "thirdweb/wallets";
-import {
-  useContract,
-  useContractWrite,
-  useSigner,
-  useWallet,
-} from "@thirdweb-dev/react";
+import { useContract, useContractWrite, useSigner, useWallet } from "@thirdweb-dev/react";
 import { client } from "../../pages/_app";
 import chain from "../../cost/chain";
 import { oseanOrderManagementABI } from "../../abi";
@@ -35,15 +25,21 @@ import { Web3 } from "web3";
 const web3 = new Web3();
 
 import Countdown from "react-countdown";
+import toast from "react-hot-toast";
 
 const options = [
   {
-    value: "Ethereum",
+    value: "Select",
+    label: "Select",
+    icon: "/select.svg",
+  },
+  {
+    value: "ETH",
     label: "Ethereum",
     icon: "/eth.svg",
   },
   {
-    value: "Binance",
+    value: "BSC",
     label: "BSC",
     icon: "/bsc.svg",
   },
@@ -74,8 +70,8 @@ const options = [
 export type OSMQuote = {
   amountUsd: number;
   amountInWei: string;
-  amountInEth: number;
-  ethUnitPrice: number;
+  amountInQuote: number;
+  quoteUnitPrice: number;
   expirationTime: number;
   requiredSigner: string;
   signature: string;
@@ -88,6 +84,8 @@ export type OSMQuote = {
     s: string;
     signature: string;
   };
+  currency: string;
+  chain: string;
   createdAt: string;
   updatedAt: string;
   objectId: string;
@@ -118,33 +116,26 @@ export default function OseanModal({
   fee: number;
 }) {
   const [network, setNetwork] = useState(options[0]);
-  const [coin, setCoin] = useState("$OSEAN");
+  const [coin, setCoin] = useState("Select");
   const [showNetworkDropdown, setShowNetworkDropdown] = useState(false);
   const [showCoinDropdown, setShowCoinDropdown] = useState(false);
   // const [isLoading, setIsLoading] = useState<null | boolean>(null);
   // console.log(options);
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
 
-  const {
-    transactionOpen,
-    toggleTransactionModal,
-    setOseanModalIsOpen,
-    oseanModalIsOpen,
-  } = useTransactionStore();
+  const { transactionOpen, toggleTransactionModal, setOseanModalIsOpen, oseanModalIsOpen } = useTransactionStore();
 
-  const { contract: oom } = useContract(
-    process.env.NEXT_PUBLIC_OOM_CONTRACT_ADDRESS
-  );
-  const { mutateAsync: fullfillOrderEth } = useContractWrite(
-    oom,
-    "fullfillOrderEth"
-  );
+  const { contract: ethOsean } = useContract(process.env.NEXT_PUBLIC_ETH_OSEAN_CONTRACT_ADDRESS);
+  const { contract: ethOom } = useContract(process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS);
+  const { mutateAsync: approve } = useContractWrite(ethOsean, "approve");
+  const { mutateAsync: fullfillOrderEth } = useContractWrite(ethOom, "fullfillOrderEth");
+  const { mutateAsync: fullfillOrderOsean } = useContractWrite(ethOom, "fullfillOrderOsean");
+
+  const [transactionHash, setTransactionHash] = useState<string | null>(null);
 
   const amountUsd = 10;
 
-  const [loadingText, setLoadingText] = useState(
-    "Preparing quote... | Queue: 1/1"
-  );
+  const [loadingText, setLoadingText] = useState("Preparing quote...");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -153,7 +144,6 @@ export default function OseanModal({
   console.log(quote);
 
   async function verifyQuoteSettled(quote: OSMQuote) {
-    console.log(`Verifying quote ${quote.objectId} settled`);
     const query = new Moralis.Query("Quote");
     query.equalTo("objectId", quote.objectId);
     const result = await query.first();
@@ -162,32 +152,68 @@ export default function OseanModal({
       console.log("Quote settled");
       setIsLoading(false);
       setTransactionModalOpen(true);
+      setQuote(result?.toJSON());
+    }
+
+    const expiryDate = new Date(quote.expirationTime * 1000);
+    const now = new Date();
+
+    if (expiryDate < now) {
+      toast.error("Quote expired. Please try again.");
+      setIsLoading(false);
+      setTransactionModalOpen(false);
+      setOseanModalIsOpen(false);
     }
   }
 
   async function fetchQuote() {
-    const quote = await Moralis.Cloud.run("generateQuoteEth", { amountUsd });
-
+    if (coin === "Select") return;
+    if (network.value === "Select") return;
+    if (transactionHash) return;
+    console.log(`calling generateQuote with ${amountUsd}, ${coin}, ${network.value}`);
+    const quote = await Moralis.Cloud.run("generateQuote", { amountUsd, currency: coin, network: network.value });
     setQuote(quote);
-
     setIsFetchingQuote(false);
   }
 
   async function pay() {
     setIsLoading(true);
     try {
-      const txValue = quote?.amountInWei as string;
-      const message = quote?.message as string;
-      const messageHash = quote?.signatureRaw.messageHash;
-      const v = quote?.signatureRaw.v;
-      const r = quote?.signatureRaw.r;
-      const s = quote?.signatureRaw.s;
-      const referenceQuoteId = quote?.objectId;
+      if (network.value === "ETH" && coin === "ETH") {
+        const txValue = quote?.amountInWei as string;
+        const message = quote?.message as string;
+        const messageHash = quote?.signatureRaw.messageHash;
+        const v = quote?.signatureRaw.v;
+        const r = quote?.signatureRaw.r;
+        const s = quote?.signatureRaw.s;
+        const referenceQuoteId = quote?.objectId;
 
-      await fullfillOrderEth({
-        args: [message, messageHash, v, r, s, referenceQuoteId],
-        overrides: { value: txValue },
-      });
+        const tx = await fullfillOrderEth({
+          args: [message, messageHash, v, r, s, referenceQuoteId],
+          overrides: { value: txValue },
+        });
+
+        setTransactionHash(tx.receipt.transactionHash);
+      } else if (network.value === "ETH" && coin === "OSEAN") {
+        const txValue = quote?.amountInWei as string;
+        const message = quote?.message as string;
+        const messageHash = quote?.signatureRaw.messageHash;
+        const v = quote?.signatureRaw.v;
+        const r = quote?.signatureRaw.r;
+        const s = quote?.signatureRaw.s;
+        const referenceQuoteId = quote?.objectId;
+
+        // Increase allowance for the contract
+        await approve({
+          args: [process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS, txValue],
+        });
+
+        const tx = await fullfillOrderOsean({
+          args: [txValue, message, messageHash, v, r, s, referenceQuoteId],
+        });
+
+        setTransactionHash(tx.receipt.transactionHash);
+      }
     } catch (e: any) {
       console.error(e);
     } finally {
@@ -202,26 +228,25 @@ export default function OseanModal({
   const discountedFee = fee - discount;
 
   useEffect(() => {
-    if (oseanModalIsOpen) {
-      fetchQuote();
-    }
-  }, [oseanModalIsOpen]);
+    if (coin && network) fetchQuote();
+  }, [coin, network]);
 
   useEffect(() => {
-    if (quote) {
-      const interval = setInterval(() => {
-        verifyQuoteSettled(quote);
-      }, 1000);
+    const interval = setInterval(() => {
+      quote && verifyQuoteSettled(quote);
+    }, 1000);
 
-      return () => {
-        clearInterval(interval);
-        console.log("cleared");
-      };
-    }
+    return () => {
+      clearInterval(interval);
+      console.log("cleared");
+    };
   }, [quote]);
 
   return (
-    <Modal.Root open={oseanModalIsOpen} onOpenChange={setOseanModalIsOpen}>
+    <Modal.Root
+      open={oseanModalIsOpen}
+      onOpenChange={setOseanModalIsOpen}
+    >
       <Modal.Trigger>{children}</Modal.Trigger>
 
       <Modal.Content
@@ -229,7 +254,7 @@ export default function OseanModal({
           transactionOpen && "!hidden"
         }`}
       >
-        <div className="relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-[600px]">
+        <div className="relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-[600px] min-h-[450px]">
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">
             <svg
               width="100%"
@@ -258,14 +283,12 @@ export default function OseanModal({
                     alt="osean"
                     className="w-6 -translate-y-0.5"
                   />
-                  <p className="font-bold inline-block !mb-0 !text-black !text-2xl ">
-                    $OSEAN{" "}
-                  </p>
+                  <p className="font-bold inline-block !mb-0 !text-black !text-2xl ">OSEAN </p>
                 </div>
               </h2>
             </div>
             <div className="flex flex-col gap-4">
-              {isFetchingQuote ? (
+              {false ? (
                 <div className="flex ">
                   <Spinner />
                   <motion.div
@@ -276,37 +299,29 @@ export default function OseanModal({
                   >
                     {/* Remove this, TransactionOutcomeModal is already called inside the tenary for you, this is to just showcase the code working */}
                     <TransactionOutcomeModal
-                      network={network.label}
-                      fee={discountedFee}
-                      discount={discount}
+                      quote={quote}
                       isOpen={transactionModalOpen}
                       onOpenChange={setTransactionModalOpen}
                     />
-                    <Button
+                    {/* <Button
                       className="w-fit !p-2"
-                      onClick={() =>
-                        setTransactionModalOpen(!transactionModalOpen)
-                      }
+                      onClick={() => setTransactionModalOpen(!transactionModalOpen)}
                     >
                       Toggle Modal
-                    </Button>
+                    </Button> */}
                     <p className="my-auto text-xl">{loadingText}</p>
                   </motion.div>
                 </div>
               ) : (
                 <>
                   <div className="flex flex-col gap-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Network and Coin
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700">Network and Coin</label>
                     <div className="flex gap-2 justify-between">
                       <div className="relative">
                         <button
                           type="button"
                           className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full flex justify-between items-center"
-                          onClick={() =>
-                            setShowNetworkDropdown(!showNetworkDropdown)
-                          }
+                          onClick={() => setShowNetworkDropdown(!showNetworkDropdown)}
                         >
                           <span className="flex items-center">
                             <Image
@@ -352,9 +367,7 @@ export default function OseanModal({
                                     alt={option.label}
                                     className="mr-2"
                                   />
-                                  <span className="font-normal block truncate">
-                                    {option.label}
-                                  </span>
+                                  <span className="font-normal block truncate">{option.label}</span>
                                 </div>
                               </li>
                             ))}
@@ -369,7 +382,7 @@ export default function OseanModal({
                         >
                           <span className="flex items-center">
                             <Image
-                              src="/logo.png"
+                              src={coin === "ETH" ? "/eth.svg" : "/logo.png"}
                               height={20}
                               width={20}
                               alt="osean"
@@ -397,27 +410,25 @@ export default function OseanModal({
                             <li
                               className="text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
                               onClick={() => {
-                                setCoin("$OSEAN");
+                                setCoin("ETH");
                                 setShowCoinDropdown(false);
                               }}
                             >
                               <div className="flex items-center">
                                 <Image
-                                  src="/logo.png"
+                                  src="/eth.svg"
                                   height={20}
                                   width={20}
                                   alt="osean"
                                   className="mr-2"
                                 />
-                                <span className="font-normal block truncate">
-                                  $OSEAN
-                                </span>
+                                <span className="font-normal block truncate">ETH</span>
                               </div>
                             </li>
                             <li
                               className="text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
                               onClick={() => {
-                                setCoin("$OSEAN");
+                                setCoin("OSEAN");
                                 setShowCoinDropdown(false);
                               }}
                             >
@@ -429,9 +440,7 @@ export default function OseanModal({
                                   alt="osean"
                                   className="mr-2"
                                 />
-                                <span className="font-normal block truncate">
-                                  $OSEAN
-                                </span>
+                                <span className="font-normal block truncate">OSEAN</span>
                               </div>
                             </li>
                           </ul>
@@ -439,69 +448,62 @@ export default function OseanModal({
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Currency conversion
-                    </label>
-                    <p className="text-sm text-gray-500">
-                      1 ETH = ${quote?.ethUnitPrice}
-                    </p>
-                    {quote && (
-                      <p className="text-sm text-gray-500">
-                        Expires in{" "}
-                        <Countdown
-                          date={quote?.expirationTime * 1000}
-                          renderer={renderer}
+                  {coin !== "Select" && network.value !== "Select" && (
+                    <>
+                      <div className="flex flex-col gap-0">
+                        <label className="block text-sm font-medium text-gray-700">Currency conversion</label>
+                        <p className="text-sm text-gray-500">
+                          1 {coin} = ${quote?.quoteUnitPrice}
+                        </p>
+                        {quote && (
+                          <p className="text-sm text-gray-500">
+                            Quote expires in{" "}
+                            <Countdown
+                              date={quote?.expirationTime * 1000}
+                              renderer={renderer}
+                            />
+                            {/* <p>{quote?.objectId}</p> */}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-col ">
+                        <label className="block text-sm font-medium text-gray-700">Discounts:</label>
+                        <p className="text-sm !font-bold text-green-500">20% Discount </p>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="block text-sm font-medium text-gray-700">Amount to pay</label>
+                        <p className="text-sm text-gray-900">
+                          {quote?.amountInQuote} {coin}
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-4">
+                        <TransactionOutcomeModal
+                          quote={quote}
+                          isOpen={transactionModalOpen}
+                          onOpenChange={setTransactionModalOpen}
+                          txHash={transactionHash}
                         />
-                        <p>{quote?.objectId}</p>
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex flex-col ">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Discounts:
-                    </label>
-                    <p className="text-sm !font-bold text-green-500">
-                      20% Discount (${discount.toFixed(2)})
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Amount to pay
-                    </label>
-                    <p className="text-sm text-gray-900">
-                      {quote?.amountInEth} ETH
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    <TransactionOutcomeModal
-                      network={network.label}
-                      fee={discountedFee}
-                      discount={discount}
-                      isOpen={transactionModalOpen}
-                      onOpenChange={setTransactionModalOpen}
-                    />
-                    <Button
-                      isLoading={isLoading}
-                      // onClick={() => {
-                      //   setIsLoading(true);
-                      //   setTimeout(() => {
-                      //     setIsLoading(false);
-                      //     setTimeout(() => {
-                      //       console.log(isLoading, "loading");
-                      //     }, 1000);
-                      //   }, 1000);
-                      // }}
-                      // className={`${isLoading && "opacity-50"}`}
-                      onClick={async (e: any) => {
-                        e.preventDefault();
+                        <Button
+                          isLoading={isLoading}
+                          // onClick={() => {
+                          //   setIsLoading(true);
+                          //   setTimeout(() => {
+                          //     setIsLoading(false);
+                          //     setTimeout(() => {
+                          //       console.log(isLoading, "loading");
+                          //     }, 1000);
+                          //   }, 1000);
+                          // }}
+                          // className={`${isLoading && "opacity-50"}`}
+                          onClick={async (e: any) => {
+                            e.preventDefault();
 
-                        await pay();
-                      }}
-                    >
-                      Pay {quote!.amountInEth.toFixed(6)} ETH
-                      {/* {isLoading ? "Loading..." : `Pay ${discountedFee.toFixed(2)}`} */}
-                      {/* <div className="flex gap-1 ml-2 items-center">
+                            await pay();
+                          }}
+                        >
+                          Pay {quote?.amountInQuote.toFixed(6)} {coin}
+                          {/* {isLoading ? "Loading..." : `Pay ${discountedFee.toFixed(2)}`} */}
+                          {/* <div className="flex gap-1 ml-2 items-center">
                           <Image
                             src="/logo.png"
                             height={50}
@@ -511,8 +513,10 @@ export default function OseanModal({
                           />
                           <p className="font-bold inline-block !mb-0 !text-white">$OSEAN </p>
                         </div> */}
-                    </Button>
-                  </div>
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>

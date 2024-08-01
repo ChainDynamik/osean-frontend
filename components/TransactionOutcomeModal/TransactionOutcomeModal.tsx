@@ -7,44 +7,43 @@ import Modal from "../Modal/Modal";
 import Image from "next/image";
 import Button from "../Button/Button";
 import { cn } from "../../util";
+import { OSMQuote } from "../OseanModal/OseanModal";
+import { truncateAddress } from "../../helpers";
+import Link from "next/link";
 
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 type TransactionOutcomeModalProps = {
-  network: string;
-  discount: number;
-  fee: number;
+  quote: OSMQuote | undefined;
   isLoading?: boolean | null;
   isOpen: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
+  txHash: string;
 };
 
-export default function TransactionOutcomeModal({
-  isOpen,
-  onOpenChange,
-  network,
-  discount,
-  fee,
-}: TransactionOutcomeModalProps) {
+export default function TransactionOutcomeModal({ isOpen, quote, onOpenChange, txHash }: TransactionOutcomeModalProps) {
   return (
-    <Modal.Root open={isOpen} onOpenChange={onOpenChange}>
+    <Modal.Root
+      open={isOpen}
+      onOpenChange={onOpenChange}
+    >
       <Modal.Trigger>
         {/* Optional: Trigger element can be placed here if needed */}
         <div style={{ display: "none" }}></div>
       </Modal.Trigger>
 
       <Modal.Content
-        className={cn(
-          "max-[500px]:w-[90%] max-[500px]:max-w-none w-fit max-w-fit !min-w-[500px] rounded-lg",
-          {
-            // "!hidden": isLoading,
-          }
-        )}
+        className={cn("max-[500px]:w-[90%] max-[500px]:max-w-none w-fit max-w-fit !min-w-[500px] rounded-lg", {
+          // "!hidden": isLoading,
+        })}
       >
         <div className="relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-full">
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16">
-            <Lottie animationData={CheckAnimation} loop={false} />
+            <Lottie
+              animationData={CheckAnimation}
+              loop={false}
+            />
           </div>
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">
             <svg
@@ -62,34 +61,31 @@ export default function TransactionOutcomeModal({
             </svg>
           </Modal.Close>
           <div className="flex flex-col items-center gap-5 mt-12">
-            <h1 className="text-[1.4rem] !mb-0  text-black font-bold uppercase text-center">
-              Payment was successful
-            </h1>
+            <h1 className="text-[1.4rem] !mb-0  text-black font-bold uppercase text-center">Payment was successful</h1>
             <p className="text-sm text-center !mb-0  text-gray-700">
-              Payment has been received successfully. Thank you for your
-              payment.
+              Payment has been received successfully. Thank you for your payment.
             </p>
             <div className="flex items-center bg-gray-100 rounded-full px-4 py-1 text-gray-800">
               <Image
-                src="/logo.png"
+                src={quote?.currency === "ETH" ? "/eth.svg" : "/logo.png"}
                 width={24}
                 height={24}
                 alt="logo"
                 className="mr-2"
               />
-              <span>${fee} $OSEAN</span>
+              <span>
+                {quote?.amountInQuote} {quote?.currency}
+              </span>
             </div>
-            <p className="text-green-600 !mb-0 font-semibold">
-              Discount: {discount}
-            </p>
+            <p className="text-green-600 !mb-0 font-semibold">Discount: 1%</p>
             <div className="mt-6 w-full">
               <div className="flex justify-between text-gray-700 mb-2">
                 <span>Network</span>
-                <span>{network}</span>
+                <span>{quote?.chain === "eth" ? "Ethereum" : "Binance Smart Chain"}</span>
               </div>
               <div className="flex justify-between text-gray-700 mb-2">
                 <span>Paid in</span>
-                <span>$OSEAN</span>
+                <span>{quote?.currency}</span>
               </div>
               <div className="flex justify-between text-gray-700 mb-2">
                 <span>From</span>
@@ -101,20 +97,26 @@ export default function TransactionOutcomeModal({
               </div>
               <div className="flex justify-between text-gray-700 mb-2">
                 <span>Transaction time</span>
-                <span>6 July 2024</span>
+                <span>{new Date().toLocaleDateString()}</span>
               </div>
               <div className="flex justify-between text-gray-700 mb-2">
                 <span>Transaction hash</span>
-                <span className="text-indigo-600">0xk8h6...9865</span>
+                <Link
+                  href={
+                    quote?.chain === "eth"
+                      ? `https://sepolia.etherscan.io/tx/${txHash}`
+                      : `https://testnet.bscscan.com/tx/${txHash}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="text-indigo-600">{txHash && truncateAddress(txHash)}</span>
+                </Link>
               </div>
             </div>
             <div className="flex gap-4 mt-6">
-              <button className="bg-gray-200 text-gray-700 rounded-md px-4 py-2">
-                Download invoice
-              </button>
-              <Button className=" text-white rounded-md px-4 py-2">
-                Download receipt
-              </Button>
+              <button className="bg-gray-200 text-gray-700 rounded-md px-4 py-2">Download invoice</button>
+              <Button className=" text-white rounded-md px-4 py-2">Download receipt</Button>
             </div>
           </div>
         </div>
