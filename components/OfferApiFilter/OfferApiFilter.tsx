@@ -308,12 +308,12 @@ export default function OfferApiFilter({
         </label>
         <Slider.Root
           className="SliderRoot"
-          min={2000}
-          max={30000}
+          min={0}
+          max={200000}
           step={100}
           defaultValue={priceRange}
           onValueChange={(value) => setPriceRange(value)}
-          minStepsBetweenThumbs={20} // Ensures that thumbs do not overlap
+          minStepsBetweenThumbs={10} // Ensures that thumbs do not overlap
         >
           <Slider.Track className="SliderTrack">
             <Slider.Range className="SliderRange" />
