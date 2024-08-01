@@ -15,9 +15,7 @@ type ReservationWithBoat = Reservation & {
 
 export default function SimilarYacht() {
   const { lastReturnedOffers } = useLastReturnedOffersStore();
-  const [randomizedOffers, setRandomizedOffers] = useState<
-    ReservationWithBoat[]
-  >([]);
+  const [randomizedOffers, setRandomizedOffers] = useState<ReservationWithBoat[]>([]);
 
   const { isInitialized } = useMoralis();
 
@@ -25,9 +23,7 @@ export default function SimilarYacht() {
     const shuffledOffers = lastReturnedOffers.sort(() => 0.5 - Math.random());
     const first4Offers = shuffledOffers.slice(0, 4);
 
-    const boatDetails = await fetchBoatsDataFromDb(
-      first4Offers.map((offer) => offer.yachtId)
-    );
+    const boatDetails = await fetchBoatsDataFromDb(first4Offers.map((offer) => offer.yachtId));
 
     const boatDetailsWithOffers = first4Offers.map((offer, index) => ({
       ...offer,
@@ -71,7 +67,7 @@ export default function SimilarYacht() {
             slug="slug"
             location={item?.boat?.homeBase}
             price={item?.boat?.deposit + "€"}
-            boatManufacturingDate={item?.boat?.year.toString()}
+            boatManufacturingDate={item?.boat?.year?.toString()}
           />
         ))}
       </div>

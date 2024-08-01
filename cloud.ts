@@ -500,12 +500,13 @@ async function getSettingsKey(key: string) {
 Parse.Cloud.define("generateQuote", async (request: any) => {
   // Check if there is a pending, not expired/settled quote for this user
 
-  const { currency } = request.params;
+  const { currency, selectedOffer, selectedExtras, network } = request.params;
 
   {
     const Quote = Parse.Object.extend("Quote");
     const query = new Parse.Query(Quote);
     query.equalTo("currency", currency);
+    query.equalTo("network", network);
     query.equalTo("status", "pending");
     query.equalTo("requiredSigner", request.user.get("ethAddress"));
     query.greaterThanOrEqualTo("expirationTime", Math.floor(Date.now() / 1000));
@@ -533,6 +534,7 @@ Parse.Cloud.define("generateQuote", async (request: any) => {
   const Quote = Parse.Object.extend("Quote");
   const quote = new Quote();
   quote.set("currency", currency);
+  quote.set("network", network);
   quote.set("amountUsd", amountUsd);
   quote.set("amountInWei", amountInWei);
   quote.set("amountInQuote", amountInQuote);
@@ -543,6 +545,9 @@ Parse.Cloud.define("generateQuote", async (request: any) => {
   quote.set("message", message);
   quote.set("status", "pending");
   quote.set("signatureRaw", signature);
+  quote.set("selectedOffer", selectedOffer);
+  quote.set("selectedExtras", selectedExtras);
+
   await quote.save();
 
   return quote.toJSON();

@@ -10,6 +10,7 @@ import { cn } from "../../util";
 import { OSMQuote } from "../OseanModal/OseanModal";
 import { truncateAddress } from "../../helpers";
 import Link from "next/link";
+import { useWallet } from "@thirdweb-dev/react";
 
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -87,20 +88,13 @@ export default function TransactionOutcomeModal({ isOpen, quote, onOpenChange, t
                 <span>Paid in</span>
                 <span>{quote?.currency}</span>
               </div>
+
               <div className="flex justify-between text-gray-700 mb-2">
-                <span>From</span>
-                <span>0x3454...2fr4</span>
-              </div>
-              <div className="flex justify-between text-gray-700 mb-2">
-                <span>To</span>
-                <span>0xdfg4...sd45</span>
-              </div>
-              <div className="flex justify-between text-gray-700 mb-2">
-                <span>Transaction time</span>
+                <span>Transaction Time</span>
                 <span>{new Date().toLocaleDateString()}</span>
               </div>
               <div className="flex justify-between text-gray-700 mb-2">
-                <span>Transaction hash</span>
+                <span>Transaction Hash</span>
                 <Link
                   href={
                     quote?.chain === "eth"
@@ -114,9 +108,9 @@ export default function TransactionOutcomeModal({ isOpen, quote, onOpenChange, t
                 </Link>
               </div>
             </div>
-            <div className="flex gap-4 mt-6">
-              <button className="bg-gray-200 text-gray-700 rounded-md px-4 py-2">Download invoice</button>
-              <Button className=" text-white rounded-md px-4 py-2">Download receipt</Button>
+            <div className="flex ">
+              {/* <button className="bg-gray-200 text-gray-700 rounded-md px-4 py-2">Download invoice</button> */}
+              <Button className="text-white rounded-md w-full mx-3">View reservation</Button>
             </div>
           </div>
         </div>
