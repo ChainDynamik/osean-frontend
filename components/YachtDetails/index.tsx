@@ -61,7 +61,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
       label: "Maximum Charter Duration",
       value: `${details?.maximumCharterDuration} days`,
     },
-  ];
+  ].filter(Boolean);
 
   const visibleSpecifications = isViewMore
     ? specifications
@@ -75,6 +75,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   )?.url;
 
   console.log(details);
+  console.log(visibleSpecifications, "specs");
 
   return (
     <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16 mt-14 mb-16">
@@ -231,29 +232,33 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
             </div>
           </div>
         </div>
-        {visibleSpecifications && visibleSpecifications.length > 0 && (
-          <div className="mt-10">
-            <h2 className="text-2xl font-semibold mb-4">Specifications</h2>
-            <table className="w-full text-left">
-              <tbody>
-                {visibleSpecifications.map(({ label, value }, index) => (
-                  <tr key={index} className={index !== 0 ? "border-t" : ""}>
-                    <td className="py-2">{label}</td>
-                    <td className="py-2">
-                      {loading ? <Skeleton width={100} /> : value}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div
-              className="mt-2 text-blue-600 cursor-pointer"
-              onClick={() => setIsViewMore(!isViewMore)}
-            >
-              {isViewMore ? "View Less" : "View More"}
-            </div>
+        <div className="mt-10">
+          <h2 className="text-2xl font-semibold mb-4">Specifications</h2>
+          <table className="w-full text-left">
+            <tbody>
+              {visibleSpecifications?.map(({ label, value }, index) => {
+                return (
+                  <>
+                    {label && (
+                      <tr key={index} className={index !== 0 ? "border-t" : ""}>
+                        <td className="py-2">{label}</td>
+                        <td className="py-2">
+                          {loading ? <Skeleton width={100} /> : value}
+                        </td>
+                      </tr>
+                    )}
+                  </>
+                );
+              })}
+            </tbody>
+          </table>
+          <div
+            className="mt-2 text-blue-600 cursor-pointer"
+            onClick={() => setIsViewMore(!isViewMore)}
+          >
+            {isViewMore ? "View Less" : "View More"}
           </div>
-        )}
+        </div>
         <Box mt="9" borderWidth="1px" borderRadius="lg" overflow="hidden" p="6">
           <Text fontWeight="bold" mb={3.5} className="text-black">
             OBLIGATORY EXTRAS
