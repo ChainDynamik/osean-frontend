@@ -3,7 +3,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import Modal from "../Modal/Modal";
 import Button from "../Button/Button";
-import Image from "next/image";
 import { useTransactionStore } from "../../util/store";
 import TransactionOutcomeModal from "../TransactionOutcomeModal/TransactionOutcomeModal";
 import { Spinner } from "../../src/components/Spinner";
@@ -14,13 +13,13 @@ import { getContract, prepareContractCall, sendAndConfirmTransaction, toWei } fr
 import { useSendTransaction } from "thirdweb/react";
 import { sendTransaction } from "thirdweb";
 import { createWallet } from "thirdweb/wallets";
-import { useContract, useContractWrite, useSigner, useWallet } from "@thirdweb-dev/react";
+import { useAddress, useContract, useContractWrite, useSigner, useWallet } from "@thirdweb-dev/react";
 import { client } from "../../pages/_app";
 import chain from "../../cost/chain";
 import { oseanOrderManagementABI } from "../../abi";
 import { ethereum, sepolia } from "thirdweb/chains";
 import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-
+import { Image } from "@chakra-ui/react";
 import { Web3 } from "web3";
 const web3 = new Web3();
 
@@ -120,6 +119,7 @@ export default function OseanModal({
   const [coin, setCoin] = useState("Select currency");
   const [showNetworkDropdown, setShowNetworkDropdown] = useState(false);
   const [showCoinDropdown, setShowCoinDropdown] = useState(false);
+
 
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
 
@@ -287,12 +287,12 @@ export default function OseanModal({
                 <div className="flex gap-1 ml-2 items-center">
                   <Image
                     src="/logo.png"
-                    height={50}
-                    width={50}
+                    height={30}
+                    width={30}
                     alt="osean"
                     className="w-6 -translate-y-0.5"
                   />
-                  <p className="font-bold inline-block !mb-0 !text-black !text-2xl ">OSEAN </p>
+                  <p className="font-bold inline-block !mb-0 !text-black !text-2xl ">OSEAN</p>
                 </div>
               </h2>
             </div>
@@ -336,8 +336,8 @@ export default function OseanModal({
                             {network.icon && (
                               <Image
                                 src={network.icon}
-                                height={20}
-                                width={20}
+                                height={5}
+                                width={5}
                                 alt={network.label}
                                 className="mr-2"
                               />
@@ -374,8 +374,8 @@ export default function OseanModal({
                                   {option.icon && (
                                     <Image
                                       src={option.icon}
-                                      height={20}
-                                      width={20}
+                                      height={5}
+                                      width={5}
                                       alt={option.label}
                                       className="mr-2"
                                     />
@@ -396,8 +396,8 @@ export default function OseanModal({
                           <span className="flex items-center">
                             <Image
                               src={coin === "ETH" ? "/eth.svg" : "/logo.png"}
-                              height={20}
-                              width={20}
+                              height={5}
+                              width={5}
                               alt="osean"
                               className="mr-2"
                             />
@@ -430,8 +430,8 @@ export default function OseanModal({
                               <div className="flex items-center">
                                 <Image
                                   src="/eth.svg"
-                                  height={20}
-                                  width={20}
+                                  height={5}
+                                  width={5}
                                   alt="osean"
                                   className="mr-2"
                                 />
@@ -448,8 +448,8 @@ export default function OseanModal({
                               <div className="flex items-center">
                                 <Image
                                   src="/logo.png"
-                                  height={20}
-                                  width={20}
+                                  height={5}
+                                  width={5}
                                   alt="osean"
                                   className="mr-2"
                                 />
@@ -463,26 +463,26 @@ export default function OseanModal({
                   </div>
                   {coin !== "Select currency" && network.value !== "Select network" && (
                     <>
-                      <div className="flex flex-col gap-0">
+                      <div className="flex flex-col my-0">
                         <label className="block text-sm font-medium text-gray-700">Currency conversion</label>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 ">
                           1 {coin} = ${quote?.quoteUnitPrice}
                         </p>
                         {quote && (
-                          <p className="text-sm text-gray-500">
+                          <div className="text-sm text-gray-500">
                             Quote expires in{" "}
                             <Countdown
                               date={quote?.expirationTime * 1000}
                               renderer={renderer}
                             />
                             {/* <p>{quote?.objectId}</p> */}
-                          </p>
+                          </div>
                         )}
                       </div>
-                      <div className="flex flex-col ">
+                      {/* <div className="flex flex-col ">
                         <label className="block text-sm font-medium text-gray-700">Discounts:</label>
                         <p className="text-sm !font-bold text-green-500">20% Discount </p>
-                      </div>
+                      </div> */}
                       <div className="flex flex-col gap-2">
                         <label className="block text-sm font-medium text-gray-700">Amount to pay</label>
                         <p className="text-sm text-gray-900">
@@ -490,24 +490,16 @@ export default function OseanModal({
                         </p>
                       </div>
                       <div className="flex flex-col gap-4">
-                        <TransactionOutcomeModal
-                          quote={quote}
-                          isOpen={transactionModalOpen}
-                          onOpenChange={setTransactionModalOpen}
-                          txHash={transactionHash}
-                        />
+                        {transactionHash && (
+                          <TransactionOutcomeModal
+                            quote={quote}
+                            isOpen={transactionModalOpen}
+                            onOpenChange={setTransactionModalOpen}
+                            txHash={transactionHash || "0x0"}
+                          />
+                        )}
                         <Button
                           isLoading={isLoading}
-                          // onClick={() => {
-                          //   setIsLoading(true);
-                          //   setTimeout(() => {
-                          //     setIsLoading(false);
-                          //     setTimeout(() => {
-                          //       console.log(isLoading, "loading");
-                          //     }, 1000);
-                          //   }, 1000);
-                          // }}
-                          // className={`${isLoading && "opacity-50"}`}
                           onClick={async (e: any) => {
                             e.preventDefault();
 

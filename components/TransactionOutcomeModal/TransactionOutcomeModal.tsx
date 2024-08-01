@@ -10,7 +10,7 @@ import { cn } from "../../util";
 import { OSMQuote } from "../OseanModal/OseanModal";
 import { truncateAddress } from "../../helpers";
 import Link from "next/link";
-import { useWallet } from "@thirdweb-dev/react";
+import { useAddress } from "@thirdweb-dev/react";
 
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -24,6 +24,8 @@ type TransactionOutcomeModalProps = {
 };
 
 export default function TransactionOutcomeModal({ isOpen, quote, onOpenChange, txHash }: TransactionOutcomeModalProps) {
+  const address = useAddress();
+
   return (
     <Modal.Root
       open={isOpen}
@@ -110,7 +112,15 @@ export default function TransactionOutcomeModal({ isOpen, quote, onOpenChange, t
             </div>
             <div className="flex ">
               {/* <button className="bg-gray-200 text-gray-700 rounded-md px-4 py-2">Download invoice</button> */}
-              <Button className="text-white rounded-md w-full mx-3">View reservation</Button>
+              <Button
+                className="text-white rounded-md w-full mx-3"
+                onClick={() => {
+                  console.log("test");
+                  window.location.href = `/usergov/${address}`;
+                }}
+              >
+                View reservation
+              </Button>
             </div>
           </div>
         </div>

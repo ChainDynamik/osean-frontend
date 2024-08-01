@@ -41,7 +41,7 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, o
             </div>
             <div className="w-full bg-white text-black px-6 py-8 rounded-b-3xl">
               <div className="mb-4 border-b pb-4">
-                <p className="mb-2">
+                {/* <p className="mb-2">
                   <strong>Full Name:</strong>
                 </p>
                 <p className="mb-2">
@@ -49,15 +49,15 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, o
                 </p>
                 <p className="mb-2">
                   <strong>Contact Number:</strong>
+                </p> */}
+                <p className="mb-2">
+                  <strong>Trip Start Date:</strong> {new Date(offer?.offer?.dateFrom).toLocaleString()} (local time)
                 </p>
                 <p className="mb-2">
-                  <strong>Trip Start Date:</strong> {new Date(offer?.offer.dateFrom).toLocaleString()} (local time)
+                  <strong>Trip End Date:</strong> {new Date(offer?.offer?.dateTo).toLocaleString()} (local time)
                 </p>
                 <p className="mb-2">
-                  <strong>Trip End Date:</strong> {new Date(offer?.offer.dateTo).toLocaleString()} (local time)
-                </p>
-                <p className="mb-2">
-                  <strong>Base Trip Price: </strong> {offer?.offer.price} {offer?.offer.currency}
+                  <strong>Base Trip Price: </strong> {offer?.offer?.price} {offer?.offer?.currency}
                 </p>
                 <p className="mb-2">
                   <strong>Paid Amount:</strong> {offer?.quote?.amountInQuote?.toLocaleString()} {offer?.quote?.currency}
@@ -71,6 +71,19 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, o
                 </p>
 
                 {offer?.offer?.obligatoryExtras?.map((extra) => (
+                  <p
+                    key={extra.id}
+                    className="mb-2"
+                  >
+                    {extra.name}: {extra.price} {extra.currency}
+                  </p>
+                ))}
+
+                <p className="mb-2">
+                  <strong>Selected Extras:</strong>
+                </p>
+
+                {offer?.quote?.selectedExtras?.map((extra: any) => (
                   <p
                     key={extra.id}
                     className="mb-2"

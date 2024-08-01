@@ -189,7 +189,7 @@ const BookingsTable: React.FC = () => {
                       id={booking.objectId}
                       offer={booking}
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer.yacht}</p>
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.yacht}</p>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -204,7 +204,7 @@ const BookingsTable: React.FC = () => {
                       id={booking.objectId}
                       offer={booking}
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer.dateFrom}</p>
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.dateFrom}</p>
                     </BookingsDetailsModal>
                   </Td>
                   {/* <Td
@@ -231,7 +231,7 @@ const BookingsTable: React.FC = () => {
                       id={booking.objectId}
                       offer={booking}
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer.startBase}</p>
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.startBase}</p>
                     </BookingsDetailsModal>
                   </Td>
                   {/* <Td
