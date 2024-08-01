@@ -40,13 +40,13 @@ export default function Profile() {
   }, [user]);
 
   return (
-    <main className="w-full md:px-8 pt-20 md:pt-10">
+    <main className="w-full px-4 md:px-8 pt-20 md:pt-10">
       <h1 className="text-2xl md:text-3xl text-text-secondary font-bold mt-16">
         Bookings History
       </h1>
       <BookingsTable />
       <div className="flex max-lg:flex-col justify-center gap-12 mt-12">
-        <div className="bg-white flex flex-col gap-4 box-shadow rounded p-6 lg:w-1/2">
+        <div className="bg-white flex flex-col gap-4 box-shadow rounded max-md:px-0 p-6 lg:w-1/2">
           <h2 className="text-2xl">Profile Settings</h2>
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -73,7 +73,7 @@ export default function Profile() {
           <Button className="mt-auto text-white">Save Changes</Button>
         </div>
 
-        <div className="bg-white flex flex-col gap-4 box-shadow rounded p-6 lg:w-1/2 ">
+        <div className="bg-white flex flex-col gap-4 box-shadow rounded max-md:px-0 p-6 lg:w-1/2 ">
           <h3 className="text-xl">Update Password</h3>
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2">
