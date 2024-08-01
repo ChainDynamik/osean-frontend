@@ -128,11 +128,11 @@ export default function TopBoatsPage() {
       <section className="py-16 mt-0 px-4 max-w-[1200px] mx-auto">
         <SailYourWay />
 
-        {/* <div className="mb-12">
+        <div className="mb-12">
           <h3>Top Boat Rentals</h3>
           <p>Unsatiable It Considered Invitation He Traveling Insensible.</p>
         </div>
-        <BoatGrid /> */}
+        <BoatGrid />
       </section>
     </main>
   );
