@@ -1,10 +1,10 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import Modal from "../Modal/Modal";
 import Image from "next/image";
-// import { FormData } from "../EnrollmentFormModal/EnrollmentFormModal";
+import { FormData } from "../EnrollmentFormModal/EnrollmentFormModal";
+import Icon from "../Icon-selector/Icon-selector";
 import { useMoralis } from "react-moralis";
 import Moralis from "moralis-v1";
-import Icon from "../icon-selector/icon-selector";
 
 type DetailsComponentProps = {
   children: ReactNode;

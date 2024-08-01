@@ -29,7 +29,7 @@ export default function TransactionOutcomeModal({
 }: TransactionOutcomeModalProps) {
   return (
     <Modal.Root open={isOpen} onOpenChange={onOpenChange}>
-      <Modal.Trigger>
+      <Modal.Trigger asChild>
         {/* Optional: Trigger element can be placed here if needed */}
         <div style={{ display: "none" }}></div>
       </Modal.Trigger>
