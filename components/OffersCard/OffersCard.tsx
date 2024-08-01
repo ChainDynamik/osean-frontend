@@ -74,6 +74,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
   };
 
   const discountPercentage = calculateDiscountPercentage(startPrice, price);
+  console.log(boatData, "my boat");
 
   return (
     <div className="w-full max-md:mb-6 ring-primary !text-black flex gap-3 flex-col rounded-lg shadow-card border-[0.5px] border-black">
@@ -165,7 +166,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     {loading || loadingBoatData ? (
                       <Skeleton width={50} />
                     ) : (
-                      <span>{boatData.kind}</span>
+                      <span>{boatData?.kind}</span>
                     )}
                   </p>
                 </div>
@@ -180,10 +181,10 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     {loading || loadingBoatData ? (
                       <Skeleton width={100} />
                     ) : (
-                      boatData.products?.map((product, index) => (
+                      boatData?.products?.map((product, index) => (
                         <span key={index}>
                           {product.name}
-                          {index < boatData.products.length - 1 && ","}
+                          {index < boatData?.products?.length - 1 && ","}
                         </span>
                       ))
                     )}

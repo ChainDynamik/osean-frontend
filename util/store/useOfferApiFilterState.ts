@@ -31,6 +31,8 @@ interface OfferApiFilterState {
   setPassengersOnBoard: (passengers: number | null) => void;
   setCountries: (countries: string[]) => void;
   setPriceRange: (range: number[]) => void;
+  minCabins: number | null;
+  setMinCabins: (cabins: number | null) => void;
 }
 
 export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
@@ -67,4 +69,6 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   setPassengersOnBoard: (passengers) => set({ passengersOnBoard: passengers }),
   setCountries: (countries) => set({ countries }),
   setPriceRange: (range) => set({ priceRange: range }),
+  minCabins: null,
+  setMinCabins: (cabins) => set({ minCabins: cabins }),
 }));
