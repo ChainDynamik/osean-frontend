@@ -33,3 +33,7 @@ export async function fetchBoatDataFromDb(modelId: string) {
     return null;
   }
 }
+
+export function truncateAddress(address: string, length = 6): string {
+  return `${address.slice(0, length)}...${address.slice(-length)}`;
+}

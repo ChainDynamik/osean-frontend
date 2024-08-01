@@ -1069,13 +1069,15 @@ function getSettingsKey(key) {
         });
     });
 }
-Parse.Cloud.define("generateQuoteEth", function (request) { return __awaiter(_this, void 0, void 0, function () {
-    var Quote_1, query, existingQuote, amountUsd, user, ethPrice, _a, amountInEth, amountInWei, expirationTime, signer, message, account, signature, Quote, quote;
+Parse.Cloud.define("generateQuote", function (request) { return __awaiter(_this, void 0, void 0, function () {
+    var currency, Quote_1, query, existingQuote, amountUsd, user, quoteUnitPrice, _a, amountInQuote, amountInWei, expirationTime, signer, message, signature, Quote, quote;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
+                currency = request.params.currency;
                 Quote_1 = Parse.Object.extend("Quote");
                 query = new Parse.Query(Quote_1);
+                query.equalTo("currency", currency);
                 query.equalTo("status", "pending");
                 query.equalTo("requiredSigner", request.user.get("ethAddress"));
                 query.greaterThanOrEqualTo("expirationTime", Math.floor(Date.now() / 1000));
@@ -1088,29 +1090,29 @@ Parse.Cloud.define("generateQuoteEth", function (request) { return __awaiter(_th
                 amountUsd = request.params.amountUsd;
                 user = request.user;
                 _a = Number;
-                return [4 /*yield*/, getSettingsKey("eth-unit-price")];
+                return [4 /*yield*/, getSettingsKey(currency === "ETH" ? "eth-unit-price" : "osean-unit-price")];
             case 2:
-                ethPrice = _a.apply(void 0, [_b.sent()]);
-                amountInEth = Number(amountUsd) / ethPrice;
-                amountInWei = web3.utils.toWei(amountInEth, "ether");
+                quoteUnitPrice = _a.apply(void 0, [_b.sent()]);
+                amountInQuote = Number(amountUsd) / quoteUnitPrice;
+                amountInWei = web3.utils.toWei(amountInQuote, "ether");
                 expirationTime = Math.floor(Date.now() / 1000) + 300;
                 signer = user.get("ethAddress");
                 message = "".concat(amountInWei, "_").concat(expirationTime, "_").concat(signer);
-                account = web3.eth.accounts.privateKeyToAccount(process.env.BACKEND_WALLET_PRIVATE_KEY);
-                console.log("Signer wallet: ".concat(account.address));
                 return [4 /*yield*/, web3.eth.accounts.sign(message, process.env.BACKEND_WALLET_PRIVATE_KEY)];
             case 3:
                 signature = _b.sent();
                 Quote = Parse.Object.extend("Quote");
                 quote = new Quote();
+                quote.set("currency", currency);
                 quote.set("amountUsd", amountUsd);
                 quote.set("amountInWei", amountInWei);
-                quote.set("amountInEth", amountInEth);
-                quote.set("ethUnitPrice", ethPrice);
+                quote.set("amountInQuote", amountInQuote);
+                quote.set("quoteUnitPrice", quoteUnitPrice);
                 quote.set("expirationTime", expirationTime);
                 quote.set("requiredSigner", signer);
                 quote.set("signature", signature.signature);
                 quote.set("message", message);
+                quote.set("status", "pending");
                 quote.set("signatureRaw", signature);
                 return [4 /*yield*/, quote.save()];
             case 4:

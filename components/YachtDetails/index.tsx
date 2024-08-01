@@ -29,7 +29,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   };
 
   const specifications = [
-    { label: "Name", value: details?.name },
+    details?.name && { label: "Name", value: details?.name },
     { label: "Model", value: details?.model },
     { label: "Year", value: details?.year },
     { label: "Kind", value: details?.kind },
@@ -138,9 +138,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                     <div>
                       <Icon iconType="mainsail" className="w-4" />
                     </div>
-                    <p className="mb-0 text-black">
-                      {details?.mainsailType} mainsail
-                    </p>
+                    <p className="mb-0 text-black">{details?.mainsailType}</p>
                   </div>
                   <div className="flex gap-4 items-center">
                     <div>
@@ -153,7 +151,8 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                       <Icon iconType="breadth" className="w-4" />
                     </div>
                     <p className="mb-0 text-black">
-                      {details?.length} ft ({details?.length * 0.3048} m)
+                      {details?.boatLength} ft (
+                      {(details!.boatLength * 0.3048).toFixed(2)} m)
                     </p>
                   </div>
                   <div className="flex gap-4 items-center">
@@ -210,14 +209,16 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
               <div className="flex flex-col gap-2">
                 {/* <p className="mb-0 font-bold text-black">Misc.</p> */}
                 {details?.equipmentIds.map((id) => {
-                  return (
-                    <div className="flex gap-2 items-center" key={id}>
-                      <Icon iconType="check" className="text-black w-4 " />
-                      <p className="mb-0 font-extrabold text-black/80">
-                        {mmkEquipment.find((e) => e.id === id)?.name}
-                      </p>
-                    </div>
-                  );
+                  if (mmkEquipment.find((e) => e.id === id))
+                    return (
+                      <div className="flex gap-2 items-center" key={id}>
+                        <Icon iconType="check" className="text-black w-4 " />
+
+                        <p className="mb-0 font-extrabold text-black/80">
+                          {mmkEquipment.find((e) => e.id === id)?.name}
+                        </p>
+                      </div>
+                    );
                 })}
 
                 <div className="flex gap-2 items-center">

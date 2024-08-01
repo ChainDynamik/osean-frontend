@@ -497,11 +497,15 @@ async function getSettingsKey(key: string) {
   return settings.get("value");
 }
 
-Parse.Cloud.define("generateQuoteEth", async (request: any) => {
+Parse.Cloud.define("generateQuote", async (request: any) => {
   // Check if there is a pending, not expired/settled quote for this user
+
+  const { currency } = request.params;
+
   {
     const Quote = Parse.Object.extend("Quote");
     const query = new Parse.Query(Quote);
+    query.equalTo("currency", currency);
     query.equalTo("status", "pending");
     query.equalTo("requiredSigner", request.user.get("ethAddress"));
     query.greaterThanOrEqualTo("expirationTime", Math.floor(Date.now() / 1000));
@@ -515,42 +519,82 @@ Parse.Cloud.define("generateQuoteEth", async (request: any) => {
   const { amountUsd } = request.params;
   const user = request.user;
 
-  const ethPrice = Number(await getSettingsKey("eth-unit-price"));
-  const amountInEth = Number(amountUsd) / ethPrice;
-
-  const amountInWei = web3.utils.toWei(amountInEth, "ether");
+  const quoteUnitPrice = Number(await getSettingsKey(currency === "ETH" ? "eth-unit-price" : "osean-unit-price"));
+  const amountInQuote = Number(amountUsd) / quoteUnitPrice;
+  const amountInWei = web3.utils.toWei(amountInQuote, "ether");
 
   // 5 minutes from now
   const expirationTime = Math.floor(Date.now() / 1000) + 300;
-
   const signer = user.get("ethAddress");
-
-  // amountInWei_quoteExpiryTime_signer
-  // const message = `1000000000000000000_999999999999_0x5B38Da6a701c568545dCfcB03FcB875f56beddC4`;
-
   const message = `${amountInWei}_${expirationTime}_${signer}`;
-
-  const account = web3.eth.accounts.privateKeyToAccount(process.env.BACKEND_WALLET_PRIVATE_KEY);
-
-  console.log(`Signer wallet: ${account.address}`);
-
   const signature = await web3.eth.accounts.sign(message, process.env.BACKEND_WALLET_PRIVATE_KEY);
 
   // Save this quote in the database
   const Quote = Parse.Object.extend("Quote");
   const quote = new Quote();
+  quote.set("currency", currency);
   quote.set("amountUsd", amountUsd);
   quote.set("amountInWei", amountInWei);
-  quote.set("amountInEth", amountInEth);
-  quote.set("ethUnitPrice", ethPrice);
+  quote.set("amountInQuote", amountInQuote);
+  quote.set("quoteUnitPrice", quoteUnitPrice);
   quote.set("expirationTime", expirationTime);
   quote.set("requiredSigner", signer);
   quote.set("signature", signature.signature);
   quote.set("message", message);
+  quote.set("status", "pending");
   quote.set("signatureRaw", signature);
   await quote.save();
 
   return quote.toJSON();
+
+  // if (currency === "ETH") {
+
+  // } else if (currency === "OSEAN") {
+  //   {
+  //     const Quote = Parse.Object.extend("Quote");
+  //     const query = new Parse.Query(Quote);
+  //     query.equalTo("currency", currency);
+  //     query.equalTo("status", "pending");
+  //     query.equalTo("requiredSigner", request.user.get("ethAddress"));
+  //     query.greaterThanOrEqualTo("expirationTime", Math.floor(Date.now() / 1000));
+  //     const existingQuote = await query.first();
+
+  //     if (existingQuote) {
+  //       return existingQuote.toJSON();
+  //     }
+  //   }
+
+  //   const { amountUsd } = request.params;
+
+  //   const user = request.user;
+
+  //   const quoteUnitPrice = Number(await getSettingsKey("osean-unit-price"));
+  //   const amountInQuote = Number(amountUsd) / quoteUnitPrice;
+  //   const amountInWei = web3.utils.toWei(amountInQuote, "ether");
+
+  //   // 5 minutes from now
+  //   const expirationTime = Math.floor(Date.now() / 1000) + 300;
+  //   const signer = user.get("ethAddress");
+  //   const message = `${amountInWei}_${expirationTime}_${signer}`;
+  //   const signature = await web3.eth.accounts.sign(message, process.env.BACKEND_WALLET_PRIVATE_KEY);
+
+  //   // Save this quote in the database
+  //   const Quote = Parse.Object.extend("Quote");
+  //   const quote = new Quote();
+  //   quote.set("currency", currency);
+  //   quote.set("amountUsd", amountUsd);
+  //   quote.set("amountInWei", amountInWei);
+  //   quote.set("amountInQuote", amountInQuote);
+  //   quote.set("quoteUnitPrice", quoteUnitPrice);
+  //   quote.set("expirationTime", expirationTime);
+  //   quote.set("requiredSigner", signer);
+  //   quote.set("signature", signature.signature);
+  //   quote.set("message", message);
+  //   quote.set("signatureRaw", signature);
+  //   await quote.save();
+
+  //   return quote.toJSON();
+  // }
 });
 
 Parse.Cloud.define("createOrder", async (request: any) => {
