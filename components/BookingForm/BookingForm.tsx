@@ -11,19 +11,18 @@ import Icon from "../icon-selector/icon-selector";
 import { Box, Checkbox, CheckboxGroup, Stack, Text } from "@chakra-ui/react";
 import { useSelectedExtrasStore } from "../../util/store/extraStore";
 import { useTripStore } from "../../util/store/tripStore";
+import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
 
 interface BookingFormProps {
   price: number;
-  averageRating: number;
-  totalReviews: number;
+
   className?: string;
   securityDeposit: number;
 }
 
 export default function BookingForm({
   price,
-  averageRating,
-  totalReviews,
+
   className,
   securityDeposit,
 }: BookingFormProps) {
@@ -33,6 +32,8 @@ export default function BookingForm({
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
   const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
   const toggleExtra = useSelectedExtrasStore((state) => state.toggleExtra);
+
+  const { selectedOffer } = useSelectedOfferStore();
 
   const handleIncreaseNights = () => {
     setNights(nights + 1);
@@ -132,18 +133,39 @@ export default function BookingForm({
         // pl="4"
       >
         <ul className="">
+          {selectedOffer?.startPrice !== selectedOffer?.price && (
+            <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+              <span className="font-normal">Original Price</span>
+              <span className="font-bold">{selectedOffer?.startPrice} EUR</span>
+            </li>
+          )}
           <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
-            <span className="font-normal">Weekly discount</span>
-            <span className="font-bold">$782</span>
+            <span className="font-normal">Current Price</span>
+            <span className="font-bold">{selectedOffer?.price} EUR</span>
           </li>
           <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
-            <span className="font-normal">Discount</span>
-            <span className="font-bold">$23</span>
+            <span className="font-normal">Obligatory Extras Price</span>
+            <span className="font-bold">{selectedOffer?.obligatoryExtrasPrice} EUR</span>
           </li>
-
           <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
-            <span className="font-normal">Total fee</span>
-            <span className="font-bold">${totalFee}</span>
+            <span className="font-normal"> Extras Price</span>
+            <span className="font-bold">{selectedExtras.reduce((total, extra) => total + extra.price, 0)} EUR</span>
+          </li>
+          {selectedOffer?.startPrice !== selectedOffer?.price && (
+            <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+              <span className="font-normal">Discount</span>
+              <span className="font-bold">$23</span>
+            </li>
+          )}
+          <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+            <span className="font-normal">Total Price</span>
+            <span className="font-bold">
+              {" "}
+              {selectedOffer?.price +
+                selectedOffer?.obligatoryExtrasPrice +
+                selectedExtras.reduce((total, extra) => total + extra.price, 0)}{" "}
+              EUR
+            </span>
           </li>
         </ul>
         <Suspense fallback={<p>loading...</p>}>
@@ -172,10 +194,9 @@ export default function BookingForm({
         >
           GET QUOTE
         </Button>
-        <div className="flex gap-2 mt-4">
-          <span className="w-2.5 h-1.5 mt-2  aspect-square rounded-full bg-black"></span>
-          <p className="list-disc text-xs font-extrabold text-center text-black">
-            Pay online or with Cryptocurrencies and save up t0 30%
+        <div className="flex gap-2 mt-4 mx-auto">
+          <p className="list-disc text-xs font-extrabold text-center text-black ">
+            Pay with cryptocurrencies and save up to 30%
           </p>
         </div>
       </Box>
@@ -198,10 +219,14 @@ export default function BookingForm({
             mt="1"
             spacing="1"
           >
-            <Checkbox isChecked={true}>
-              Chorter packoge (end cleaning, bed linen & towels - one sel/person/week - exiTo gos bottle Outboard
-              Engine) - 250 EUR
-            </Checkbox>
+            {selectedOffer?.obligatoryExtras.map((extra) => (
+              <Checkbox
+                key={extra.id}
+                isChecked={true}
+              >
+                {extra.name} - {extra.price} {extra.currency}
+              </Checkbox>
+            ))}
           </Stack>
         </CheckboxGroup>
       </Box>
@@ -235,7 +260,7 @@ export default function BookingForm({
           <div className="flex gap-2 mt-4">
             <span className="w-2.5 h-2 mt-2 inline-block aspect-square rounded-full bg-black"></span>
             <p className="list-disc text-xs font-extrabold text-center text-black">
-              All Extras ore payable ot operator&apos;s base
+              All Extras are payable ot operator&apos;s base
             </p>
           </div>
         </ul>
@@ -249,7 +274,8 @@ export default function BookingForm({
         mt="5"
         className="text-sm font-extrabold bg-black/5"
       >
-        A {securityDeposit?.toLocaleString()} EUR security deposit will be required by the renter at the base
+        A {selectedOffer?.securityDeposit?.toLocaleString()} EUR security deposit will be required by the renter at the
+        base
       </Box>
     </form>
   );

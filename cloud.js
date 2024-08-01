@@ -1070,29 +1070,30 @@ function getSettingsKey(key) {
     });
 }
 Parse.Cloud.define("generateQuote", function (request) { return __awaiter(_this, void 0, void 0, function () {
-    var currency, Quote_1, query, existingQuote, amountUsd, user, quoteUnitPrice, _a, amountInQuote, amountInWei, expirationTime, signer, message, signature, Quote, quote;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, currency, selectedOffer, selectedExtras, network, Quote_1, query, existingQuote, amountUsd, user, quoteUnitPrice, _b, amountInQuote, amountInWei, expirationTime, signer, message, signature, Quote, quote;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
-                currency = request.params.currency;
+                _a = request.params, currency = _a.currency, selectedOffer = _a.selectedOffer, selectedExtras = _a.selectedExtras, network = _a.network;
                 Quote_1 = Parse.Object.extend("Quote");
                 query = new Parse.Query(Quote_1);
                 query.equalTo("currency", currency);
+                query.equalTo("network", network);
                 query.equalTo("status", "pending");
                 query.equalTo("requiredSigner", request.user.get("ethAddress"));
                 query.greaterThanOrEqualTo("expirationTime", Math.floor(Date.now() / 1000));
                 return [4 /*yield*/, query.first()];
             case 1:
-                existingQuote = _b.sent();
+                existingQuote = _c.sent();
                 if (existingQuote) {
                     return [2 /*return*/, existingQuote.toJSON()];
                 }
                 amountUsd = request.params.amountUsd;
                 user = request.user;
-                _a = Number;
+                _b = Number;
                 return [4 /*yield*/, getSettingsKey(currency === "ETH" ? "eth-unit-price" : "osean-unit-price")];
             case 2:
-                quoteUnitPrice = _a.apply(void 0, [_b.sent()]);
+                quoteUnitPrice = _b.apply(void 0, [_c.sent()]);
                 amountInQuote = Number(amountUsd) / quoteUnitPrice;
                 amountInWei = web3.utils.toWei(amountInQuote, "ether");
                 expirationTime = Math.floor(Date.now() / 1000) + 300;
@@ -1100,10 +1101,11 @@ Parse.Cloud.define("generateQuote", function (request) { return __awaiter(_this,
                 message = "".concat(amountInWei, "_").concat(expirationTime, "_").concat(signer);
                 return [4 /*yield*/, web3.eth.accounts.sign(message, process.env.BACKEND_WALLET_PRIVATE_KEY)];
             case 3:
-                signature = _b.sent();
+                signature = _c.sent();
                 Quote = Parse.Object.extend("Quote");
                 quote = new Quote();
                 quote.set("currency", currency);
+                quote.set("network", network);
                 quote.set("amountUsd", amountUsd);
                 quote.set("amountInWei", amountInWei);
                 quote.set("amountInQuote", amountInQuote);
@@ -1114,9 +1116,11 @@ Parse.Cloud.define("generateQuote", function (request) { return __awaiter(_this,
                 quote.set("message", message);
                 quote.set("status", "pending");
                 quote.set("signatureRaw", signature);
+                quote.set("selectedOffer", selectedOffer);
+                quote.set("selectedExtras", selectedExtras);
                 return [4 /*yield*/, quote.save()];
             case 4:
-                _b.sent();
+                _c.sent();
                 return [2 /*return*/, quote.toJSON()];
         }
     });

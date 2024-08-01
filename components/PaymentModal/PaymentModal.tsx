@@ -11,6 +11,7 @@ import CardModal from "../CardModal/CardModal";
 import { useTransactionStore } from "../../util/store";
 import { useSelectedExtrasStore } from "../../util/store/extraStore";
 import Icon from "../icon-selector/icon-selector";
+import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
 
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -37,22 +38,14 @@ export default function PaymentModal({
   totalFee,
 }: PaymentModalProps) {
   type PaymentMethodType = "card" | "wire";
-  const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(
-    null
-  );
+  const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(null);
 
   const handlePaymentChoice = (choice: PaymentMethodType) => {
     setPaymentMethod(choice);
   };
-  const {
-    transactionOpen,
-    toggleTransactionModal,
-    paymentModalIsOpen,
-    setPaymentModal,
-  } = useTransactionStore();
-  const selectedExtras = useSelectedExtrasStore(
-    (state) => state.selectedExtras
-  );
+  const { transactionOpen, toggleTransactionModal, paymentModalIsOpen, setPaymentModal } = useTransactionStore();
+  const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
+  const { selectedOffer } = useSelectedOfferStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -64,12 +57,13 @@ export default function PaymentModal({
   };
 
   return (
-    <Modal.Root open={paymentModalIsOpen} onOpenChange={setPaymentModal}>
+    <Modal.Root
+      open={paymentModalIsOpen}
+      onOpenChange={setPaymentModal}
+    >
       <Modal.Trigger>{children}</Modal.Trigger>
 
-      <Modal.Content
-        className={`max-[500px]:w-[90%] max-[500px]:max-w-none max-md:w-4/5  w-fit max-w-fit !min-w-fit`}
-      >
+      <Modal.Content className={`max-[500px]:w-[90%] max-[500px]:max-w-none max-md:w-4/5  w-fit max-w-fit !min-w-fit`}>
         <div className="relative bg-white pt-4 pb-10 px-20 rounded-md shadow-lg w-full">
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">
             <svg
@@ -89,7 +83,7 @@ export default function PaymentModal({
           {/* <button>
             Switch
           </button> */}
-          <Button onClick={handleOpenModal}>Open Modal</Button>
+          {/* <Button onClick={handleOpenModal}>Open Modal</Button> */}
 
           {paymentMethod !== null && (
             <div
@@ -116,9 +110,7 @@ export default function PaymentModal({
           {!paymentMethod && (
             <div className="flex flex-col mt-4 items-center">
               <div className="flex gap-2 items-center mt-4 mb-4">
-                <h3 className="text-3xl !mb-0 font-bold text-gray-900">
-                  Payment Method
-                </h3>
+                <h3 className="text-3xl !mb-0 font-bold text-gray-900">Payment Method</h3>
                 <Lottie
                   animationData={BlueCardAnimation}
                   loop={false}
@@ -137,73 +129,65 @@ export default function PaymentModal({
                         className="w-8 mr-2"
                       />
                     </span>
-                    <span className="font-bold inline-block mr-2">$OSEAN </span>{" "}
-                    <span className="text-green-400 !font-bold">
-                      (20% DISCOUNT)
-                    </span>
+                    <span className="font-bold inline-block mr-2">CRYPTO </span>{" "}
+                    <span className="text-green-400 !font-bold">(20% DISCOUNT)</span>
                   </Button>
                 </OseanModal>
 
                 <CardModal>
-                  <Button className="mb-2 !px-0 whitespace-nowrap font-bold">
-                    CARD (0% DISCOUNT)
-                  </Button>
+                  <Button className="mb-2 !px-0 whitespace-nowrap font-bold">CARD (0% DISCOUNT)</Button>
                 </CardModal>
               </div>
             </div>
           )}
 
           <div className="mt-6">
-            <h4 className="text-lg font-bold text-gray-900 mb-2">
-              Booking Summary
-            </h4>
+            <h4 className="text-lg font-bold text-gray-900 mb-2">Reservation Summary</h4>
             <ul>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
-                <span className="font-normal">Price per night</span>
-                <span className="font-bold">${price}</span>
+                <span className="font-normal">Trip Base Price</span>
+                <span className="font-bold">{selectedOffer?.price} EUR</span>
               </li>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
-                <span className="font-normal">Nights</span>
-                <span className="font-bold">{nights}</span>
+                <span className="font-normal">Obligatory Extras Price</span>
+                <span className="font-bold">{selectedOffer?.obligatoryExtrasPrice} EUR</span>
               </li>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
-                <span className="font-normal">Weekly discount</span>
-                <span className="font-bold">${discount}</span>
+                <span className="font-normal">Selected Extras Price </span>
+                <span className="font-bold">{selectedExtras.reduce((acc, extra) => acc + extra.price, 0)} EUR</span>
               </li>
+              {selectedExtras.length > 0 && (
+                <div className="mt-2">
+                  <ul>
+                    {selectedExtras.map((extra) => (
+                      <li
+                        key={extra.id}
+                        className="flex items-center gap-2 py-1.5 text-base capitalize text-gray-dark"
+                      >
+                        <div>
+                          <Icon
+                            iconType="checkbox"
+                            className="text-black w-4"
+                          />
+                        </div>
+                        <p className="mb-0 text-black">{extra.name}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <hr />
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
-                <span className="font-normal">Cleaning fee</span>
-                <span className="font-bold">${cleaningFee}</span>
-              </li>
-              <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
-                <span className="font-normal">Service fee</span>
-                <span className="font-bold">${serviceFee}</span>
-              </li>
-              <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
-                <span className="font-normal">Total fee</span>
-                <span className="font-bold">${totalFee}</span>
+                <span className="font-normal">Amount to pay</span>
+                <span className="font-bold">
+                  {selectedOffer?.price +
+                    selectedOffer?.obligatoryExtrasPrice +
+                    selectedExtras.reduce((acc, extra) => acc + extra.price, 0)}{" "}
+                  EUR
+                </span>
               </li>
             </ul>
           </div>
-          {selectedExtras.length > 0 && (
-            <div className="mt-6">
-              <h4 className="text-lg font-bold text-gray-900 mb-2">
-                Selected Extras
-              </h4>
-              <ul>
-                {selectedExtras.map((extra) => (
-                  <li
-                    key={extra.id}
-                    className="flex items-center gap-2 py-1.5 text-base capitalize text-gray-dark"
-                  >
-                    <div>
-                      <Icon iconType="checkbox" className="text-black w-4" />
-                    </div>
-                    <p className="mb-0 text-black">{extra.name}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
       </Modal.Content>
     </Modal.Root>

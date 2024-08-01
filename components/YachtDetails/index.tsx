@@ -9,6 +9,7 @@ import Icon from "../icon-selector/icon-selector";
 import Image from "next/image";
 import PreviewImage from "../PreviewImage/PreviewImage";
 import { mmkEquipment } from "../../mmk-categories";
+import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
 
 interface YachtDetailsProps {
   details: BookingManagerYacht | null;
@@ -18,6 +19,9 @@ interface YachtDetailsProps {
 export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   const [isViewMore, setIsViewMore] = useState(false);
   const [isViewMoreExtras, setIsViewMoreExtras] = useState(false);
+
+  const { selectedOffer } = useSelectedOfferStore();
+  console.log(selectedOffer);
 
   const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
   const toggleExtra = useSelectedExtrasStore((state) => state.toggleExtra);
@@ -256,7 +260,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
         <div className="mt-10">
           <h2 className="text-2xl font-semibold mb-4">Specifications</h2>
           <table className="w-full text-left">
-            <tbody>
+            {/* <tbody>
               {visibleSpecifications.map(({ label, value }, index) => (
                 <tr
                   key={index}
@@ -266,7 +270,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                   <td className="py-2">{loading ? <Skeleton width={100} /> : value}</td>
                 </tr>
               ))}
-            </tbody>
+            </tbody> */}
           </table>
           <div
             className="mt-2 text-blue-600 cursor-pointer"
@@ -304,10 +308,20 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                   </Checkbox>
                 ))
               ) : (
-                <Checkbox isChecked={true}>
-                  Chorter packoge (end cleaning, bed linen & towels - one sel/person/week - exiTo gos bottle Outboard
-                  Engine) - 250 EUR
-                </Checkbox>
+                <>
+                  {selectedOffer?.obligatoryExtras.map((extra) => (
+                    <Checkbox
+                      key={extra.id}
+                      isChecked={true}
+                    >
+                      {extra.name} - {extra.price} {extra.currency}
+                    </Checkbox>
+                  ))}
+                  {/* <Checkbox isChecked={true}>
+                    Chorter packoge (end cleaning, bed linen & towels - one sel/person/week - exiTo gos bottle Outboard
+                    Engine) - 250 EUR
+                  </Checkbox> */}
+                </>
               )}
             </Stack>
           </CheckboxGroup>

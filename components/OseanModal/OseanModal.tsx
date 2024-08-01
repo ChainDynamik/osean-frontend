@@ -26,12 +26,13 @@ const web3 = new Web3();
 
 import Countdown from "react-countdown";
 import toast from "react-hot-toast";
+import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
+import { useSelectedExtrasStore } from "../../util/store/extraStore";
 
 const options = [
   {
     value: "Select",
-    label: "Select",
-    icon: "/select.svg",
+    label: "Select network",
   },
   {
     value: "ETH",
@@ -116,14 +117,16 @@ export default function OseanModal({
   fee: number;
 }) {
   const [network, setNetwork] = useState(options[0]);
-  const [coin, setCoin] = useState("Select");
+  const [coin, setCoin] = useState("Select currency");
   const [showNetworkDropdown, setShowNetworkDropdown] = useState(false);
   const [showCoinDropdown, setShowCoinDropdown] = useState(false);
-  // const [isLoading, setIsLoading] = useState<null | boolean>(null);
-  // console.log(options);
+
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
 
   const { transactionOpen, toggleTransactionModal, setOseanModalIsOpen, oseanModalIsOpen } = useTransactionStore();
+
+  const { selectedOffer } = useSelectedOfferStore();
+  const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
 
   const { contract: ethOsean } = useContract(process.env.NEXT_PUBLIC_ETH_OSEAN_CONTRACT_ADDRESS);
   const { contract: ethOom } = useContract(process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS);
@@ -167,11 +170,17 @@ export default function OseanModal({
   }
 
   async function fetchQuote() {
-    if (coin === "Select") return;
-    if (network.value === "Select") return;
+    if (coin === "Select currency") return;
+    if (!network.value) return;
     if (transactionHash) return;
     console.log(`calling generateQuote with ${amountUsd}, ${coin}, ${network.value}`);
-    const quote = await Moralis.Cloud.run("generateQuote", { amountUsd, currency: coin, network: network.value });
+    const quote = await Moralis.Cloud.run("generateQuote", {
+      amountUsd,
+      currency: coin,
+      network: network.value,
+      selectedExtras,
+      selectedOffer,
+    });
     setQuote(quote);
     setIsFetchingQuote(false);
   }
@@ -324,13 +333,15 @@ export default function OseanModal({
                           onClick={() => setShowNetworkDropdown(!showNetworkDropdown)}
                         >
                           <span className="flex items-center">
-                            <Image
-                              src={network.icon}
-                              height={20}
-                              width={20}
-                              alt={network.label}
-                              className="mr-2"
-                            />
+                            {network.icon && (
+                              <Image
+                                src={network.icon}
+                                height={20}
+                                width={20}
+                                alt={network.label}
+                                className="mr-2"
+                              />
+                            )}
                             {network.label}
                           </span>
                           <svg
@@ -360,13 +371,15 @@ export default function OseanModal({
                                 }}
                               >
                                 <div className="flex items-center">
-                                  <Image
-                                    src={option.icon}
-                                    height={20}
-                                    width={20}
-                                    alt={option.label}
-                                    className="mr-2"
-                                  />
+                                  {option.icon && (
+                                    <Image
+                                      src={option.icon}
+                                      height={20}
+                                      width={20}
+                                      alt={option.label}
+                                      className="mr-2"
+                                    />
+                                  )}
                                   <span className="font-normal block truncate">{option.label}</span>
                                 </div>
                               </li>
@@ -448,7 +461,7 @@ export default function OseanModal({
                       </div>
                     </div>
                   </div>
-                  {coin !== "Select" && network.value !== "Select" && (
+                  {coin !== "Select currency" && network.value !== "Select network" && (
                     <>
                       <div className="flex flex-col gap-0">
                         <label className="block text-sm font-medium text-gray-700">Currency conversion</label>
