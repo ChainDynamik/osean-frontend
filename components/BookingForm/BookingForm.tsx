@@ -27,30 +27,17 @@ export default function BookingForm({
   securityDeposit,
 }: BookingFormProps) {
   const [focus, setFocus] = useState<boolean>(false);
-  const [nights, setNights] = useState<number>(1); // Initial number of nights
-
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
+  const { selectedOffer } = useSelectedOfferStore();
   const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
   const toggleExtra = useSelectedExtrasStore((state) => state.toggleExtra);
 
-  const { selectedOffer } = useSelectedOfferStore();
-
-  const handleIncreaseNights = () => {
-    setNights(nights + 1);
-  };
-  const handleReduceNights = () => {
-    if (nights > 1) setNights(nights - 1);
-  };
-
-  const getTotalPrice = (price: number, nights: number, selectedExtras: { price: number }[]) => {
-    const extrasTotal = selectedExtras.reduce((total, extra) => total + extra.price, 0);
-    return price * nights + extrasTotal;
-  };
-
-  const discount = 117; // Example value, update as needed
-  const cleaningFee = 100; // Example value, update as needed
-  const serviceFee = 65; // Example value, update as needed
-  const totalFee = getTotalPrice(price, nights, selectedExtras) - discount + cleaningFee + serviceFee;
+  const discount = selectedOffer?.startPrice - selectedOffer?.price;
+  const discountPercentage = Math.round((discount / selectedOffer?.startPrice) * 100);
+  const totalPrice =
+    selectedOffer?.price +
+    selectedOffer?.obligatoryExtrasPrice +
+    selectedExtras.reduce((total, extra) => total + extra.price, 0);
 
   return (
     <form
@@ -136,13 +123,21 @@ export default function BookingForm({
           {selectedOffer?.startPrice !== selectedOffer?.price && (
             <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
               <span className="font-normal">Original Price</span>
-              <span className="font-bold">{selectedOffer?.startPrice} EUR</span>
+              <span className="font-bold line-through">{selectedOffer?.startPrice} EUR</span>
             </li>
           )}
           <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
             <span className="font-normal">Current Price</span>
             <span className="font-bold">{selectedOffer?.price} EUR</span>
           </li>
+          {selectedOffer?.startPrice !== selectedOffer?.price && (
+            <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+              <span className="font-normal">Discount</span>
+              <span className="font-bold text-green-500">
+                {discount} EUR ( -{discountPercentage.toFixed(0)}%)
+              </span>
+            </li>
+          )}
           <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
             <span className="font-normal">Obligatory Extras Price</span>
             <span className="font-bold">{selectedOffer?.obligatoryExtrasPrice} EUR</span>
@@ -151,39 +146,21 @@ export default function BookingForm({
             <span className="font-normal"> Extras Price</span>
             <span className="font-bold">{selectedExtras.reduce((total, extra) => total + extra.price, 0)} EUR</span>
           </li>
-          {selectedOffer?.startPrice !== selectedOffer?.price && (
-            <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
-              <span className="font-normal">Discount</span>
-              <span className="font-bold">$23</span>
-            </li>
-          )}
+
           <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
             <span className="font-normal">Total Price</span>
-            <span className="font-bold">
-              {" "}
-              {selectedOffer?.price +
-                selectedOffer?.obligatoryExtrasPrice +
-                selectedExtras.reduce((total, extra) => total + extra.price, 0)}{" "}
-              EUR
-            </span>
+            <span className="font-bold"> {totalPrice} EUR</span>
           </li>
         </ul>
         <Suspense fallback={<p>loading...</p>}>
-          <PaymentModal
-            price={price}
-            nights={nights}
-            discount={discount}
-            cleaningFee={cleaningFee}
-            serviceFee={serviceFee}
-            totalFee={totalFee}
-          >
+          <PaymentModal price={price}>
             <Button
               type="submit"
               className="mt-4 w-full !pb-[14px] text-lg !font-bold uppercase relative pt-3 tracking-widest"
             >
               BOOK ONLINE{" "}
               <span className="bg-negative top-0 right-0 absolute text-white px-2 rounded-md inline-block text-xs">
-                up to -30%
+                up to {discountPercentage.toFixed(0)}% off
               </span>
             </Button>
           </PaymentModal>
@@ -196,7 +173,7 @@ export default function BookingForm({
         </Button>
         <div className="flex gap-2 mt-4 mx-auto">
           <p className="list-disc text-xs font-extrabold text-center text-black ">
-            Pay with cryptocurrencies and save up to 30%
+            Pay with cryptocurrencies and save up to {discountPercentage.toFixed(0)}% off
           </p>
         </div>
       </Box>

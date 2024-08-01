@@ -267,7 +267,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Specifications</h2>
             <table className="w-full text-left">
-              <tbody>
+              {/* <tbody>
                 {visibleSpecifications.map(({ label, value }, index) => (
                   <tr
                     key={index}
@@ -277,7 +277,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                     <td className="py-2">{loading ? <Skeleton width={100} /> : value}</td>
                   </tr>
                 ))}
-              </tbody>
+              </tbody> */}
             </table>
             <div
               className="mt-2 text-blue-600 cursor-pointer"
