@@ -5,17 +5,63 @@ import useYachts from "../../hooks/useYachts";
 import ReserveOffer from "../../components/ReserveOffer/ReserveOffer";
 import SailYourWay from "../../components/SailYourWay/SailYourWay";
 import ReactPaginate from "react-paginate";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useScreenSize from "../../util/hooks/useScreenSize";
+import axios from "axios";
+import { OfferWithBoat, Reservation } from "../offers";
+import { fetchBoatDataFromDb } from "../../helpers";
 
 const ITEMS_PER_PAGE = 12; // Number of items per page
 
-function BoatGrid() {
+function RandomBoatsGrid() {
   const { yachts } = useYachts();
   const [currentPage, setCurrentPage] = useState(0);
   const { isMobile } = useScreenSize();
 
+  const [offersWithBoats, setOffersWithBoats] = useState<OfferWithBoat[]>([]);
+
+  async function fetchOffers() {
+    const dateFrom = "2024-11-17";
+    const dateTo = "2024-11-24";
+
+    let queryString = `/api/fetchOffers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
+
+    try {
+      const request = await axios.get(queryString, {
+        headers: {
+          Authorization: `Bearer ${process.env.BOOKING_MANAGER_API_KEY}`,
+        },
+      });
+      // tsst
+      const offers: Reservation[] = request.data;
+      offers.sort(() => Math.random() - 0.5);
+
+      // Only take the first 9 offers
+      offers.splice(9);
+
+      let offersWithBoatBuffer: OfferWithBoat[] = [];
+
+      for (const offer of offers) {
+        const boatInfo = await fetchBoatDataFromDb(offer.yachtId.toString());
+        offersWithBoatBuffer.push({ offer, boat: boatInfo });
+      }
+
+      setOffersWithBoats(offersWithBoatBuffer);
+
+      console.log(offersWithBoatBuffer);
+    } catch (error) {
+      console.error("Error fetching offers:", error);
+    } finally {
+      // setLoading(false); // Set loading state to false after fetching
+    }
+  }
+
+  useEffect(() => {
+    fetchOffers();
+  }, []);
+
   const getOrderedImages = (images: any) => {
+    if (!images) return [];
     const mainImage = images.find((image: any) => image.description === "Main image");
     const interiorImage = images.find((image: any) => image.description === "Interior image");
     const otherImages = images.filter(
@@ -54,32 +100,39 @@ function BoatGrid() {
   };
 
   const offset = currentPage * ITEMS_PER_PAGE;
-  const currentPageData = yachts?.slice(offset, offset + ITEMS_PER_PAGE);
+  const currentPageData = offersWithBoats?.slice(offset, offset + ITEMS_PER_PAGE);
 
   return (
     <>
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 3xl:gap-y-10">
         {isLoading
           ? loadingCards
-          : currentPageData?.map((item) => {
-              const slides = getOrderedImages(item.images); // Get the ordered images
+          : currentPageData?.map((item, index) => {
+              const slides = getOrderedImages(item.boat?.images); // Get the ordered images
+
+              const startPrice = item.offer?.startPrice;
+              const currentPrice = item.offer?.price;
+
+              const discountPercentage = Math.round(((startPrice - currentPrice) / startPrice) * 100);
 
               return (
                 <YachtCard
                   loading={false}
-                  cabins={item.cabins}
-                  length={item.length}
-                  berths={item.berths}
-                  key={item.id}
-                  id={item.id}
+                  cabins={item.boat?.cabins}
+                  length={item.boat?.boatLength}
+                  berths={item.boat?.berths}
+                  base={item.boat?.homeBase}
+                  baseId={item.offer?.startBaseId}
+                  key={`single-boat-${index}`}
                   slides={slides}
-                  title={item.kind}
-                  name={item.name}
-                  caption={item.model}
+                  title={item.boat?.kind}
+                  name={item.boat?.name}
+                  caption={item.boat?.model}
                   slug="slug"
-                  location={item.homeBase}
-                  price={item.deposit + "€"}
-                  boatManufacturingDate={item.year.toString()}
+                  location={item.boat?.homeBase}
+                  price={item.offer?.price + "€"}
+                  discount={discountPercentage}
+                  boatManufacturingDate={item.boat?.year?.toString()}
                 />
               );
             })}
@@ -132,7 +185,7 @@ export default function TopBoatsPage() {
           <h3>Top Boat Rentals</h3>
           <p>Unsatiable It Considered Invitation He Traveling Insensible.</p>
         </div>
-        <BoatGrid />
+        <RandomBoatsGrid />
       </section>
     </main>
   );
