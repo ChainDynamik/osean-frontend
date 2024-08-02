@@ -9,11 +9,13 @@ import { useMoralis } from "react-moralis";
 import { fetchBoatDataFromDb } from "../../helpers";
 import { Reservation } from "../../pages/offers";
 import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
+import { getBaseCountryFromBaseId } from "../../const/booking-manager-bases";
 
 export type OffersCardProps = {
   yacht: string;
   id: number;
   startBase: string;
+  startBaseId: number;
   endBase: string;
   price: number;
   startPrice: number;
@@ -37,6 +39,7 @@ export type OffersCardProps = {
 const OffersCard: React.FC<OffersCardProps> = ({
   yacht,
   startBase,
+  startBaseId,
   price,
   startPrice,
   currency,
@@ -113,7 +116,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                       <Skeleton width={100} />
                     ) : (
                       <>
-                        <span className="font-bold">Base:</span> {startBase}
+                        <span className="font-bold">Base:</span> {startBase} ({getBaseCountryFromBaseId(startBaseId)})
                       </>
                     )}
                   </p>
@@ -129,7 +132,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 <div className="flex gap-1 items-center">
                   <span className="bg-black/70 rounded-full size-1.5"></span>
                   <p className="mb-0 text-black text-xs">
-                    {loading || loadingBoatData ? <Skeleton width={30} /> : "3 baths"}
+                    {loading || loadingBoatData ? <Skeleton width={30} /> : `${boatData?.wc} WCs`}
                   </p>
                 </div>
                 <div className="flex gap-1 items-center">

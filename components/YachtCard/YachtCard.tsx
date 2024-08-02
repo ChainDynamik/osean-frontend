@@ -5,27 +5,26 @@ import Link from "next/link";
 import Image from "next/image";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import {
-  Swiper,
-  SwiperSlide,
-  Navigation,
-  Pagination,
-} from "../../util/libs/slider";
+import { Swiper, SwiperSlide, Navigation, Pagination } from "../../util/libs/slider";
 import AddToWishlist from "../../assets/icons-components/add-to-wishlist";
 import { ChevronLeftIcon } from "../../assets/icons-components/chevronLeft";
 import { ChevronRightIcon } from "../../assets/icons-components/chevronRight";
 import ActionIcon from "../../assets/icons-components/action-icon";
 import { cn } from "../../util";
 import PreviewImage from "../PreviewImage/PreviewImage";
+import Icon from "../icon-selector/icon-selector";
+import { getBaseCountryFromBaseId } from "../../const/booking-manager-bases";
 
 export type ListingItemTypes = {
   id: number;
   slides: string[];
   caption: string;
+  base: string;
+  baseId: number;
   title: string;
   name: string;
   slug: string;
-  location: string;
+  discount: number;
   price: string;
   length: number;
   cabins: number;
@@ -38,8 +37,10 @@ export default function YachtCard({
   id,
   slides,
   caption,
+  base,
+  baseId,
   title,
-  location,
+  discount,
   price,
   boatManufacturingDate,
   cabins,
@@ -55,8 +56,7 @@ export default function YachtCard({
       className={cn(
         "listing-card shadow-card  transition-all duration-300 ease-in-out border-[1px] border-black/20 rounded-xl px-2.5 group/item relative inline-flex w-full flex-col",
         {
-          "ring-offset-2 hover:bg-primary/15 ring-primary hover:ring-1":
-            !loading,
+          "ring-offset-2 hover:bg-primary/15 ring-primary hover:ring-1": !loading,
         }
       )}
     >
@@ -90,6 +90,11 @@ export default function YachtCard({
                       priority
                     />
                   </PreviewImage>
+                  {discount > 0 && (
+                    <span className="bg-negative px-2 rounded-lg inline-block left-2 text-white font-extrabold absolute top-2">
+                      -{discount}%
+                    </span>
+                  )}
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -119,18 +124,25 @@ export default function YachtCard({
         <div className="content pt-3 text-black">
           <div className="text-blue-800 text-lg mb-0.5">
             <span className="font-bold">
-              {loading ? (
-                <Skeleton width={150} />
-              ) : (
-                `${caption} (${boatManufacturingDate})`
-              )}
+              {loading ? <Skeleton width={150} /> : `${caption} (${boatManufacturingDate})`}
             </span>
-            <span className="inline-block mx-1.5">|</span>
-            <span>{name}</span>
+            {/* <span className="inline-block mx-1.5">|</span>
+            <span>{name}</span> */}
           </div>
-          <h4 className="text-ellipsis mb-0.5 text-gray-dark !text-lg 2xl:mb-1.5">
+          {/* <h4 className="text-ellipsis mb-0.5 text-gray-dark !text-lg 2xl:mb-1.5">
             {loading ? <Skeleton width={200} /> : title}
-          </h4>
+          </h4> */}
+          <div className="flex flex-col gap-1 my-2">
+            <div className="flex items-center gap-0.5">
+              <Icon
+                iconType="location"
+                className="w-4 -translate-y-[1px] text-black"
+              />
+              <p className="mb-0 text-black text-xs">
+                <span className="font-bold">Base:</span> {base} ({getBaseCountryFromBaseId(baseId)})
+              </p>
+            </div>
+          </div>
           <div className="flex gap-3 items-center">
             {loading ? (
               <>
@@ -156,9 +168,7 @@ export default function YachtCard({
             ) : (
               <p className="text-gray-light">
                 <span className="inline-block mr-1.5">From</span>
-                <span className="font-bold text-black xl:text-xl 3xl:text-xl">
-                  {price}
-                </span>
+                <span className="font-bold text-black xl:text-xl 3xl:text-xl">{price}</span>
               </p>
             )}
           </div>
