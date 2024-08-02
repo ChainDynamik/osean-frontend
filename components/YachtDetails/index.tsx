@@ -10,18 +10,19 @@ import Image from "next/image";
 import PreviewImage from "../PreviewImage/PreviewImage";
 import { mmkEquipment } from "../../mmk-categories";
 import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
+import { Reservation } from "../../pages/offers";
 
 interface YachtDetailsProps {
   details: BookingManagerYacht | null;
   loading: boolean;
+  offer: Reservation | undefined;
 }
 
-export default function YachtDetails({ details, loading }: YachtDetailsProps) {
+export default function YachtDetails({ details, loading, offer }: YachtDetailsProps) {
   const [isViewMore, setIsViewMore] = useState(false);
   const [isViewMoreExtras, setIsViewMoreExtras] = useState(false);
 
   const { selectedOffer } = useSelectedOfferStore();
-  console.log(selectedOffer);
 
   const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
   const toggleExtra = useSelectedExtrasStore((state) => state.toggleExtra);
@@ -71,9 +72,6 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
   const visibleExtras = isViewMoreExtras ? extras : extras.slice(0, 10);
 
   const planImage = details?.images.find((image) => image.description === "Plan image")?.url;
-
-  console.log(details);
-  console.log(visibleSpecifications, "specs");
 
   return (
     <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16 mt-14 mb-16">
@@ -221,9 +219,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
             <div className="lg:hidden mb-12">
               <BookingForm
                 price={500}
-                averageRating={2.31}
-                totalReviews={312}
-                securityDeposit={details?.deposit}
+                offer={offer}
               />
             </div>
           )}
@@ -272,11 +268,12 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                 return (
                   <>
                     {label && (
-                      <tr key={index} className={index !== 0 ? "border-t" : ""}>
+                      <tr
+                        key={index}
+                        className={index !== 0 ? "border-t" : ""}
+                      >
                         <td className="py-2">{label}</td>
-                        <td className="py-2">
-                          {loading ? <Skeleton width={100} /> : value}
-                        </td>
+                        <td className="py-2">{loading ? <Skeleton width={100} /> : value}</td>
                       </tr>
                     )}
                   </>
@@ -291,8 +288,18 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
             {isViewMore ? "View Less" : "View More"}
           </div>
         </div>
-        <Box mt="9" borderWidth="1px" borderRadius="lg" overflow="hidden" p="6">
-          <Text fontWeight="bold" mb={3.5} className="text-black">
+        <Box
+          mt="9"
+          borderWidth="1px"
+          borderRadius="lg"
+          overflow="hidden"
+          p="6"
+        >
+          <Text
+            fontWeight="bold"
+            mb={3.5}
+            className="text-black"
+          >
             OBLIGATORY EXTRAS
           </Text>
           <CheckboxGroup colorScheme="blue">
@@ -311,7 +318,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
                 ))
               ) : (
                 <>
-                  {selectedOffer?.obligatoryExtras.map((extra) => (
+                  {offer?.obligatoryExtras.map((extra) => (
                     <Checkbox
                       key={extra.id}
                       isChecked={true}
@@ -399,8 +406,7 @@ export default function YachtDetails({ details, loading }: YachtDetailsProps) {
         <div className="">
           <BookingForm
             price={500}
-            averageRating={2.31}
-            totalReviews={312}
+            offer={offer}
           />
         </div>
       </div>

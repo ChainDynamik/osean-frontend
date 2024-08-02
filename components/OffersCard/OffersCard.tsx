@@ -228,7 +228,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
               </p>
               <Link
                 className="mt-2"
-                href={`/yacht-details/${id}`}
+                href={`/yacht-details/${id}?dateFrom=${rawOffer?.dateFrom}&dateTo=${rawOffer?.dateTo}`}
                 onClick={() => {
                   setSelectedOffer(rawOffer);
                 }}

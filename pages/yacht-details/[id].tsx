@@ -9,6 +9,9 @@ import useYachts from "../../hooks/useYachts";
 import GridLayout from "../../components/GridLayout/GridLayout";
 import ImageGridPreview from "../../components/ImageGridPreview/ImageGridPreview";
 import { fetchBoatDataFromDb } from "../../helpers";
+import axios from "axios";
+import { Reservation } from "../offers";
+import { useTripStore } from "../../util/store/tripStore";
 
 const YachtDetailsPage: FC = () => {
   const router = useRouter();
@@ -16,17 +19,54 @@ const YachtDetailsPage: FC = () => {
 
   const [yacht, setYacht] = useState<any>();
 
+  const [offer, setOffer] = useState<Reservation | undefined>();
+
+  const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
+
   async function getYachtDetails() {
     console.log(`Fetching yacht details for ${id}`);
 
     const yachtDetails = await fetchBoatDataFromDb(id!.toString());
 
+    // Format this URL for URL encoded query string
+
+    // BACKEND https://www.booking-manager.com/api/v2/offers?dateFrom=2024-08-17T00%3A00%3A00&dateTo=2024-08-24T00%3A00%3A00
+
+    console.log(`Date changed: ${tripStart?.toDateString()} - ${tripEnd?.toDateString()}`);
+
+    // date format: yyyy-MM-ddTHH:mm:ss
+
+    const tripStartStringFormat = tripStart?.toISOString();
+    const tripEndStringFormat = tripEnd?.toISOString();
+
+    const dateFromEncoded = encodeURIComponent(tripStartStringFormat as string);
+    const dateToEncoded = encodeURIComponent(tripEndStringFormat as string);
+
+    let queryString = `/api/fetchOffers?dateFrom=${dateFromEncoded}&dateTo=${dateToEncoded}`;
+
+    console.log(queryString);
+
+    const request = await axios.get(queryString, {
+      headers: {
+        Authorization: `Bearer ${process.env.BOOKING_MANAGER_API_KEY}`,
+      },
+    });
+    // tsst
+    const offers: Reservation[] = request.data;
+
+    // Find the offers for this boatId
+
+    const yachtOffers = offers.filter((offer) => offer.yachtId.toString() === id);
+
+    console.log(yachtOffers);
+
+    setOffer(yachtOffers[0]);
     setYacht(yachtDetails);
   }
 
   useEffect(() => {
     if (id) getYachtDetails();
-  }, [id]);
+  }, [id, tripStart, tripEnd]);
 
   const isLoading = yacht === undefined || yacht.length === 0;
 
@@ -79,6 +119,7 @@ const YachtDetailsPage: FC = () => {
         <YachtDetails
           details={yacht}
           loading={isLoading}
+          offer={offer}
         />
         <SimilarYacht />
         {/* {yacht?.images && (

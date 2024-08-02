@@ -16,6 +16,7 @@ interface FetchOffersQuery {
   kind?: string;
   passengersOnBoard?: string;
   country?: string;
+  yachtId?: string;
   baseFromId?: string;
   minCabins?: string;
 }
@@ -35,6 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     kind,
     passengersOnBoard,
     country,
+    yachtId,
     baseFromId,
     minCabins,
   } = req.query as unknown as FetchOffersQuery;
@@ -87,6 +89,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     for (const country of countriesArray) {
       queryString += `&country=${country}`;
     }
+  }
+  if (yachtId) {
+    queryString += `&yachtId=${yachtId}`;
   }
   if (baseFromId) {
     // Countries is formattted as such: country1,country2,country3. Transform this string into an array

@@ -58,8 +58,6 @@ const ThirdwebMoralisLinker = () => {
     // }
   }
 
-  console.log(user);
-
   useEffect(() => {
     if (address && isInitialized) checkLink();
   }, [address, user, isInitialized]);

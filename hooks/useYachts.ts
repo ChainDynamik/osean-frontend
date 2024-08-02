@@ -12,7 +12,6 @@ const useYachts = () => {
 
       const response = await axios.get<BookingManagerYacht[]>(url);
       const yachts = response.data;
-      console.log("chrisBoats", yachts);
       setYachts(yachts);
     } catch (error) {
       console.error("Error fetching boats:", error);

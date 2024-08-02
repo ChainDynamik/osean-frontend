@@ -12,32 +12,60 @@ import { Box, Checkbox, CheckboxGroup, Stack, Text } from "@chakra-ui/react";
 import { useSelectedExtrasStore } from "../../util/store/extraStore";
 import { useTripStore } from "../../util/store/tripStore";
 import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
+import { Reservation } from "../../pages/offers";
 
 interface BookingFormProps {
   price: number;
-
+  offer: Reservation | undefined;
   className?: string;
   securityDeposit: number;
 }
 
-export default function BookingForm({
-  price,
-
-  className,
-  securityDeposit,
-}: BookingFormProps) {
+export default function BookingForm({ price, offer, className, securityDeposit }: BookingFormProps) {
   const [focus, setFocus] = useState<boolean>(false);
   const { tripStart, tripEnd, setTripStart, setTripEnd } = useTripStore();
   const { selectedOffer } = useSelectedOfferStore();
   const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
   const toggleExtra = useSelectedExtrasStore((state) => state.toggleExtra);
 
-  const discount = selectedOffer?.startPrice - selectedOffer?.price;
-  const discountPercentage = Math.round((discount / selectedOffer?.startPrice) * 100);
+  console.log(offer);
+
+  const discount = offer?.startPrice - offer?.price;
+  const discountPercentage = Math.round((discount / offer?.startPrice) * 100);
   const totalPrice =
-    selectedOffer?.price +
-    selectedOffer?.obligatoryExtrasPrice +
-    selectedExtras.reduce((total, extra) => total + extra.price, 0);
+    offer?.price + offer?.obligatoryExtrasPrice + selectedExtras.reduce((total, extra) => total + extra.price, 0);
+
+  function handleTripStartChanged(date: Date) {
+    // Retrieve existing parameters
+    const params = new URLSearchParams(window.location.search);
+
+    // Set or update the dateFrom parameter
+    const dateFrom = new Date(date);
+    dateFrom.setHours(0, 0, 0, 0);
+    params.set("dateFrom", dateFrom.toISOString());
+
+    // Construct the new URL with updated parameters
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, "", newUrl);
+
+    setTripStart(date);
+  }
+
+  function handleTripEndChanged(date: Date) {
+    // Retrieve existing parameters
+    const params = new URLSearchParams(window.location.search);
+
+    // Set or update the dateTo parameter
+    const dateTo = new Date(date);
+    dateTo.setHours(0, 0, 0, 0);
+    params.set("dateTo", dateTo.toISOString());
+
+    // Construct the new URL with updated parameters
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, "", newUrl);
+
+    setTripEnd(date);
+  }
 
   return (
     <form
@@ -79,7 +107,7 @@ export default function BookingForm({
           <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">Trip Start</span>
           <DatePicker
             selected={tripStart}
-            onChange={(date) => setTripStart(date)}
+            onChange={(date) => handleTripStartChanged(date || new Date())}
             className="w-full !border-none focus:!outline-none focus:!border-none !outline-none"
           />
         </div>
@@ -87,7 +115,7 @@ export default function BookingForm({
           <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">Trip End</span>
           <DatePicker
             selected={tripEnd}
-            onChange={(date) => setTripEnd(date)}
+            onChange={(date) => handleTripEndChanged(date || new Date())}
             className="w-full !ring-offset-0 !border-none focus:!outline-none focus:!border-none !outline-none"
           />
         </div>
@@ -120,17 +148,17 @@ export default function BookingForm({
         // pl="4"
       >
         <ul className="">
-          {selectedOffer?.startPrice !== selectedOffer?.price && (
+          {offer?.startPrice !== offer?.price && (
             <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
               <span className="font-normal">Original Price</span>
-              <span className="font-bold line-through">{selectedOffer?.startPrice} EUR</span>
+              <span className="font-bold line-through">{offer?.startPrice} EUR</span>
             </li>
           )}
           <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
             <span className="font-normal">Current Price</span>
-            <span className="font-bold">{selectedOffer?.price} EUR</span>
+            <span className="font-bold">{offer?.price} EUR</span>
           </li>
-          {selectedOffer?.startPrice !== selectedOffer?.price && (
+          {offer?.startPrice !== offer?.price && (
             <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
               <span className="font-normal">Discount</span>
               <span className="font-bold text-green-500">
@@ -140,7 +168,7 @@ export default function BookingForm({
           )}
           <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
             <span className="font-normal">Obligatory Extras Price</span>
-            <span className="font-bold">{selectedOffer?.obligatoryExtrasPrice} EUR</span>
+            <span className="font-bold">{offer?.obligatoryExtrasPrice} EUR</span>
           </li>
           <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
             <span className="font-normal"> Extras Price</span>
@@ -196,7 +224,7 @@ export default function BookingForm({
             mt="1"
             spacing="1"
           >
-            {selectedOffer?.obligatoryExtras.map((extra) => (
+            {offer?.obligatoryExtras.map((extra) => (
               <Checkbox
                 key={extra.id}
                 isChecked={true}
@@ -251,8 +279,7 @@ export default function BookingForm({
         mt="5"
         className="text-sm font-extrabold bg-black/5"
       >
-        A {selectedOffer?.securityDeposit?.toLocaleString()} EUR security deposit will be required by the renter at the
-        base
+        A {offer?.securityDeposit?.toLocaleString()} EUR security deposit will be required by the renter at the base
       </Box>
     </form>
   );
