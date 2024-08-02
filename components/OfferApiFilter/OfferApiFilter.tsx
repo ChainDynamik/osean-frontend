@@ -15,6 +15,7 @@ import * as Switch from "@radix-ui/react-switch";
 import * as Slider from "@radix-ui/react-slider";
 import { Dropdown } from "../Dropdown/Dropdown";
 import Icon from "../icon-selector/icon-selector";
+import BoatModelsDropdown from "../BoatModelsDropdown/BoatModelsDropdown";
 
 const kindOptions = [
   { value: "sail boat", label: "Sailboat" },
@@ -62,10 +63,7 @@ interface BookingFormProps {
   isRoute?: boolean;
 }
 
-export default function OfferApiFilter({
-  className,
-  isRoute,
-}: BookingFormProps) {
+export default function OfferApiFilter({ className, isRoute }: BookingFormProps) {
   const router = useRouter();
 
   // Zustand state
@@ -77,42 +75,24 @@ export default function OfferApiFilter({
   const maxBerths = useOfferApiFilterState((state) => state.maxBerths);
   const minYear = useOfferApiFilterState((state) => state.minYear);
   const maxYear = useOfferApiFilterState((state) => state.maxYear);
-  const productFilters = useOfferApiFilterState(
-    (state) => state.productFilters
-  );
+  const productFilters = useOfferApiFilterState((state) => state.productFilters);
   const kindFilters = useOfferApiFilterState((state) => state.kindFilters);
-  const passengersOnBoard = useOfferApiFilterState(
-    (state) => state.passengersOnBoard
-  );
+  const passengersOnBoard = useOfferApiFilterState((state) => state.passengersOnBoard);
   const countries = useOfferApiFilterState((state) => state.countries);
   const priceRange = useOfferApiFilterState((state) => state.priceRange);
 
   // Zustand actions
   const setStoreAmount = useOfferApiFilterState((state) => state.setAmount);
   const setCurrency = useOfferApiFilterState((state) => state.setCurrency);
-  const setStoreMinLength = useOfferApiFilterState(
-    (state) => state.setMinLength
-  );
-  const setStoreMaxLength = useOfferApiFilterState(
-    (state) => state.setMaxLength
-  );
-  const setStoreMinBerths = useOfferApiFilterState(
-    (state) => state.setMinBerths
-  );
-  const setStoreMaxBerths = useOfferApiFilterState(
-    (state) => state.setMaxBerths
-  );
+  const setStoreMinLength = useOfferApiFilterState((state) => state.setMinLength);
+  const setStoreMaxLength = useOfferApiFilterState((state) => state.setMaxLength);
+  const setStoreMinBerths = useOfferApiFilterState((state) => state.setMinBerths);
+  const setStoreMaxBerths = useOfferApiFilterState((state) => state.setMaxBerths);
   const setStoreMinYear = useOfferApiFilterState((state) => state.setMinYear);
   const setStoreMaxYear = useOfferApiFilterState((state) => state.setMaxYear);
-  const setProductFilter = useOfferApiFilterState(
-    (state) => state.setProductFilter
-  );
-  const setKindFilters = useOfferApiFilterState(
-    (state) => state.setKindFilters
-  );
-  const setPassengersOnBoard = useOfferApiFilterState(
-    (state) => state.setPassengersOnBoard
-  );
+  const setProductFilter = useOfferApiFilterState((state) => state.setProductFilter);
+  const setKindFilters = useOfferApiFilterState((state) => state.setKindFilters);
+  const setPassengersOnBoard = useOfferApiFilterState((state) => state.setPassengersOnBoard);
   const setCountries = useOfferApiFilterState((state) => state.setCountries);
   const setPriceRange = useOfferApiFilterState((state) => state.setPriceRange);
 
@@ -133,16 +113,12 @@ export default function OfferApiFilter({
   };
 
   const handleKindChange = (selectedOptions: any) => {
-    const selectedKinds = selectedOptions
-      ? selectedOptions.map((option: any) => option.value)
-      : [];
+    const selectedKinds = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
     setKindFilters(selectedKinds);
   };
 
   const handleCountryChange = (selectedOptions: any) => {
-    const selectedCountries = selectedOptions
-      ? selectedOptions.map((option: any) => option.value)
-      : [];
+    const selectedCountries = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
     setCountries(selectedCountries);
   };
 
@@ -179,10 +155,7 @@ export default function OfferApiFilter({
         e.preventDefault();
         handleReserve();
       }}
-      className={cn(
-        "rounded-xl border border-gray-lighter bg-white p-8 shadow-card",
-        className
-      )}
+      className={cn("rounded-xl border border-gray-lighter bg-white p-8 shadow-card", className)}
     >
       <h2 className="text-2xl sm:text-3xl font-bold mb-6 w-4/5">
         Book your <span className="text-yellow-500">Yacht Charter</span> with{" "}
@@ -193,21 +166,15 @@ export default function OfferApiFilter({
         <p className="mb-0 text-black text-lg">Destination</p>
         <CountriesDropdown />
       </div>
-      <div
-        className={cn(
-          "relative mt-6 grid grid-cols-2 gap-3 rounded-t-lg border border-b-0 border-gray-lighter"
-        )}
-      >
-        <span
-          className={cn(
-            "absolute inset-y-0 left-1/2 translate-x-1/2 border-r border-gray-lighter"
-          )}
-        ></span>
+      <div className="mt-4 flex flex-col gap-2">
+        <p className="mb-0 text-black text-lg">Boat Model</p>
+        <BoatModelsDropdown />
+      </div>
+      <div className={cn("relative mt-6 grid grid-cols-2 gap-3 rounded-t-lg border border-b-0 border-gray-lighter")}>
+        <span className={cn("absolute inset-y-0 left-1/2 translate-x-1/2 border-r border-gray-lighter")}></span>
 
         <div className="p-2">
-          <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
-            Trip Start
-          </span>
+          <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">Trip Start</span>
           <DatePicker
             selected={localTripStart}
             onChange={(date) => setLocalTripStart(date)}
@@ -216,9 +183,7 @@ export default function OfferApiFilter({
           />
         </div>
         <div className="p-2">
-          <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">
-            Trip End
-          </span>
+          <span className="block mb-1 text-sm font-semibold uppercase text-gray-dark">Trip End</span>
           <DatePicker
             selected={localTripEnd}
             onChange={(date) => setLocalTripEnd(date)}
@@ -303,9 +268,7 @@ export default function OfferApiFilter({
         </div>
       </div>
       <div className="mt-4">
-        <label className="block text-sm font-semibold uppercase text-gray-dark">
-          Price Range
-        </label>
+        <label className="block text-sm font-semibold uppercase text-gray-dark">Price Range</label>
         <Slider.Root
           className="SliderRoot"
           min={0}
@@ -318,8 +281,14 @@ export default function OfferApiFilter({
           <Slider.Track className="SliderTrack">
             <Slider.Range className="SliderRange" />
           </Slider.Track>
-          <Slider.Thumb className="SliderThumb" aria-label="Price Minimum" />
-          <Slider.Thumb className="SliderThumb" aria-label="Price Maximum" />
+          <Slider.Thumb
+            className="SliderThumb"
+            aria-label="Price Minimum"
+          />
+          <Slider.Thumb
+            className="SliderThumb"
+            aria-label="Price Maximum"
+          />
         </Slider.Root>
 
         <div className="flex justify-between mt-2">
@@ -329,9 +298,7 @@ export default function OfferApiFilter({
       </div>
       <div className="flex justify-between items-center">
         <div className="mt-4 w-full">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Min Length
-          </label>
+          <label className="block text-sm font-semibold uppercase text-gray-dark">Min Length</label>
           <Dropdown.Root modal={false}>
             <Dropdown.Trigger className="w-full mt-1 p-2 border-l border-t border-b border-gray-300 rounded-l-md bg-white">
               <div className="flex items-center justify-between">
@@ -340,7 +307,10 @@ export default function OfferApiFilter({
                   {minLength ? `${minLength} m` : "All"}
                 </p>
                 <div>
-                  <Icon iconType="chevron" className="w-3 text-black" />
+                  <Icon
+                    iconType="chevron"
+                    className="w-3 text-black"
+                  />
                 </div>
               </div>
             </Dropdown.Trigger>
@@ -357,9 +327,7 @@ export default function OfferApiFilter({
           </Dropdown.Root>
         </div>
         <div className="mt-4 w-full">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Max Length
-          </label>
+          <label className="block text-sm font-semibold uppercase text-gray-dark">Max Length</label>
           <Dropdown.Root modal={false}>
             <Dropdown.Trigger className="w-full mt-1 p-2 border-r border-t border-b  border-gray-300 rounded-r-md bg-white">
               <div className="flex items-center justify-between">
@@ -368,7 +336,10 @@ export default function OfferApiFilter({
                   {maxLength ? `${maxLength} m` : "All"}
                 </p>
                 <div>
-                  <Icon iconType="chevron" className="w-3 text-black" />
+                  <Icon
+                    iconType="chevron"
+                    className="w-3 text-black"
+                  />
                 </div>
               </div>
             </Dropdown.Trigger>
@@ -387,16 +358,17 @@ export default function OfferApiFilter({
       </div>
       <div className="flex justify-between items-center">
         <div className="mt-4 w-full">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Min Year
-          </label>
+          <label className="block text-sm font-semibold uppercase text-gray-dark">Min Year</label>
           <Dropdown.Root modal={false}>
             <Dropdown.Trigger className="w-full mt-1 p-2 border-l border-t border-b border-gray-300 rounded-l-md bg-white">
               <div className="flex items-center justify-between">
                 <div>≥</div>
                 <p className="mb-0 text-black">{minYear || "All"}</p>
                 <div>
-                  <Icon iconType="chevron" className="w-3 text-black" />
+                  <Icon
+                    iconType="chevron"
+                    className="w-3 text-black"
+                  />
                 </div>
               </div>
             </Dropdown.Trigger>
@@ -413,16 +385,17 @@ export default function OfferApiFilter({
           </Dropdown.Root>
         </div>
         <div className="mt-4 w-full">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            Max Year
-          </label>
+          <label className="block text-sm font-semibold uppercase text-gray-dark">Max Year</label>
           <Dropdown.Root modal={false}>
             <Dropdown.Trigger className="w-full mt-1 p-2 border-r border-t border-b  border-gray-300 rounded-r-md bg-white">
               <div className="flex items-center justify-between">
                 <div>≤</div>
                 <p className="mb-0 text-black">{maxYear || "All"}</p>
                 <div>
-                  <Icon iconType="chevron" className="w-3 text-black" />
+                  <Icon
+                    iconType="chevron"
+                    className="w-3 text-black"
+                  />
                 </div>
               </div>
             </Dropdown.Trigger>
@@ -449,9 +422,7 @@ export default function OfferApiFilter({
               onClick={() => handleCabinChange(number)}
               className={cn(
                 "w-1/5 aspect-square border rounded-lg",
-                minCabins === number
-                  ? "bg-blue-500 text-white"
-                  : "bg-white text-black border-gray-300"
+                minCabins === number ? "bg-blue-500 text-white" : "bg-white text-black border-gray-300"
               )}
             >
               {number === 6 ? "6+" : number}
@@ -461,15 +432,16 @@ export default function OfferApiFilter({
       </div>
       <div className="flex justify-between gap-4 items-center">
         <div className="mt-4 w-full">
-          <label className="block text-sm font-semibold uppercase text-gray-dark">
-            People
-          </label>
+          <label className="block text-sm font-semibold uppercase text-gray-dark">People</label>
           <Dropdown.Root modal={false}>
             <Dropdown.Trigger className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-white">
               <div className="flex items-center justify-between">
                 <p className="mb-0 text-black">{passengersOnBoard || "All"}</p>
                 <div>
-                  <Icon iconType="chevron" className="w-3 text-black" />
+                  <Icon
+                    iconType="chevron"
+                    className="w-3 text-black"
+                  />
                 </div>
               </div>
             </Dropdown.Trigger>

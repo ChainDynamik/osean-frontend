@@ -15,6 +15,7 @@ interface OfferApiFilterState {
   kindFilters: string[];
   passengersOnBoard: number | null;
   countries: string[];
+  boatModels: string[];
   priceRange: number[];
   setStartDate: (date: Date | null) => void;
   setEndDate: (date: Date | null) => void;
@@ -30,6 +31,7 @@ interface OfferApiFilterState {
   setKindFilters: (kinds: string[]) => void;
   setPassengersOnBoard: (passengers: number | null) => void;
   setCountries: (countries: string[]) => void;
+  setBoatModels: (models: string[]) => void;
   setPriceRange: (range: number[]) => void;
   minCabins: number | null;
   setMinCabins: (cabins: number | null) => void;
@@ -50,6 +52,7 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   kindFilters: [],
   passengersOnBoard: null,
   countries: [],
+  boatModels: [],
   priceRange: [0, 200000],
   setStartDate: (date) => set({ startDate: date }),
   setEndDate: (date) => set({ endDate: date }),
@@ -68,6 +71,7 @@ export const useOfferApiFilterState = create<OfferApiFilterState>((set) => ({
   setKindFilters: (kinds) => set({ kindFilters: kinds }),
   setPassengersOnBoard: (passengers) => set({ passengersOnBoard: passengers }),
   setCountries: (countries) => set({ countries }),
+  setBoatModels: (models) => set({ boatModels: models }),
   setPriceRange: (range) => set({ priceRange: range }),
   minCabins: null,
   setMinCabins: (cabins) => set({ minCabins: cabins }),

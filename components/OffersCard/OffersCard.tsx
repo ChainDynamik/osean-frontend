@@ -10,6 +10,7 @@ import { fetchBoatDataFromDb } from "../../helpers";
 import { Reservation } from "../../pages/offers";
 import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
 import { getBaseCountryFromBaseId } from "../../const/booking-manager-bases";
+import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
 
 export type OffersCardProps = {
   yacht: string;
@@ -55,13 +56,15 @@ const OffersCard: React.FC<OffersCardProps> = ({
 
   const { selectedOffer, setSelectedOffer } = useSelectedOfferStore();
 
+  const boatModels = useOfferApiFilterState((state) => state.boatModels);
+
   const imageUrl = mainImage ? mainImage.url : boatData?.images[0]?.url || "/images/placeholder-yacht.jpg";
 
   useEffect(() => {
     async function fetchData() {
       if (isInitialized) {
         const data = await fetchBoatDataFromDb(id.toString());
-        console.log(data, "individual my");
+        // console.log(data, "individual my");
 
         setBoatData(data);
         setLoadingBoatData(false);
@@ -76,7 +79,11 @@ const OffersCard: React.FC<OffersCardProps> = ({
   };
 
   const discountPercentage = calculateDiscountPercentage(startPrice, price);
-  console.log(boatData, "my boat");
+  // console.log(boatData, "my boat");
+
+  // if (boatModels.length > 0 && !boatModels.includes(boatData?.model)) {
+  //   return null;
+  // }
 
   return (
     <div className="w-full max-md:mb-6 ring-primary !text-black flex gap-3 flex-col rounded-lg shadow-card border-[0.5px] border-black">

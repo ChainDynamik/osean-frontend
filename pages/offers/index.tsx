@@ -19,6 +19,7 @@ import useScreenSize from "../../util/hooks/useScreenSize";
 import { useMoralis } from "react-moralis";
 import { useLastReturnedOffersStore } from "../../util/store/lastReturnedOffersStore";
 import CurrencyDropdown from "../../components/CurrencyDropdown/CurrencyDropdown";
+import { getModelFromYachtId } from "../../const/boat-models";
 
 type Extra = {
   id: number;
@@ -94,6 +95,7 @@ export default function Offers() {
     passengersOnBoard,
     countries,
     priceRange,
+    boatModels,
   } = useOfferApiFilterState();
   const minCabins = useOfferApiFilterState((state) => state.minCabins);
   const setMinCabins = useOfferApiFilterState((state) => state.setMinCabins);
@@ -211,8 +213,10 @@ export default function Offers() {
   const filteredOffers = offers.filter((data) => {
     const withinPriceRange = +data.price >= priceRange[0];
     const withinPriceMaxRange = +data.price <= priceRange[1];
+    const boatModel = getModelFromYachtId(data.yachtId.toString());
+    const isBoatModelSelected = boatModels.length === 0 || boatModels.includes(boatModel);
 
-    return withinPriceRange && withinPriceMaxRange;
+    return withinPriceRange && withinPriceMaxRange && isBoatModelSelected;
   });
 
   const sortedOffers = [...filteredOffers].sort((a, b) => {
