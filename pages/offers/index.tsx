@@ -58,7 +58,7 @@ export type Reservation = {
   myReservationId: number;
 };
 
-type OfferWithBoat = {
+export type OfferWithBoat = {
   offer: Reservation;
   boat: BookingManagerYacht | undefined;
 };
@@ -191,6 +191,7 @@ export default function Offers() {
       products: productNames || [],
       yacht: offer?.yacht,
       startBase: offer?.startBase,
+      startBaseId: offer?.startBaseId,
       endBase: offer?.endBase,
       price: offer?.price,
       startPrice: offer?.startPrice,
