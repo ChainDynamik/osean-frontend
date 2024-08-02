@@ -139,7 +139,12 @@ export default function Offers() {
       queryString += `&minCabins=${minCabins}`;
     }
     if (countries.length > 0) {
-      queryString += `&country=${countries.join(",")}`;
+      for (const country of countries) {
+        // If the country is a number, means its a baseId
+        if (!isNaN(Number(country))) {
+          queryString += `&baseFromId=${country}`;
+        } else queryString += `&country=${countries.join(",")}`;
+      }
     }
     console.log(queryString, "new query");
 

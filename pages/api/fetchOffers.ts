@@ -16,13 +16,11 @@ interface FetchOffersQuery {
   kind?: string;
   passengersOnBoard?: string;
   country?: string;
+  baseFromId?: string;
   minCabins?: string;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
     tripStart,
     tripEnd,
@@ -37,6 +35,7 @@ export default async function handler(
     kind,
     passengersOnBoard,
     country,
+    baseFromId,
     minCabins,
   } = req.query as unknown as FetchOffersQuery;
 
@@ -87,6 +86,13 @@ export default async function handler(
     const countriesArray = country.split(",");
     for (const country of countriesArray) {
       queryString += `&country=${country}`;
+    }
+  }
+  if (baseFromId) {
+    // Countries is formattted as such: country1,country2,country3. Transform this string into an array
+    const basesIdArray = baseFromId.split(",");
+    for (const base of basesIdArray) {
+      queryString += `&baseFromId=${base}`;
     }
   }
 
