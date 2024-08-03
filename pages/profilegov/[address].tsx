@@ -244,7 +244,7 @@ export default function ProfilePage({ listing }: Props) {
       </div>
 
       <div
-        className={`${
+        className={`pb-16 ${
           tab === "bookings" ? styles.activeTabContent : styles.tabContent
         }`}
       >

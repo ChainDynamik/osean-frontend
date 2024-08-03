@@ -9,7 +9,7 @@ export default function PersonalInfoForm() {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   return (
-    <div className="max-w-lg mb-4 p-4 box-shadow border border-black rounded-md">
+    <div className="w-full mb-4 pt-4 pb-7 px-4 box-shadow border border-black rounded-md">
       <h2 className="text-xl font-bold mb-4">Personal Info</h2>
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-1">

@@ -299,6 +299,11 @@ const BookingsTable: React.FC = () => {
             </Tbody>
           </Table>
         </TableContainer>
+        {bookings.length < 1 && (
+          <p className="mx-auto text-3xl w-fit py-16 text-black">
+            No Existing Bookings
+          </p>
+        )}
       </motion.div>
     </motion.div>
   );
