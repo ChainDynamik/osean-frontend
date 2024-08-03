@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Table, Thead, Tbody, Tr, Th, Td, TableContainer } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+} from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { cn } from "../../util";
 import BookingsDetailsModal from "../BookingsDetailsModal/BookingsDetailsModal";
 import { useMoralis } from "react-moralis";
 import { Reservation } from "../../pages/offers";
 import Moralis from "moralis-v1";
+import PreviewImage from "../PreviewImage/PreviewImage";
+import Image from "next/image";
 
 const tableHeader = [
+  {
+    name: "Boat IMG",
+  },
   {
     name: "Booking ID",
   },
@@ -17,15 +30,11 @@ const tableHeader = [
   {
     name: "Trip Start",
   },
-  // {
-  //   name: "Trip End",
-  // },
+
   {
     name: "Start Base",
   },
-  // {
-  //   name: "End Base",
-  // },
+
   {
     name: "Payment Status",
   },
@@ -34,31 +43,37 @@ const tableHeader = [
 // Dummy data
 const dummyBookings = [
   {
-    id: "BKG001",
+    boatId: "BKG001",
     courseName: "React for Beginners",
     courseDate: "2024-08-01",
     status: "Paid",
   },
   {
-    id: "BKG002",
+    boatId: "BKG001",
+    courseName: "React for Beginners",
+    courseDate: "2024-08-01",
+    status: "Paid",
+  },
+  {
+    boatId: "BKG002",
     courseName: "Advanced JavaScript",
     courseDate: "2024-08-10",
     status: "Awaiting payment...",
   },
   {
-    id: "BKG003",
+    boatId: "BKG003",
     courseName: "UI/UX Design Essentials",
     courseDate: "2024-08-15",
     status: "Paid",
   },
   {
-    id: "BKG004",
+    boatId: "BKG004",
     courseName: "Python Data Science",
     courseDate: "2024-09-01",
     status: "Paid",
   },
   {
-    id: "BKG005",
+    boatId: "BKG005",
     courseName: "Full-Stack Development",
     courseDate: "2024-09-10",
     status: "Awaiting payment...",
@@ -170,11 +185,29 @@ const BookingsTable: React.FC = () => {
                     fontSize="1.2rem"
                     border="2px solid #cccccc"
                   >
-                    <BookingsDetailsModal
-                      id={booking.objectId}
-                      offer={booking}
-                    >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.objectId}</p>
+                    <div className="py-4">
+                      <PreviewImage src="/images/top-boats/boat-eight.jpg">
+                        <Image
+                          src="/images/top-boats/boat-eight.jpg"
+                          width={80}
+                          height={80}
+                          className="rounded-full mx-auto aspect-square "
+                        />
+                      </PreviewImage>
+                    </div>
+                  </Td>
+                  <Td
+                    textAlign="center"
+                    color="black"
+                    fontWeight={500}
+                    p={0}
+                    fontSize="1.2rem"
+                    border="2px solid #cccccc"
+                  >
+                    <BookingsDetailsModal id={booking.objectId} offer={booking}>
+                      <p className="font-semibold text-sm mb-0 py-4">
+                        {booking.objectId}
+                      </p>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -185,11 +218,10 @@ const BookingsTable: React.FC = () => {
                     fontSize="1.2rem"
                     border="2px solid #cccccc"
                   >
-                    <BookingsDetailsModal
-                      id={booking.objectId}
-                      offer={booking}
-                    >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.yacht}</p>
+                    <BookingsDetailsModal id={booking.objectId} offer={booking}>
+                      <p className="font-semibold text-sm mb-0 py-4">
+                        {booking.offer?.yacht}
+                      </p>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -200,11 +232,10 @@ const BookingsTable: React.FC = () => {
                     fontSize="1.2rem"
                     border="2px solid #cccccc"
                   >
-                    <BookingsDetailsModal
-                      id={booking.objectId}
-                      offer={booking}
-                    >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.dateFrom}</p>
+                    <BookingsDetailsModal id={booking.objectId} offer={booking}>
+                      <p className="font-semibold text-sm mb-0 py-4">
+                        {booking.offer?.dateFrom}
+                      </p>
                     </BookingsDetailsModal>
                   </Td>
                   {/* <Td
@@ -227,11 +258,10 @@ const BookingsTable: React.FC = () => {
                     fontSize="1.2rem"
                     border="2px solid #cccccc"
                   >
-                    <BookingsDetailsModal
-                      id={booking.objectId}
-                      offer={booking}
-                    >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.startBase}</p>
+                    <BookingsDetailsModal id={booking.objectId} offer={booking}>
+                      <p className="font-semibold text-sm mb-0 py-4">
+                        {booking.offer?.startBase}
+                      </p>
                     </BookingsDetailsModal>
                   </Td>
                   {/* <Td

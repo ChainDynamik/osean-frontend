@@ -23,6 +23,7 @@ import randomColor from "../../util/randomColor";
 import toast, { Toaster } from "react-hot-toast";
 import toastStyle from "../../util/toastConfig";
 import BookingsTable from "../../components/BookingsTable/BookingsTable";
+import PersonalInfoForm from "../../components/PersonalInfoForm/PersonalInfoForm";
 
 const [randomColor1, randomColor2, randomColor3, randomColor4] = [
   randomColor(),
@@ -41,41 +42,61 @@ export default function ProfilePage({ listing }: Props) {
   const user = useAddress();
   const { contract: nftCollection } = useContract(GOV_NFT);
 
-  const { contract: marketplace } = useContract(MARKETPLACE_ADDRESS, "marketplace-v3");
+  const { contract: marketplace } = useContract(
+    MARKETPLACE_ADDRESS,
+    "marketplace-v3"
+  );
 
-  const { data: ownedNfts, isLoading: loadingOwnedNfts } = useOwnedNFTs(nftCollection, router.query.address as string);
+  const { data: ownedNfts, isLoading: loadingOwnedNfts } = useOwnedNFTs(
+    nftCollection,
+    router.query.address as string
+  );
 
-  const { data: directListings, isLoading: loadingDirects } = useValidDirectListings(marketplace, {
-    tokenContract: GOV_NFT,
-  });
+  const { data: directListings, isLoading: loadingDirects } =
+    useValidDirectListings(marketplace, {
+      tokenContract: GOV_NFT,
+    });
 
-  const { data: auctionListings, isLoading: loadingAuctions } = useEnglishAuctions(marketplace, {
-    tokenContract: GOV_NFT,
-  });
+  const { data: auctionListings, isLoading: loadingAuctions } =
+    useEnglishAuctions(marketplace, {
+      tokenContract: GOV_NFT,
+    });
 
-  const { data: auctionListingsOfferor, isLoading: loadingAuctionsOfferor } = useEnglishAuctions(marketplace, {
-    tokenContract: GOV_NFT,
-    offeror: user,
-  });
+  const { data: auctionListingsOfferor, isLoading: loadingAuctionsOfferor } =
+    useEnglishAuctions(marketplace, {
+      tokenContract: GOV_NFT,
+      offeror: user,
+    });
 
   // Filter and process data
 
   const filteredDirectListings = directListings
-    ? directListings.filter((listing) => listing.creatorAddress === router.query.address)
+    ? directListings.filter(
+        (listing) => listing.creatorAddress === router.query.address
+      )
     : [];
 
   const filteredAuctionListings = auctionListings
     ? auctionListings.filter(
-        (listing) => listing.creatorAddress === router.query.address && listing.status === Status.Expired
+        (listing) =>
+          listing.creatorAddress === router.query.address &&
+          listing.status === Status.Expired
       )
     : [];
 
   const filteredAuctionListingsOfferor = auctionListingsOfferor
-    ? auctionListingsOfferor.filter((listing) => listing.status === Status.Expired)
+    ? auctionListingsOfferor.filter(
+        (listing) => listing.status === Status.Expired
+      )
     : [];
 
   const filteredOwnedNftsNotInDirectListings = ownedNfts
-    ? ownedNfts.filter((nft) => !filteredDirectListings.some((listing) => listing.asset.id === nft.metadata.id))
+    ? ownedNfts.filter(
+        (nft) =>
+          !filteredDirectListings.some(
+            (listing) => listing.asset.id === nft.metadata.id
+          )
+      )
     : [];
 
   // Create a set to store unique listing IDs
@@ -91,12 +112,16 @@ export default function ProfilePage({ listing }: Props) {
   });
 
   // Convert the set to an array
-  const combinedAuctionListings = Array.from(uniqueListingIds).map((listingId) => {
-    const foundListing =
-      filteredAuctionListings.find((listing) => listing.id === listingId) ||
-      filteredAuctionListingsOfferor.find((listing) => listing.id === listingId);
-    return foundListing;
-  });
+  const combinedAuctionListings = Array.from(uniqueListingIds).map(
+    (listingId) => {
+      const foundListing =
+        filteredAuctionListings.find((listing) => listing.id === listingId) ||
+        filteredAuctionListingsOfferor.find(
+          (listing) => listing.id === listingId
+        );
+      return foundListing;
+    }
+  );
 
   const [selectedOption, setSelectedOption] = useState("");
 
@@ -121,10 +146,7 @@ export default function ProfilePage({ listing }: Props) {
     <Container maxWidth="lg">
       <br />
       <br />
-      <Toaster
-        position="bottom-center"
-        reverseOrder={false}
-      />
+      <Toaster position="bottom-center" reverseOrder={false} />
       <div className="breadcrumb">
         <div>
           <Link href="/">Marketplace &nbsp;</Link> /&nbsp;
@@ -159,17 +181,16 @@ export default function ProfilePage({ listing }: Props) {
         />
         <h1 className={styles.profileName}>
           {router.query.address ? (
-            router.query.address.toString().substring(0, 4) + "..." + router.query.address.toString().substring(38, 42)
+            router.query.address.toString().substring(0, 4) +
+            "..." +
+            router.query.address.toString().substring(38, 42)
           ) : (
             <Skeleton width="320" />
           )}
         </h1>
       </div>
 
-      <div
-        style={{ marginBottom: "70px" }}
-        className={styles.tabs}
-      >
+      <div style={{ marginBottom: "70px" }} className={styles.tabs}>
         <h3
           className={`${styles.tab}
           ${tab === "nfts" ? styles.activeTab : ""}`}
@@ -195,7 +216,9 @@ export default function ProfilePage({ listing }: Props) {
 
       <div
         style={{ marginBottom: "70px" }}
-        className={`${tab === "nfts" ? styles.activeTabContent : styles.tabContent}`}
+        className={`${
+          tab === "nfts" ? styles.activeTabContent : styles.tabContent
+        }`}
       >
         <NFTGrid
           data={filteredOwnedNftsNotInDirectListings}
@@ -204,22 +227,28 @@ export default function ProfilePage({ listing }: Props) {
         />
       </div>
 
-      <div className={`${tab === "listings" ? styles.activeTabContent : styles.tabContent}`}>
+      <div
+        className={`${
+          tab === "listings" ? styles.activeTabContent : styles.tabContent
+        }`}
+      >
         {loadingDirects ? (
           <p>Loading...</p>
         ) : filteredDirectListings.length === 0 ? (
           <p>Nothing for sale yet! Head to the sell tab to list an NFT.</p>
         ) : (
           filteredDirectListings.map((listing) => (
-            <ListingWrapper
-              listing={listing}
-              key={listing.id}
-            />
+            <ListingWrapper listing={listing} key={listing.id} />
           ))
         )}
       </div>
 
-      <div className={`${tab === "bookings" ? styles.activeTabContent : styles.tabContent}`}>
+      <div
+        className={`${
+          tab === "bookings" ? styles.activeTabContent : styles.tabContent
+        }`}
+      >
+        <PersonalInfoForm />
         <BookingsTable />
       </div>
     </Container>

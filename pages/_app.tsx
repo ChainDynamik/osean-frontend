@@ -58,6 +58,8 @@ const ThirdwebMoralisLinker = () => {
     // }
   }
 
+  console.log(user);
+
   useEffect(() => {
     if (address && isInitialized) checkLink();
   }, [address, user, isInitialized]);
@@ -119,10 +121,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 name="description"
                 content="Osean is a crypto currency project designed to invest in Yachting industry"
               />
-              <meta
-                name="theme-color"
-                content="#1FC7D4"
-              />
+              <meta name="theme-color" content="#1FC7D4" />
               <meta
                 name="twitter:image"
                 content="https://osean.online/osean200.png"
@@ -131,10 +130,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 name="twitter:description"
                 content="Osean is a crypto currency project designed to invest in Yachting industry"
               />
-              <meta
-                name="twitter:card"
-                content="summary_large_image"
-              />
+              <meta name="twitter:card" content="summary_large_image" />
               <meta
                 name="twitter:title"
                 content="🌊 OSEAN DAO - Osean DAO dapp"
