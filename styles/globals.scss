@@ -300,3 +300,57 @@ a {
 .box-shadow {
   box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.1);
 }
+
+// .css-t3ipsp-control {
+//   &:active,
+//   &:focus,
+//   &:hover,
+//   &:focus-visible,
+//   &:focus-within {
+//     // border: 0 !important;
+//     // hsl(0, 0%, 80%)
+//     border-color: hsl(0, 0%, 80%) !important;
+//     box-shadow: none;
+//   }
+// }
+
+// .css-13cymwt-control {
+//   cursor: pointer !important;
+
+//   & > * {
+//     cursor: pointer !important;
+//   }
+// }
+
+.css-1dyz3mf {
+  & * {
+    outline: none !important;
+    border: none !important;
+  }
+}
+
+.css-1lc3dfz {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  & * {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  & > * {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  & > input {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  & input {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
