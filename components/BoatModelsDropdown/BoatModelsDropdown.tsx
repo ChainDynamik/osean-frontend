@@ -4,7 +4,7 @@ import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState"
 import { COUNTRIES_DATA } from "../../data/countries-data";
 import { bookingManagerBases } from "../../const/booking-manager-bases";
 import { boatModels } from "../../const/boat-models";
-import { selectCustomStyles } from "../CountriesDropdown/CountriesDropdown";
+import { selectCustomStyles } from "../KindSelect/KindSelect";
 
 // Remove items with the same model from boatModels
 const deduplicatedBoatModels = boatModels.filter(

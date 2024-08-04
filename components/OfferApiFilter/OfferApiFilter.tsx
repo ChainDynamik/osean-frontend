@@ -10,16 +10,15 @@ import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
 import Select from "react-select";
 import { COUNTRIES_DATA } from "../../data/countries-data";
-import CountriesDropdown, {
-  selectCustomStyles,
-} from "../CountriesDropdown/CountriesDropdown";
+import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
 import * as Switch from "@radix-ui/react-switch";
 import * as Slider from "@radix-ui/react-slider";
 import { Dropdown } from "../Dropdown/Dropdown";
 import Icon from "../icon-selector/icon-selector";
 import BoatModelsDropdown from "../BoatModelsDropdown/BoatModelsDropdown";
+import { selectCustomStyles } from "../KindSelect/KindSelect";
 
-const kindOptions = [
+export const kindOptions = [
   { value: "sail boat", label: "Sailboat" },
   { value: "motorboat", label: "Motorboat" },
   { value: "catamaran", label: "Catamaran" },

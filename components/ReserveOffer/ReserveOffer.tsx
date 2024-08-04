@@ -8,6 +8,10 @@ import { useRouter } from "next/navigation";
 import { cn } from "../../util";
 import { useTripStore } from "../../util/store/tripStore";
 import CountriesDropdown from "../CountriesDropdown/CountriesDropdown";
+import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
+import Select from "react-select";
+import { kindOptions } from "../OfferApiFilter/OfferApiFilter";
+import KindSelect from "../KindSelect/KindSelect";
 
 interface BookingFormProps {
   className?: string;
@@ -19,12 +23,16 @@ export default function ReserveOffer({ className, isRoute }: BookingFormProps) {
 
   const { setTripStart, setTripEnd } = useTripStore();
 
-  const [localTripStart, setLocalTripStart] = useState<Date | null>(
+  const [localTripStart, setLocalTripStart] = useState<Date>(
     new Date("2024-08-17")
   );
-  const [localTripEnd, setLocalTripEnd] = useState<Date | null>(
+  const [localTripEnd, setLocalTripEnd] = useState<Date>(
     new Date("2024-08-24")
   );
+  const setKindFilters = useOfferApiFilterState(
+    (state) => state.setKindFilters
+  );
+  const kindFilters = useOfferApiFilterState((state) => state.kindFilters);
 
   const handleReserve = () => {
     setTripStart(localTripStart);
@@ -33,6 +41,12 @@ export default function ReserveOffer({ className, isRoute }: BookingFormProps) {
     if (isRoute) {
       router.push("/offers");
     }
+  };
+  const handleKindChange = (selectedOptions: any) => {
+    const selectedKinds = selectedOptions
+      ? selectedOptions.map((option: any) => option.value)
+      : [];
+    setKindFilters(selectedKinds);
   };
 
   return (
@@ -53,9 +67,15 @@ export default function ReserveOffer({ className, isRoute }: BookingFormProps) {
         Book your <span className="text-yellow-500">Yacht Charter</span> with{" "}
         <span className="text-blue-500">confidence</span>
       </h2>
+      <div className="mt-4">
+        <CountriesDropdown />
+      </div>
+      <div className="mt-4 flex flex-col gap-2">
+        <KindSelect />
+      </div>
       <div
         className={cn(
-          "relative mt-6 grid grid-cols-2 gap-3 rounded-t-lg border border-b-0 border-gray-lighter"
+          "relative mt-6 grid grid-cols-2 gap-3 rounded-md border border-b-0 border-gray-lighter"
         )}
       >
         <span
@@ -86,9 +106,7 @@ export default function ReserveOffer({ className, isRoute }: BookingFormProps) {
           />
         </div>
       </div>
-      <div className="mt-4">
-        <CountriesDropdown />
-      </div>
+
       <Button
         type="submit"
         variant="secondary"
