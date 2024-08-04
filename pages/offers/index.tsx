@@ -411,7 +411,7 @@ export default function Offers() {
                 <OffersCard key={index} loading={false} {...offerBoatObject} />
               );
             })}
-          <ReactPaginate
+          {/* <ReactPaginate
             previousLabel={`${isMobile ? "←" : "← Previous"}`}
             nextLabel={`${isMobile ? "→" : "Next →"}`}
             pageCount={Math.ceil(sortedOffers.length / ITEMS_PER_PAGE)}
@@ -423,6 +423,25 @@ export default function Offers() {
             activeClassName={"pagination__link--active"}
             marginPagesDisplayed={isMobile ? 1 : 2}
             pageRangeDisplayed={isMobile ? 2 : 5}
+          /> */}
+          <ReactPaginate
+            previousLabel={isMobile ? "←" : "← Previous"}
+            nextLabel={isMobile ? "→" : "Next →"}
+            breakLabel={"..."}
+            breakClassName={"break-me"}
+            pageCount={Math.ceil(sortedOffers.length / ITEMS_PER_PAGE)}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={"pagination"}
+            pageClassName={"page-item"}
+            pageLinkClassName={"page-link"}
+            previousClassName={"page-item"}
+            previousLinkClassName={"page-link"}
+            nextClassName={"page-item"}
+            nextLinkClassName={"page-link"}
+            breakLinkClassName={"page-link"}
+            activeClassName={"active"}
           />
         </div>
       </div>
