@@ -46,10 +46,7 @@ export default async function handler(
     minCabins,
   } = req.query as unknown as FetchOffersQuery;
 
-  const tripStart = dateFrom ? dateFrom : "2024-08-17";
-  const tripEnd = dateTo ? dateTo : "2024-08-24";
-
-  let queryString = `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${tripStart}T00%3A00%3A00&dateTo=${tripEnd}T00%3A00%3A00`;
+  let queryString = `${BOOKING_MANAGER_API_ROOT}/offers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
 
   if (currency) {
     queryString += `&currency=${currency}`;

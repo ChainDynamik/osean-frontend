@@ -16,7 +16,7 @@ const currencyOptions = [
 export default function CurrencyDropdown() {
   const currency = useOfferApiFilterState((state) => state.currency);
   const setCurrency = useOfferApiFilterState((state) => state.setCurrency);
-  const [activeIcon, setActiveIcon] = useState("");
+  const [activeIcon, setActiveIcon] = useState("eur");
   const handleCurrencyChange = (selectedValue: string) => {
     setCurrency(selectedValue);
   };
@@ -26,7 +26,10 @@ export default function CurrencyDropdown() {
       <Dropdown.Trigger className="inline-flex justify-between rounded-md border border-gray-300 shadow-sm px-3 py-1 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-sm w-fit">
         <div>
           <div className="flex items-center gap-2">
-            <Icon iconType={activeIcon} className="w-4 text-primary" />
+            <Icon
+              iconType={activeIcon}
+              className="w-4 text-primary -translate-y-0.5"
+            />
             {currency || "Select Currency"}
           </div>
           <svg
@@ -54,7 +57,10 @@ export default function CurrencyDropdown() {
             }}
           >
             <div className="flex items-center gap-2">
-              <Icon iconType={option.icon} className="w-4 text-primary" />
+              <Icon
+                iconType={option.icon}
+                className="w-4 text-primary -translate-y-0.5"
+              />
               {option.label}
             </div>
           </Dropdown.Item>

@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { format } from "date-fns";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
-import OffersCard, { OffersCardProps } from "../../components/OffersCard/OffersCard";
+import OffersCard, {
+  OffersCardProps,
+} from "../../components/OffersCard/OffersCard";
 import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
@@ -20,6 +21,7 @@ import { useMoralis } from "react-moralis";
 import { useLastReturnedOffersStore } from "../../util/store/lastReturnedOffersStore";
 import CurrencyDropdown from "../../components/CurrencyDropdown/CurrencyDropdown";
 import { getModelFromYachtId } from "../../const/boat-models";
+import { format } from "date-fns";
 
 type Extra = {
   id: number;
@@ -102,8 +104,8 @@ export default function Offers() {
   const { tripStart, tripEnd } = useTripStore();
 
   async function fetchOffers() {
-    const dateFrom = tripStart ? format(tripStart, "yyyy-MM-dd") : "2024-08-17";
-    const dateTo = tripEnd ? format(tripEnd, "yyyy-MM-dd") : "2024-08-24";
+    const dateFrom = format(tripStart, "yyyy-MM-dd");
+    const dateTo = format(tripEnd, "yyyy-MM-dd");
 
     let queryString = `/api/fetchOffers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
 
@@ -190,8 +192,13 @@ export default function Offers() {
     minCabins,
   ]);
 
-  const mapOfferToProps = (offer: Reservation, boat: BookingManagerYacht): OffersCardProps => {
-    const productNames = boat?.products?.map((product) => product.name.toLowerCase());
+  const mapOfferToProps = (
+    offer: Reservation,
+    boat: BookingManagerYacht
+  ): OffersCardProps => {
+    const productNames = boat?.products?.map((product) =>
+      product.name.toLowerCase()
+    );
 
     return {
       id: offer?.yachtId,
@@ -214,7 +221,8 @@ export default function Offers() {
     const withinPriceRange = +data.price >= priceRange[0];
     const withinPriceMaxRange = +data.price <= priceRange[1];
     const boatModel = getModelFromYachtId(data.yachtId.toString());
-    const isBoatModelSelected = boatModels.length === 0 || boatModels.includes(boatModel);
+    const isBoatModelSelected =
+      boatModels.length === 0 || boatModels.includes(boatModel);
 
     return withinPriceRange && withinPriceMaxRange && isBoatModelSelected;
   });
@@ -295,10 +303,7 @@ export default function Offers() {
             }}
             className="lg:hidden absolute right-4 top-4"
           >
-            <Icon
-              iconType="cancel"
-              className="w-7  text-black"
-            />
+            <Icon iconType="cancel" className="w-7  text-black" />
           </div>
           <OfferApiFilter />
         </div>
@@ -317,7 +322,9 @@ export default function Offers() {
               "
               />
             </div>
-            <p className="mb-0 w-full text-xs pr-3">Where would you like to cruise?</p>
+            <p className="mb-0 w-full text-xs pr-3">
+              Where would you like to cruise?
+            </p>
             <div className="py-2.5 px-2.5 border-l border-l-primary">
               <Icon
                 iconType="filter"
@@ -326,48 +333,68 @@ export default function Offers() {
               />
             </div>
           </div>
-          <div className="flex w-full ml-auto justify-between items-center !mb-7 gap-4 flex-wrap">
-            <p className="mb-0">{sortedOffers.length} Boats</p>
-            <div className="flex gap-4 items-center">
-              <p className="mb-0 text-black whitespace-nowrap">Sort by:</p>
+          <div className="flex flex-col w-full mb-2">
+            <div className="flex w-full ml-auto justify-between items-center !mb-6 gap-4 flex-wrap">
+              <p className="mb-0">{sortedOffers.length} Boats</p>
+              <div className="flex gap-4 items-center">
+                <p className="mb-0 text-black whitespace-nowrap">Sort by:</p>
 
-              <Dropdown.Root modal={false}>
-                <Dropdown.Trigger className="inline-flex justify-between rounded-md border border-gray-300 shadow-sm px-3 py-1 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-sm w-fit">
-                  <div>
-                    {!sortOption ? "Default" : sortOption}
-                    <svg
-                      className="-mr-1 ml-2 h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                </Dropdown.Trigger>
-                <Dropdown.Content className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  {sortOptions.map((option) => (
-                    <Dropdown.Item
-                      key={option.value}
-                      onClick={() => setSortOption(option.value)}
-                    >
-                      {option.label}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Content>
-              </Dropdown.Root>
-              {/*  */}
-              <CurrencyDropdown />
+                <Dropdown.Root modal={false}>
+                  <Dropdown.Trigger className="inline-flex justify-between capitalize rounded-md border border-gray-300 shadow-sm px-3 py-1 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-sm w-fit">
+                    <div>
+                      {!sortOption ? "Default" : sortOption}
+                      <svg
+                        className="-mr-1 ml-2 h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 9.707a1 1 0 011.414 0L10 13.414l3.293-3.707a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  </Dropdown.Trigger>
+                  <Dropdown.Content className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                    {sortOptions.map((option) => (
+                      <Dropdown.Item
+                        key={option.value}
+                        onClick={() => setSortOption(option.value)}
+                      >
+                        {option.label}
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Content>
+                </Dropdown.Root>
+                {/*  */}
+                <CurrencyDropdown />
+              </div>
+            </div>
+            <div className="flex mr-auto">
+              Previewing Yachts Available from{"  "}
+              <span className="text-primary font-bold mx-2">
+                {format(new Date(tripStart), "MMM dd, yyyy")}
+              </span>{" "}
+              to {"  "}
+              <span className="text-primary font-bold ml-2">
+                {format(new Date(tripEnd), "MMM dd, yyyy")}
+              </span>
             </div>
           </div>
+          {/*  */}
+          {/* <div className="flex">
+            Previewing Yachts Available from {`${tripStart}`} to {`${tripEnd}`}
+          </div> */}
+
+          {/*  */}
           {!loading && sortedOffers.length === 0 && (
             <div className="flex flex-col gap-4">
-              <p className="text-lg font-semibold mb-0 ">No results, please configure filters</p>
+              <p className="text-lg font-semibold mb-0 ">
+                No results, please configure filters
+              </p>
               <Button className="w-fit mx-auto">Get Quote</Button>
             </div>
           )}
@@ -381,11 +408,7 @@ export default function Offers() {
               const offerBoatObject = mapOfferToProps(offerObject);
 
               return (
-                <OffersCard
-                  key={index}
-                  loading={false}
-                  {...offerBoatObject}
-                />
+                <OffersCard key={index} loading={false} {...offerBoatObject} />
               );
             })}
           <ReactPaginate

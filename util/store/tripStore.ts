@@ -1,10 +1,10 @@
 import { create } from "zustand";
 
 interface TripState {
-  tripStart: Date | null;
-  tripEnd: Date | null;
-  setTripStart: (date: Date | null) => void;
-  setTripEnd: (date: Date | null) => void;
+  tripStart: Date;
+  tripEnd: Date;
+  setTripStart: (date: Date) => void;
+  setTripEnd: (date: Date) => void;
 }
 
 export const useTripStore = create<TripState>((set) => ({
