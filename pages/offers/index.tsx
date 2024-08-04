@@ -373,7 +373,7 @@ export default function Offers() {
                 <CurrencyDropdown />
               </div>
             </div>
-            <div className="flex mr-auto">
+            <div className="mr-auto">
               Previewing Yachts Available from{"  "}
               <span className="text-primary font-bold mx-2">
                 {format(new Date(tripStart), "MMM dd, yyyy")}
