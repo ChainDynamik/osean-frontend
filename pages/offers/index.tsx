@@ -408,7 +408,12 @@ export default function Offers() {
               const offerBoatObject = mapOfferToProps(offerObject);
 
               return (
-                <OffersCard key={index} loading={false} {...offerBoatObject} />
+                <OffersCard
+                  filterCabins={minCabins}
+                  key={index}
+                  loading={false}
+                  {...offerBoatObject}
+                />
               );
             })}
           {/* <ReactPaginate

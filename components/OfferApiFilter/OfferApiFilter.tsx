@@ -16,7 +16,7 @@ import * as Slider from "@radix-ui/react-slider";
 import { Dropdown } from "../Dropdown/Dropdown";
 import Icon from "../icon-selector/icon-selector";
 import BoatModelsDropdown from "../BoatModelsDropdown/BoatModelsDropdown";
-import { selectCustomStyles } from "../KindSelect/KindSelect";
+import KindSelect, { selectCustomStyles } from "../KindSelect/KindSelect";
 
 export const kindOptions = [
   { value: "sail boat", label: "Sailboat" },
@@ -197,7 +197,8 @@ export default function OfferApiFilter({
       </div>
       <div className="mt-4 flex flex-col gap-2">
         <p className="mb-0 text-black text-lg">Types of boat:</p>
-        <Select
+        <KindSelect placeholder="Select kinds" />
+        {/* <Select
           options={kindOptions}
           onChange={handleKindChange}
           styles={selectCustomStyles}
@@ -205,7 +206,7 @@ export default function OfferApiFilter({
           isMulti
           isSearchable
           placeholder="Select kinds"
-        />
+        /> */}
       </div>
 
       <div

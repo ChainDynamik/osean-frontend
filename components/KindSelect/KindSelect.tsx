@@ -52,7 +52,11 @@ export const selectCustomStyles = {
   }),
 };
 
-const KindSelect = () => {
+const KindSelect = ({
+  placeholder = "Type Of Boat",
+}: {
+  placeholder?: string;
+}) => {
   // Global state for kind filters
   const kindFilters = useOfferApiFilterState((state) => state.kindFilters);
   const setKindFilters = useOfferApiFilterState(
@@ -81,7 +85,7 @@ const KindSelect = () => {
       isClearable
       isMulti
       isSearchable
-      placeholder="Type Of Boat"
+      placeholder={placeholder}
     />
   );
 };
