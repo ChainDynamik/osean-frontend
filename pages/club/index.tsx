@@ -206,7 +206,7 @@ export default function TopBoatsPage() {
     <main className="mt-[2.5rem]">
       <div className="yacht-page-header lg:h-[calc(100vh-30px)] lg:max-h-[700px] h-fit w-full flex max-lg:items-center max-lg:justify-center">
         <div className="max-w-[1200px] mx-auto max-lg:pt-6 md:px-8 pb-8 flex items-end relative h-full w-full max-lg:items-center max-lg:justify-center max-lg:h-fit">
-          <div className="flex w-full gap-8 max-lg:w-fit max-lg:items-center justify-between max-h-fit max-sm:w-[90%] items-center max-lg:flex-col">
+          <div className="flex w-full gap-8 max-lg:w-fit lg:items-end justify-between max-h-fit max-sm:w-[90%] items-center max-lg:flex-col">
             <ReserveOffer isRoute />
             <div>
               <Image

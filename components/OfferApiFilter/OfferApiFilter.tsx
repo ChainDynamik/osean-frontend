@@ -459,7 +459,7 @@ export default function OfferApiFilter({
                   : "bg-white text-black border-gray-300"
               )}
             >
-              {number === 6 ? "6+" : number}
+              {number}+
             </button>
           ))}
         </div>
