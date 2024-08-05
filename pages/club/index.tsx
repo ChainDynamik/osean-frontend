@@ -117,7 +117,7 @@ function RandomBoatsGrid() {
   ) => {
     if (type === "prev") {
       return (
-        <a className="flex hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
+        <a className="flex max-sm:py-2 hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
           <div>
             <Icon
               iconType={"chevron"}
@@ -132,7 +132,7 @@ function RandomBoatsGrid() {
     }
     if (type === "next") {
       return (
-        <a className="flex hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
+        <a className="flex max-sm:py-2 hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
           <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">
             Next
           </p>
