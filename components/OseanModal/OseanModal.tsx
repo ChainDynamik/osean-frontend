@@ -27,6 +27,7 @@ import Countdown from "react-countdown";
 import toast from "react-hot-toast";
 import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
 import { useSelectedExtrasStore } from "../../util/store/extraStore";
+import { useMoralis } from "react-moralis";
 
 const options = [
   {
@@ -110,16 +111,17 @@ export default function OseanModal({
   children,
   enrollId,
   fee,
+  amountUsd,
 }: {
   children?: ReactNode;
   enrollId?: string;
   fee: number;
+  amountUsd: number;
 }) {
   const [network, setNetwork] = useState(options[0]);
   const [coin, setCoin] = useState("Select currency");
   const [showNetworkDropdown, setShowNetworkDropdown] = useState(false);
   const [showCoinDropdown, setShowCoinDropdown] = useState(false);
-
 
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
 
@@ -136,15 +138,15 @@ export default function OseanModal({
 
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
 
-  const amountUsd = 10;
-
   const [loadingText, setLoadingText] = useState("Preparing quote...");
 
   const [isLoading, setIsLoading] = useState(false);
 
   const [quote, setQuote] = useState<OSMQuote>();
 
-  console.log(quote);
+  const { user } = useMoralis();
+
+  console.log(user);
 
   async function verifyQuoteSettled(quote: OSMQuote) {
     const query = new Moralis.Query("Quote");

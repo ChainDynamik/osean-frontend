@@ -29,12 +29,88 @@ import { createThirdwebClient } from "thirdweb";
 import { useCurrencyConverter } from "../util/hooks/useCurrencyConverter";
 import axios from "axios";
 
-const ThirdwebMoralisLinker = () => {
-  const { user, authenticate, isInitialized, Moralis, login } = useMoralis();
-  const address = useAddress();
+// const ThirdwebMoralisLinker = () => {
+//   const { user, authenticate, isInitialized, Moralis, logout } = useMoralis();
+//   const address = useAddress();
 
-  const { ethUnitPrice } = useCurrencyConverter();
-  const { data: userEmail } = useEmbeddedWalletUserEmail();
+//   const { ethUnitPrice } = useCurrencyConverter();
+//   const { data: userEmail } = useEmbeddedWalletUserEmail();
+
+//   const wallet = useWallet();
+
+//   async function checkLink() {
+//     if (user) {
+//       if (address?.toLowerCase !== user.get("ethAddress")) {
+//         // Invalid user, log out
+//         console.log(`Invalid user, logging out`);
+//         logout();
+//       }
+//       console.log("User is already logged in");
+//       return;
+//     }
+
+//     // Get message to sign from the auth api
+//     const { message } = await Moralis.Cloud.run("requestMessage", {
+//       address,
+//       chain: parseInt("1", 16),
+//       networkType: "evm",
+//     });
+
+//     // const signedMessage = await wallet?.signMessage(message);
+
+//     // // Challenge the parse server for authentication
+
+//     // const request = await axios({
+//     //   method: "POST",
+//     //   url: "https://parse-osean.dappstation.eu/server/users",
+//     //   data: {
+//     //     authData: {
+//     //       moralisEth: {
+//     //         id: address,
+//     //         signature: signedMessage,
+//     //         data: message,
+//     //       },
+//     //     },
+//     //     _ApplicationId: "345735ed2a1752402440e3ea7f0c0985094e8d79",
+//     //     _ClientVersion: "js1.12.0",
+//     //     _InstallationId: "f372a82b-0b8a-41cc-8b73-4b582b269dd6",
+//     //   },
+//     // });
+
+//     // const sessionToken = request.data.sessionToken;
+//     // const randomPassword = Math.random().toString(36).slice(-8);
+//     // const loggedInUser = await Moralis.User.become(sessionToken);
+
+//     // console.log("Logged in user", loggedInUser);
+
+//     // loggedInUser.set("password", randomPassword);
+//     // await loggedInUser.save();
+
+//     // await login(loggedInUser.get("email"), randomPassword);
+
+//     // console.log("login ok");
+
+//     await authenticate({
+//       signingMessage: message,
+//     });
+//   }
+
+//   console.log(user);
+
+//   useEffect(() => {
+//     if (address && isInitialized) checkLink();
+//   }, [address, user, isInitialized]);
+
+//   // useEffect(() => {
+//   //   if (isInitialized) logoutIfNoWalletOrDifferent();
+//   // }, [wallet, isInitialized, user]);
+
+//   return <>p</>;
+// };
+
+const ThirdwebMoralisLinker = () => {
+  const { user, authenticate, isInitialized, Moralis } = useMoralis();
+  const address = useAddress();
 
   const wallet = useWallet();
 
@@ -48,51 +124,26 @@ const ThirdwebMoralisLinker = () => {
       networkType: "evm",
     });
 
-    const signedMessage = await wallet?.signMessage(message);
+    // const signedMessage = await wallet?.signMessage(message);
 
-    // Challenge the parse server for authentication
-
-    const request = await axios({
-      method: "POST",
-      url: "https://parse-osean.dappstation.eu/server/users",
-      data: {
-        authData: {
-          moralisEth: {
-            id: address,
-            signature: signedMessage,
-            data: message,
-          },
-        },
-        _ApplicationId: "345735ed2a1752402440e3ea7f0c0985094e8d79",
-        _ClientVersion: "js1.12.0",
-        _InstallationId: "f372a82b-0b8a-41cc-8b73-4b582b269dd6",
-      },
+    await authenticate({
+      signingMessage: message,
+      throwOnError: true,
     });
 
-    const sessionToken = request.data.sessionToken;
-    const randomPassword = Math.random().toString(36).slice(-8);
-    const loggedInUser = await Moralis.User.become(sessionToken);
-    loggedInUser.set("password", randomPassword);
-    await loggedInUser.save();
-
-    await login(loggedInUser.get("email"), randomPassword);
+    // if(user && address) {
+    //   const provider = new
+    //   const signer = provider.getSigner();
+    //   const address = await signer.getAddress();
+    //   console.log("address", address);
+    // }
   }
 
   console.log(user);
 
-  async function logoutIfNoWalletOrDifferent() {
-    if (!wallet && user) {
-      await Moralis.User.logOut();
-    }
-  }
-
   useEffect(() => {
     if (address && isInitialized) checkLink();
   }, [address, user, isInitialized]);
-
-  // useEffect(() => {
-  //   if (isInitialized) logoutIfNoWalletOrDifferent();
-  // }, [wallet, isInitialized, user]);
 
   return <>p</>;
 };

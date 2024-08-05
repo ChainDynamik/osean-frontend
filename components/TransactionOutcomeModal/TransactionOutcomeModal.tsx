@@ -116,7 +116,7 @@ export default function TransactionOutcomeModal({ isOpen, quote, onOpenChange, t
                 className="text-white rounded-md w-full mx-3"
                 onClick={() => {
                   console.log("test");
-                  window.location.href = `/usergov/${address}`;
+                  window.location.href = `/profilegov/${address}`;
                 }}
               >
                 View reservation

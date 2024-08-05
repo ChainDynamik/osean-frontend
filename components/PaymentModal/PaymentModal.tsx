@@ -18,25 +18,10 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 interface PaymentModalProps {
   children?: ReactNode;
-  enrollId?: string;
-  price: number;
-  nights: number;
-  discount: number;
-  cleaningFee: number;
-  serviceFee: number;
-  totalFee: number;
+  amountUsd: number;
 }
 
-export default function PaymentModal({
-  children,
-  enrollId,
-  price,
-  nights,
-  discount,
-  cleaningFee,
-  serviceFee,
-  totalFee,
-}: PaymentModalProps) {
+export default function PaymentModal({ children, amountUsd, totalFee }: PaymentModalProps) {
   type PaymentMethodType = "card" | "wire";
   const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(null);
 
@@ -118,7 +103,10 @@ export default function PaymentModal({
                 />
               </div>
               <div className="flex gap-4 flex-col">
-                <OseanModal fee={totalFee}>
+                <OseanModal
+                  fee={totalFee}
+                  amountUsd={amountUsd}
+                >
                   <Button className="mb-2 whitespace-nowrap font-bold">
                     <span>
                       <Image
@@ -178,13 +166,8 @@ export default function PaymentModal({
               )}
               <hr />
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
-                <span className="font-normal">Amount to pay</span>
-                <span className="font-bold">
-                  {selectedOffer?.price +
-                    selectedOffer?.obligatoryExtrasPrice +
-                    selectedExtras.reduce((acc, extra) => acc + extra.price, 0)}{" "}
-                  EUR
-                </span>
+                <span className="font-normal">Payable Today</span>
+                <span className="font-bold">{selectedOffer?.price} EUR</span>
               </li>
             </ul>
           </div>

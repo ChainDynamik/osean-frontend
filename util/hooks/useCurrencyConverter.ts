@@ -8,11 +8,11 @@ export const useCurrencyConverter = () => {
   const [eurUnitUsdPrice, setEurUnitUsdPrice] = useState<number>(0);
   const [usdUnitPrice, setUsdUnitPrice] = useState<number>(0);
 
-  console.log(`ethUnitPrice: ${ethUnitPrice}`);
-  console.log(`bnbUnitPrice: ${bnbUnitPrice}`);
-  console.log(`oseanUnitPrice: ${oseanUnitPrice}`);
-  console.log(`eurUnitUsdPrice: ${eurUnitUsdPrice}`);
-  console.log(`usdUnitPrice: ${usdUnitPrice}`);
+  // console.log(`ethUnitPrice: ${ethUnitPrice}`);
+  // console.log(`bnbUnitPrice: ${bnbUnitPrice}`);
+  // console.log(`oseanUnitPrice: ${oseanUnitPrice}`);
+  // console.log(`eurUnitUsdPrice: ${eurUnitUsdPrice}`);
+  // console.log(`usdUnitPrice: ${usdUnitPrice}`);
 
   const { Moralis, isInitialized } = useMoralis();
 

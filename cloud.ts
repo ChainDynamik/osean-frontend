@@ -527,7 +527,7 @@ Parse.Cloud.define("generateQuote", async (request: any) => {
   // 5 minutes from now
   const expirationTime = Math.floor(Date.now() / 1000) + 300;
   const signer = user.get("ethAddress");
-  const message = `${amountInWei}_${expirationTime}_${signer}`;
+  const message = `${amountInWei}_${expirationTime}_${signer}_`;
   const signature = await web3.eth.accounts.sign(message, process.env.BACKEND_WALLET_PRIVATE_KEY);
 
   // Save this quote in the database
@@ -634,3 +634,17 @@ Parse.Cloud.define("createOrder", async (request: any) => {
   await order.save();
   return order.toJSON();
 });
+
+// Parse.Cloud.beforeSave("_User", async (request: any) => {
+//   const user = request.object;
+
+//   if (!user.get("ethAddress")) {
+//     // Check if it's in the authData object as authData.moralisEth.address
+//     const authData = user.get("authData");
+//     const ethAddress = authData?.moralisEth?.id;
+
+//     if (ethAddress) {
+//       user.set("ethAddress", ethAddress);
+//     }
+//   }
+// });

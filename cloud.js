@@ -1098,7 +1098,7 @@ Parse.Cloud.define("generateQuote", function (request) { return __awaiter(_this,
                 amountInWei = web3.utils.toWei(amountInQuote, "ether");
                 expirationTime = Math.floor(Date.now() / 1000) + 300;
                 signer = user.get("ethAddress");
-                message = "".concat(amountInWei, "_").concat(expirationTime, "_").concat(signer);
+                message = "".concat(amountInWei, "_").concat(expirationTime, "_").concat(signer, "_");
                 return [4 /*yield*/, web3.eth.accounts.sign(message, process.env.BACKEND_WALLET_PRIVATE_KEY)];
             case 3:
                 signature = _c.sent();
@@ -1158,3 +1158,14 @@ Parse.Cloud.define("createOrder", function (request) { return __awaiter(_this, v
         }
     });
 }); });
+// Parse.Cloud.beforeSave("_User", async (request: any) => {
+//   const user = request.object;
+//   if (!user.get("ethAddress")) {
+//     // Check if it's in the authData object as authData.moralisEth.address
+//     const authData = user.get("authData");
+//     const ethAddress = authData?.moralisEth?.id;
+//     if (ethAddress) {
+//       user.set("ethAddress", ethAddress);
+//     }
+//   }
+// });
