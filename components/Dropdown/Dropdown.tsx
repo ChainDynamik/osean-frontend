@@ -63,7 +63,7 @@ const Content = forwardRef<ContentElement, ContentProps>((props, ref) => {
       <DropdownMenu.Content
         sideOffset={6}
         side="bottom"
-        className="outline-none rounded-lg shadow-2xl overflow-hidden z-[99999999]  shadow-black/10 cursor-pointer border border-border"
+        className="outline-none max-h-[300px] lg:max-h-[600px] overflow-y-scroll rounded-lg shadow-2xl z-[99999999]  shadow-black/10 cursor-pointer border border-border"
         {...contentProps}
         ref={ref}
       >
