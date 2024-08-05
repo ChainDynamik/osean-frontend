@@ -15,13 +15,13 @@ import { Dropdown } from "../../components/Dropdown/Dropdown";
 import { cn } from "../../util";
 import Overlay from "../../components/Overlay/overlay";
 import Button from "../../components/Button/Button";
-import ReactPaginate from "react-paginate";
 import useScreenSize from "../../util/hooks/useScreenSize";
 import { useMoralis } from "react-moralis";
 import { useLastReturnedOffersStore } from "../../util/store/lastReturnedOffersStore";
 import CurrencyDropdown from "../../components/CurrencyDropdown/CurrencyDropdown";
 import { getModelFromYachtId } from "../../const/boat-models";
 import { format } from "date-fns";
+import { Pagination } from "antd"; // Import Ant Design's Pagination component
 
 type Extra = {
   id: number;
@@ -79,7 +79,7 @@ export default function Offers() {
   const [sortOption, setSortOption] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const { yachts, getBoatById } = useYachts();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const { isMobile } = useScreenSize();
 
   const { setLastReturnedOffers } = useLastReturnedOffersStore();
@@ -109,9 +109,6 @@ export default function Offers() {
 
     let queryString = `/api/fetchOffers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
 
-    // if (currency) {
-    //   queryString += `&currency=${currency}`;
-    // }
     if (minLength) {
       queryString += `&minLength=${minLength}`;
     }
@@ -144,7 +141,6 @@ export default function Offers() {
     }
     if (countries.length > 0) {
       for (const country of countries) {
-        // If the country is a number, means its a baseId
         if (!isNaN(Number(country))) {
           queryString += `&baseFromId=${country}`;
         } else queryString += `&country=${countries.join(",")}`;
@@ -158,7 +154,6 @@ export default function Offers() {
           Authorization: `Bearer ${process.env.BOOKING_MANAGER_API_KEY}`,
         },
       });
-      // tsst
       const offers: Reservation[] = request.data;
       console.log(offers, "my offers");
 
@@ -167,7 +162,7 @@ export default function Offers() {
     } catch (error) {
       console.error("Error fetching offers:", error);
     } finally {
-      setLoading(false); // Set loading state to false after fetching
+      setLoading(false);
     }
   }
 
@@ -234,7 +229,7 @@ export default function Offers() {
     if (sortOption === "highestPrice") {
       return b.price - a.price;
     }
-    return 0; // Default: no sorting
+    return 0;
   });
 
   const loadingCards = Array.from({ length: 4 }, (_, index) => (
@@ -261,18 +256,15 @@ export default function Offers() {
     />
   ));
 
-  const handlePageClick = (data: { selected: number }) => {
-    setCurrentPage(data.selected);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
-  const [offset, setOffset] = useState(0);
-  const currentPageData = sortedOffers.slice(offset, offset + ITEMS_PER_PAGE);
+  const currentPageData = sortedOffers.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
-  useEffect(() => {
-    setOffset(currentPage * ITEMS_PER_PAGE);
-  }, [currentPage]);
-
-  // Log the current page data
   useEffect(() => {
     console.log("Pagination active items:", currentPageData);
   }, [currentPage, sortedOffers]);
@@ -369,7 +361,6 @@ export default function Offers() {
                     ))}
                   </Dropdown.Content>
                 </Dropdown.Root>
-                {/*  */}
                 <CurrencyDropdown />
               </div>
             </div>
@@ -384,12 +375,7 @@ export default function Offers() {
               </span>
             </div>
           </div>
-          {/*  */}
-          {/* <div className="flex">
-            Previewing Yachts Available from {`${tripStart}`} to {`${tripEnd}`}
-          </div> */}
 
-          {/*  */}
           {!loading && sortedOffers.length === 0 && (
             <div className="flex flex-col gap-4">
               <p className="text-lg font-semibold mb-0 ">
@@ -416,37 +402,12 @@ export default function Offers() {
                 />
               );
             })}
-          {/* <ReactPaginate
-            previousLabel={`${isMobile ? "←" : "← Previous"}`}
-            nextLabel={`${isMobile ? "→" : "Next →"}`}
-            pageCount={Math.ceil(sortedOffers.length / ITEMS_PER_PAGE)}
-            onPageChange={handlePageClick}
-            containerClassName={"pagination"}
-            previousLinkClassName={"pagination__link"}
-            nextLinkClassName={"pagination__link"}
-            disabledClassName={"pagination__link--disabled"}
-            activeClassName={"pagination__link--active"}
-            marginPagesDisplayed={isMobile ? 1 : 2}
-            pageRangeDisplayed={isMobile ? 2 : 5}
-          /> */}
-          <ReactPaginate
-            previousLabel={isMobile ? "←" : "← Previous"}
-            nextLabel={isMobile ? "→" : "Next →"}
-            breakLabel={"..."}
-            breakClassName={"break-me"}
-            pageCount={Math.ceil(sortedOffers.length / ITEMS_PER_PAGE)}
-            marginPagesDisplayed={2}
-            pageRangeDisplayed={5}
-            onPageChange={handlePageClick}
-            containerClassName={"pagination"}
-            pageClassName={"page-item"}
-            pageLinkClassName={"page-link"}
-            previousClassName={"page-item"}
-            previousLinkClassName={"page-link"}
-            nextClassName={"page-item"}
-            nextLinkClassName={"page-link"}
-            breakLinkClassName={"page-link"}
-            activeClassName={"active"}
+          <Pagination
+            current={currentPage}
+            total={sortedOffers.length}
+            pageSize={ITEMS_PER_PAGE}
+            onChange={handlePageChange}
+            showSizeChanger={false}
           />
         </div>
       </div>

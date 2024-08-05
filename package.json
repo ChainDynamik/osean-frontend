@@ -40,6 +40,7 @@
     "@types/mocha": "^9.1.0",
     "@types/yargs": "^17.0.22",
     "@uidotdev/usehooks": "^2.4.1",
+    "antd": "^5.20.0",
     "axios": "^1.7.2",
     "cbor": "^9.0.1",
     "cbor-js": "^0.1.0",
