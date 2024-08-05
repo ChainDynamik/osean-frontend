@@ -314,3 +314,11 @@ a {
     box-shadow: none !important;
   }
 }
+
+:where(.css-dev-only-do-not-override-d2lrxs).ant-pagination
+  .ant-pagination-item-active {
+  font-weight: 600;
+  color: #fff;
+  background-color: #1677ff;
+  border-color: #1677ff;
+}
