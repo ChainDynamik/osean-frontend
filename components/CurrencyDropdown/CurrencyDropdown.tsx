@@ -6,11 +6,11 @@ import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState"
 import Icon from "../icon-selector/icon-selector";
 
 const currencyOptions = [
-  { value: "EUR", label: "EUR", icon: "eur" },
-  { value: "USD", label: "USD", icon: "usd" },
-  { value: "ETH", label: "ETH", icon: "eth" },
-  { value: "BNB", label: "BNB", icon: "bnb" },
-  { value: "OSEAN", label: "OSEAN", icon: "osean" },
+  { value: "eur", label: "EUR", icon: "eur" },
+  { value: "usd", label: "USD", icon: "usd" },
+  { value: "eth", label: "ETH", icon: "eth" },
+  { value: "bnb", label: "BNB", icon: "bnb" },
+  { value: "osean", label: "OSEAN", icon: "osean" },
 ];
 
 export default function CurrencyDropdown() {
@@ -30,7 +30,7 @@ export default function CurrencyDropdown() {
               iconType={activeIcon}
               className="w-4 text-primary -translate-y-0.5"
             />
-            {currency || "Select Currency"}
+            {currency.toUpperCase() || "Select Currency"}
           </div>
           <svg
             className="-mr-1 ml-2 h-5 w-5"

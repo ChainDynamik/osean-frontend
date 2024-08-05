@@ -69,9 +69,15 @@ export default function YachtDetails({ details, loading, offer }: YachtDetailsPr
   const visibleSpecifications = isViewMore ? specifications : specifications.slice(0, 3);
 
   const extras = details?.products.flatMap((product) => product.extras) || [];
-  const visibleExtras = isViewMoreExtras ? extras : extras.slice(0, 10);
+
+  // Extras but stripping the obligatory Extras from the list (use ID)
+  const extrasStripped = extras.filter((extra) => !offer?.obligatoryExtras.some((oe) => oe.id === extra.id));
+
+  const visibleExtras = isViewMoreExtras ? extrasStripped : extrasStripped.slice(0, 10);
 
   const planImage = details?.images.find((image) => image.description === "Plan image")?.url;
+
+  console.log(details);
 
   return (
     <div className="flex justify-between gap-5 lg:gap-8 xl:gap-12 4xl:gap-16 mt-14 mb-16">
@@ -152,15 +158,17 @@ export default function YachtDetails({ details, loading, offer }: YachtDetailsPr
                     </div>
                     <p className="mb-0 text-black">{details?.mainsailType}</p>
                   </div>
-                  <div className="flex gap-4 items-center">
-                    <div>
-                      <Icon
-                        iconType="shower"
-                        className="w-4"
-                      />
+                  {details?.maxPeopleOnBoard && (
+                    <div className="flex gap-4 items-center">
+                      <div>
+                        <Icon
+                          iconType="door"
+                          className="w-4"
+                        />
+                      </div>
+                      <p className="mb-0 text-black">{details?.maxPeopleOnBoard} people</p>
                     </div>
-                    <p className="mb-0 text-black">4 showers</p>
-                  </div>
+                  )}
                   <div className="flex gap-4 items-center">
                     <div>
                       <Icon
@@ -390,7 +398,7 @@ export default function YachtDetails({ details, loading, offer }: YachtDetailsPr
                   ))}
                 </Stack>
               </CheckboxGroup>
-              {extras.length > 10 && (
+              {extrasStripped.length > 10 && (
                 <div
                   className="mt-2 text-blue-600 cursor-pointer"
                   onClick={() => setIsViewMoreExtras(!isViewMoreExtras)}

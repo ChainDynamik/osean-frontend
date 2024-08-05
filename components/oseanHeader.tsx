@@ -60,7 +60,11 @@ export const OseanHeaderLinks: React.FC = () => {
       />
       {/* END Page Level CSS*/}
       {/* BEGIN Custom CSS*/}
-      <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="assets/css/style.css"
+      />
     </>
   );
 };
@@ -69,9 +73,7 @@ export const OseanHeader: React.FC = () => {
   const { isTablet } = useScreenSize();
   function toggleNav() {
     if (isTablet) {
-      document
-        .querySelectorAll("#navbarCollapse")[0]
-        .classList.toggle("collapse");
+      document.querySelectorAll("#navbarCollapse")[0].classList.toggle("collapse");
     }
   }
 
@@ -109,8 +111,7 @@ export const OseanHeader: React.FC = () => {
               aria-label="Toggle navigation"
               onClick={toggleNav}
               style={{
-                filter:
-                  "invert(52%) sepia(44%) saturate(4169%) hue-rotate(172deg) brightness(99%) contrast(110%)",
+                filter: "invert(52%) sepia(44%) saturate(4169%) hue-rotate(172deg) brightness(99%) contrast(110%)",
               }}
             >
               <span className="navbar-toggler-icon" />
@@ -121,14 +122,20 @@ export const OseanHeader: React.FC = () => {
               })}
               id="navbarCollapse"
             >
-              <div id="navigation" className="navbar-nav ml-auto">
+              <div
+                id="navigation"
+                className="navbar-nav ml-auto"
+              >
                 <ul className="navbar-nav mt-1">
                   <li
                     className="nav-item animated"
                     data-animation="fadeInDown"
                     data-animation-delay="1.0s"
                   >
-                    <a className="nav-link" href="https://osean.online">
+                    <a
+                      className="nav-link"
+                      href="https://osean.online"
+                    >
                       Home
                     </a>
                   </li>
@@ -138,7 +145,10 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.2s"
                   >
-                    <Link className="nav-link" href="/dex">
+                    <Link
+                      className="nav-link"
+                      href="/dex"
+                    >
                       Swap
                     </Link>
                   </li>
@@ -147,7 +157,10 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.4s"
                   >
-                    <Link className="nav-link" href="/stake">
+                    <Link
+                      className="nav-link"
+                      href="/stake"
+                    >
                       Stake
                     </Link>
                   </li>
@@ -156,7 +169,10 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.4s"
                   >
-                    <Link className="nav-link" href="/markt">
+                    <Link
+                      className="nav-link"
+                      href="/markt"
+                    >
                       NFTs
                     </Link>
                   </li>
@@ -165,7 +181,10 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.8s"
                   >
-                    <Link className="nav-link" href="/vote">
+                    <Link
+                      className="nav-link"
+                      href="/vote"
+                    >
                       DAO
                     </Link>
                   </li>
@@ -174,7 +193,10 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.4s"
                   >
-                    <Link className="nav-link" href="/bridge">
+                    <Link
+                      className="nav-link"
+                      href="/bridge"
+                    >
                       Bridge
                     </Link>
                   </li>
@@ -183,11 +205,14 @@ export const OseanHeader: React.FC = () => {
                     data-animation="fadeInDown"
                     data-animation-delay="1.4s"
                   >
-                    <Link className="nav-link" href="/club">
+                    <Link
+                      className="nav-link"
+                      href="/club"
+                    >
                       Club
                     </Link>
                   </li>
-           
+
                   <li
                     className="dropdown show mr-2 px-2 animated"
                     data-animation="fadeInDown"

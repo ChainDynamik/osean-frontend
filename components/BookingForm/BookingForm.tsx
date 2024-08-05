@@ -28,7 +28,7 @@ export default function BookingForm({ price, offer, className, securityDeposit }
   const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
   const toggleExtra = useSelectedExtrasStore((state) => state.toggleExtra);
 
-  console.log(offer);
+  // console.log(offer);
 
   const discount = offer?.startPrice - offer?.price;
   const discountPercentage = Math.round((discount / offer?.startPrice) * 100);
@@ -147,49 +147,59 @@ export default function BookingForm({ price, offer, className, securityDeposit }
         p="4"
         // pl="4"
       >
-        <ul className="">
-          {offer?.startPrice !== offer?.price && (
+        {offer && (
+          <ul className="">
+            {offer?.startPrice !== offer?.price && (
+              <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+                <span className="font-normal">Original Price</span>
+                <span className="font-bold line-through">{offer?.startPrice} EUR</span>
+              </li>
+            )}
             <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
-              <span className="font-normal">Original Price</span>
-              <span className="font-bold line-through">{offer?.startPrice} EUR</span>
+              <span className="font-normal">Current Price</span>
+              <span className="font-bold">{offer?.price} EUR</span>
             </li>
-          )}
-          <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
-            <span className="font-normal">Current Price</span>
-            <span className="font-bold">{offer?.price} EUR</span>
-          </li>
-          {offer?.startPrice !== offer?.price && (
+            {offer?.startPrice !== offer?.price && (
+              <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+                <span className="font-normal">Discount</span>
+                <span className="font-bold text-green-500">
+                  {discount} EUR ( -{discountPercentage.toFixed(0)}%)
+                </span>
+              </li>
+            )}
             <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
-              <span className="font-normal">Discount</span>
-              <span className="font-bold text-green-500">
-                {discount} EUR ( -{discountPercentage.toFixed(0)}%)
-              </span>
+              <span className="font-normal">Obligatory Extras Price</span>
+              <span className="font-bold">{offer?.obligatoryExtrasPrice} EUR</span>
             </li>
-          )}
-          <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
-            <span className="font-normal">Obligatory Extras Price</span>
-            <span className="font-bold">{offer?.obligatoryExtrasPrice} EUR</span>
-          </li>
-          <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
-            <span className="font-normal"> Extras Price</span>
-            <span className="font-bold">{selectedExtras.reduce((total, extra) => total + extra.price, 0)} EUR</span>
-          </li>
+            <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+              <span className="font-normal"> Extras Price</span>
+              <span className="font-bold">{selectedExtras.reduce((total, extra) => total + extra.price, 0)} EUR</span>
+            </li>
 
-          <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
-            <span className="font-normal">Total Price</span>
-            <span className="font-bold"> {totalPrice} EUR</span>
-          </li>
-        </ul>
+            <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark first:pt-0 last:border-t last:border-gray-lighter last:pb-0">
+              <span className="font-normal">Payable Today</span>
+              <span className="font-bold"> {offer?.price} EUR</span>
+            </li>
+          </ul>
+        )}
+        {!offer && (
+          <p className="text-center mx-auto my-2">
+            No offer found for the selected dates. Get a quote now or select different dates.
+          </p>
+        )}
         <Suspense fallback={<p>loading...</p>}>
           <PaymentModal price={price}>
             <Button
               type="submit"
-              className="mt-4 w-full !pb-[14px] text-lg !font-bold uppercase relative pt-3 tracking-widest"
+              className="mt-4 w-full !pb-[14px] text-lg !font-bold uppercase relative pt-3 tracking-widest disabled:!cursor-not-allowed disabled:!opacity-50"
+              disabled={!offer}
             >
-              BOOK ONLINE{" "}
-              <span className="bg-negative top-0 right-0 absolute text-white px-2 rounded-md inline-block text-xs">
-                up to {discountPercentage.toFixed(0)}% off
-              </span>
+              BOOK ONLINE
+              {discountPercentage > 0 && (
+                <span className="bg-negative top-0 right-0 absolute text-white px-2 rounded-md inline-block text-xs">
+                  up to {discountPercentage.toFixed(0)}% off
+                </span>
+              )}
             </Button>
           </PaymentModal>
         </Suspense>
@@ -199,11 +209,13 @@ export default function BookingForm({ price, offer, className, securityDeposit }
         >
           GET QUOTE
         </Button>
-        <div className="flex gap-2 mt-4 mx-auto">
-          <p className="list-disc text-xs font-extrabold text-center text-black ">
-            Pay with cryptocurrencies and save up to {discountPercentage.toFixed(0)}% off
-          </p>
-        </div>
+        {discountPercentage > 0 && (
+          <div className="flex gap-2 mt-4 mx-auto">
+            <p className="list-disc text-xs font-extrabold text-center text-black ">
+              Pay with cryptocurrencies and save up to {discountPercentage.toFixed(0)}% off
+            </p>
+          </div>
+        )}
       </Box>
       <Box
         mt="9"

@@ -14,6 +14,8 @@ import { cn } from "../../util";
 import PreviewImage from "../PreviewImage/PreviewImage";
 import Icon from "../icon-selector/icon-selector";
 import { getBaseCountryFromBaseId } from "../../const/booking-manager-bases";
+import { useCurrencyConverter } from "../../util/hooks/useCurrencyConverter";
+import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
 
 export type ListingItemTypes = {
   id: number;
@@ -50,6 +52,9 @@ export default function YachtCard({
   loading = false, // Default loading to false
 }: ListingItemTypes) {
   const RouteComponent = loading ? "div" : "Link";
+
+  const { currency: userSelectedCurrency } = useOfferApiFilterState((state) => state);
+  const { convertEurToCurrency } = useCurrencyConverter();
 
   return (
     <div
@@ -168,7 +173,24 @@ export default function YachtCard({
             ) : (
               <p className="text-gray-light">
                 <span className="inline-block mr-1.5">From</span>
-                <span className="font-bold text-black xl:text-xl 3xl:text-xl">{price}</span>
+
+                <span className="font-bold text-black xl:text-xl 3xl:text-xl">
+                  {convertEurToCurrency({
+                    eurPrice: Number(price.replace("€", "")),
+                    currency: userSelectedCurrency,
+                  })?.toLocaleString()}
+                  {userSelectedCurrency === "eur"
+                    ? "€"
+                    : userSelectedCurrency === "usd"
+                    ? "$"
+                    : userSelectedCurrency === "eth"
+                    ? " ETH"
+                    : userSelectedCurrency === "bnb"
+                    ? " BNB"
+                    : userSelectedCurrency === "osean"
+                    ? " $OSN"
+                    : "€"}
+                </span>
               </p>
             )}
           </div>

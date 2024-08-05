@@ -9,6 +9,7 @@ import {
   embeddedWallet,
   useAddress,
   useWallet,
+  useEmbeddedWalletUserEmail,
 } from "@thirdweb-dev/react";
 import type { AppProps } from "next/app";
 import Head from "next/head";
@@ -24,12 +25,16 @@ import "styles/globals.scss";
 import useYachts from "../hooks/useYachts";
 // import GallaryBlock from "../components/GallaryBlock/GallaryBlock";
 import { MoralisProvider, useMoralis } from "react-moralis";
-import Moralis from "moralis-v1";
 import { createThirdwebClient } from "thirdweb";
+import { useCurrencyConverter } from "../util/hooks/useCurrencyConverter";
+import axios from "axios";
 
 const ThirdwebMoralisLinker = () => {
-  const { user, authenticate, isInitialized } = useMoralis();
+  const { user, authenticate, isInitialized, Moralis, login } = useMoralis();
   const address = useAddress();
+
+  const { ethUnitPrice } = useCurrencyConverter();
+  const { data: userEmail } = useEmbeddedWalletUserEmail();
 
   const wallet = useWallet();
 
@@ -43,26 +48,51 @@ const ThirdwebMoralisLinker = () => {
       networkType: "evm",
     });
 
-    // const signedMessage = await wallet?.signMessage(message);
+    const signedMessage = await wallet?.signMessage(message);
 
-    await authenticate({
-      signingMessage: message,
-      throwOnError: true,
+    // Challenge the parse server for authentication
+
+    const request = await axios({
+      method: "POST",
+      url: "https://parse-osean.dappstation.eu/server/users",
+      data: {
+        authData: {
+          moralisEth: {
+            id: address,
+            signature: signedMessage,
+            data: message,
+          },
+        },
+        _ApplicationId: "345735ed2a1752402440e3ea7f0c0985094e8d79",
+        _ClientVersion: "js1.12.0",
+        _InstallationId: "f372a82b-0b8a-41cc-8b73-4b582b269dd6",
+      },
     });
 
-    // if(user && address) {
-    //   const provider = new
-    //   const signer = provider.getSigner();
-    //   const address = await signer.getAddress();
-    //   console.log("address", address);
-    // }
+    const sessionToken = request.data.sessionToken;
+    const randomPassword = Math.random().toString(36).slice(-8);
+    const loggedInUser = await Moralis.User.become(sessionToken);
+    loggedInUser.set("password", randomPassword);
+    await loggedInUser.save();
+
+    await login(loggedInUser.get("email"), randomPassword);
   }
 
   console.log(user);
 
+  async function logoutIfNoWalletOrDifferent() {
+    if (!wallet && user) {
+      await Moralis.User.logOut();
+    }
+  }
+
   useEffect(() => {
     if (address && isInitialized) checkLink();
   }, [address, user, isInitialized]);
+
+  // useEffect(() => {
+  //   if (isInitialized) logoutIfNoWalletOrDifferent();
+  // }, [wallet, isInitialized, user]);
 
   return <>p</>;
 };
@@ -91,8 +121,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     >
       <ChainContext.Provider value={{ selectedChain, setSelectedChain }}>
         <ThirdwebProvider
-          clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
-          secretKey={process.env.NEXT_PUBLIC_TEMPLATE_SECRET_KEY}
+          clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
+          // secretKey={process.env.NEXT_PUBLIC_TEMPLATE_SECRET_KEY}
           activeChain={selectedChain}
           supportedWallets={[
             metamaskWallet(),
@@ -121,7 +151,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                 name="description"
                 content="Osean is a crypto currency project designed to invest in Yachting industry"
               />
-              <meta name="theme-color" content="#1FC7D4" />
+              <meta
+                name="theme-color"
+                content="#1FC7D4"
+              />
               <meta
                 name="twitter:image"
                 content="https://osean.online/osean200.png"
@@ -130,7 +163,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                 name="twitter:description"
                 content="Osean is a crypto currency project designed to invest in Yachting industry"
               />
-              <meta name="twitter:card" content="summary_large_image" />
+              <meta
+                name="twitter:card"
+                content="summary_large_image"
+              />
               <meta
                 name="twitter:title"
                 content="🌊 OSEAN DAO - Osean DAO dapp"

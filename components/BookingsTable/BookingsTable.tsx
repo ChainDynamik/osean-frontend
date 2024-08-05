@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-} from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td, TableContainer } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { cn } from "../../util";
 import BookingsDetailsModal from "../BookingsDetailsModal/BookingsDetailsModal";
@@ -99,6 +91,24 @@ const BookingsTable: React.FC = () => {
 
   const [bookings, setBookings] = useState<Offer[]>([]);
 
+  const [name, setName] = useState("");
+  const [surName, setSurName] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [telegram, setTelegram] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  async function fetchUserSavedInfo() {
+    setName(user?.get("name"));
+    setSurName(user?.get("surname"));
+    setAddress(user?.get("address"));
+    setCity(user?.get("city"));
+    setEmailAddress(user?.get("email"));
+    setTelegram(user?.get("telegram"));
+    setPhoneNumber(user?.get("phone"));
+  }
+
   async function getBookings() {
     const query = new Moralis.Query("Order");
     query.equalTo("user", user);
@@ -120,10 +130,11 @@ const BookingsTable: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isInitialized) {
+    if (isInitialized && user) {
       getBookings();
+      fetchUserSavedInfo();
     }
-  }, [isInitialized]);
+  }, [isInitialized, user]);
 
   return (
     <motion.div className="w-full min-h-full mt-10 scroll-container">
@@ -204,10 +215,11 @@ const BookingsTable: React.FC = () => {
                     fontSize="1.2rem"
                     border="2px solid #cccccc"
                   >
-                    <BookingsDetailsModal id={booking.objectId} offer={booking}>
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.objectId}
-                      </p>
+                    <BookingsDetailsModal
+                      id={booking.objectId}
+                      offer={booking}
+                    >
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.objectId}</p>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -218,10 +230,11 @@ const BookingsTable: React.FC = () => {
                     fontSize="1.2rem"
                     border="2px solid #cccccc"
                   >
-                    <BookingsDetailsModal id={booking.objectId} offer={booking}>
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.offer?.yacht}
-                      </p>
+                    <BookingsDetailsModal
+                      id={booking.objectId}
+                      offer={booking}
+                    >
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.yacht}</p>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -232,10 +245,11 @@ const BookingsTable: React.FC = () => {
                     fontSize="1.2rem"
                     border="2px solid #cccccc"
                   >
-                    <BookingsDetailsModal id={booking.objectId} offer={booking}>
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.offer?.dateFrom}
-                      </p>
+                    <BookingsDetailsModal
+                      id={booking.objectId}
+                      offer={booking}
+                    >
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.dateFrom}</p>
                     </BookingsDetailsModal>
                   </Td>
                   {/* <Td
@@ -258,10 +272,11 @@ const BookingsTable: React.FC = () => {
                     fontSize="1.2rem"
                     border="2px solid #cccccc"
                   >
-                    <BookingsDetailsModal id={booking.objectId} offer={booking}>
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.offer?.startBase}
-                      </p>
+                    <BookingsDetailsModal
+                      id={booking.objectId}
+                      offer={booking}
+                    >
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.startBase}</p>
                     </BookingsDetailsModal>
                   </Td>
                   {/* <Td
@@ -299,11 +314,7 @@ const BookingsTable: React.FC = () => {
             </Tbody>
           </Table>
         </TableContainer>
-        {bookings.length < 1 && (
-          <p className="mx-auto text-3xl w-fit py-16 text-black">
-            No Existing Bookings
-          </p>
-        )}
+        {bookings.length < 1 && <p className="mx-auto text-3xl w-fit py-16 text-black">No Existing Bookings</p>}
       </motion.div>
     </motion.div>
   );
