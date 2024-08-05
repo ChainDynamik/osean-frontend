@@ -286,7 +286,7 @@ export default function Offers() {
               className="rotate-90 w-4 text-black group-hover:!text-white transition-all duration-300 ease-in-out"
             />
           </div>
-          <p className="mb-0 group-hover:!text-white transition-all duration-300 ease-in-out">
+          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">
             Previous
           </p>
         </a>
@@ -295,7 +295,7 @@ export default function Offers() {
     if (type === "next") {
       return (
         <a className="flex hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
-          <p className="mb-0 group-hover:!text-white transition-all duration-300 ease-in-out">
+          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">
             Next
           </p>
           <div>
