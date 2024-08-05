@@ -271,6 +271,45 @@ export default function Offers() {
 
   const [mobileFilterIsOpen, setMobileFilterIsOpen] = useState(false);
 
+  // Function to customize the pagination item rendering
+  const itemRender = (
+    _: number,
+    type: "page" | "prev" | "next",
+    originalElement: React.ReactNode
+  ) => {
+    if (type === "prev") {
+      return (
+        <a className="flex hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
+          <div>
+            <Icon
+              iconType={"chevron"}
+              className="rotate-90 w-4 text-black group-hover:!text-white transition-all duration-300 ease-in-out"
+            />
+          </div>
+          <p className="mb-0 group-hover:!text-white transition-all duration-300 ease-in-out">
+            Previous
+          </p>
+        </a>
+      );
+    }
+    if (type === "next") {
+      return (
+        <a className="flex hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
+          <p className="mb-0 group-hover:!text-white transition-all duration-300 ease-in-out">
+            Next
+          </p>
+          <div>
+            <Icon
+              iconType={"chevron"}
+              className="-rotate-90 w-4 text-black group-hover:!text-white transition-all duration-300 ease-in-out"
+            />
+          </div>
+        </a>
+      );
+    }
+    return originalElement;
+  };
+
   return (
     <main className="!px-6 md:!px-10 pb-16 !mt-[9rem] lg:!mt-[5.5rem] relative">
       <Overlay
@@ -408,6 +447,7 @@ export default function Offers() {
             pageSize={ITEMS_PER_PAGE}
             onChange={handlePageChange}
             showSizeChanger={false}
+            itemRender={itemRender} // Use the custom item render function
           />
         </div>
       </div>

@@ -36,7 +36,6 @@ export type OffersCardProps = {
   name: string;
   loading?: boolean;
   rawOffer: Reservation;
-  filterCabins?: number;
 };
 
 const OffersCard: React.FC<OffersCardProps> = ({
@@ -49,7 +48,6 @@ const OffersCard: React.FC<OffersCardProps> = ({
   id,
   loading,
   rawOffer,
-  filterCabins,
 }) => {
   const { Moralis, isInitialized } = useMoralis();
   const [boatData, setBoatData] = useState<any>(null);
@@ -99,9 +97,6 @@ const OffersCard: React.FC<OffersCardProps> = ({
     <div
       className={cn(
         "w-full max-md:mb-6 ring-primary !text-black flex gap-3 flex-col rounded-lg shadow-card border-[0.5px] border-black"
-        // {
-        //   hidden: filterCabins && filterCabins !== boatData?.cabins,
-        // }
       )}
     >
       <div className="flex md:gap-4 max-md:flex-col">
