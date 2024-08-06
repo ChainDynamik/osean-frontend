@@ -371,7 +371,12 @@ export default function OseanModal({
                         <Dropdown.Trigger>
                           <button
                             type="button"
-                            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-fit flex justify-between items-center max-xs:w-full"
+                            className={cn(
+                              "px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-fit flex justify-between items-center max-xs:w-full",
+                              {
+                                "w-full": coin === "Select currency",
+                              }
+                            )}
                           >
                             <span className="flex items-center">
                               {typeof network !== "string" && network.icon && (
@@ -432,7 +437,12 @@ export default function OseanModal({
                         <Dropdown.Trigger>
                           <button
                             type="button"
-                            className="px-3 w-fit py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 flex justify-between items-center  max-xs:w-full"
+                            className={cn(
+                              "px-3 w-fit py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 flex justify-between items-center  max-xs:w-full",
+                              {
+                                "w-full": coin === "Select currency",
+                              }
+                            )}
                           >
                             <span className="flex items-center">
                               {coin !== "Select currency" && (
