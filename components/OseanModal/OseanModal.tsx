@@ -7,7 +7,6 @@ import { useTransactionStore } from "../../util/store";
 import TransactionOutcomeModal from "../TransactionOutcomeModal/TransactionOutcomeModal";
 import { Spinner } from "../../src/components/Spinner";
 import { motion } from "framer-motion";
-import { sleep } from "../../helpers";
 import Moralis from "moralis-v1";
 import {
   getContract,
@@ -42,7 +41,13 @@ import { useMoralis } from "react-moralis";
 import { cn } from "../../util";
 import { Dropdown } from "../Dropdown/Dropdown";
 
-const options = [
+type optionsType = {
+  value: string;
+  label: string;
+  icon: string;
+};
+
+const options: optionsType[] = [
   {
     value: "ETH",
     label: "Ethereum",
@@ -110,7 +115,9 @@ export default function OseanModal({
   fee: number;
   amountUsd: number;
 }) {
-  const [network, setNetwork] = useState("Select network");
+  const [network, setNetwork] = useState<optionsType | string>(
+    "Select network"
+  );
   const [coin, setCoin] = useState("Select currency");
 
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
@@ -175,7 +182,7 @@ export default function OseanModal({
 
   async function fetchQuote() {
     if (coin === "Select currency") return;
-    if (!network.value) return;
+    if (typeof network === "string") return;
     if (transactionHash) return;
     console.log(
       `calling generateQuote with ${amountUsd}, ${coin}, ${network.value}`
@@ -367,7 +374,7 @@ export default function OseanModal({
                             className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-fit flex justify-between items-center max-xs:w-full"
                           >
                             <span className="flex items-center">
-                              {network.icon && (
+                              {typeof network !== "string" && network.icon && (
                                 <Image
                                   src={network.icon}
                                   height={5}
@@ -376,8 +383,9 @@ export default function OseanModal({
                                   className="mr-2"
                                 />
                               )}
-                              {network.label}
-                              {!network.label && "Select network"}
+                              {typeof network !== "string"
+                                ? network.label
+                                : "Select network"}
                             </span>
                             <svg
                               className="w-4 h-4 ml-2"
@@ -491,7 +499,7 @@ export default function OseanModal({
                     </div>
                   </div>
                   {coin !== "Select currency" &&
-                    network.value !== "Select network" && (
+                    typeof network !== "string" && (
                       <>
                         <div className="flex flex-col my-0">
                           <label className="block text-sm font-medium text-gray-700">
