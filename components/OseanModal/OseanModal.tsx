@@ -43,10 +43,6 @@ import { cn } from "../../util";
 import { Dropdown } from "../Dropdown/Dropdown";
 
 const options = [
-  // {
-  //   value: "Select",
-  //   label: "Select network",
-  // },
   {
     value: "ETH",
     label: "Ethereum",
@@ -114,7 +110,7 @@ export default function OseanModal({
   fee: number;
   amountUsd: number;
 }) {
-  const [network, setNetwork] = useState(options[0]);
+  const [network, setNetwork] = useState("Select network");
   const [coin, setCoin] = useState("Select currency");
 
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
@@ -292,7 +288,7 @@ export default function OseanModal({
       >
         <div
           className={cn(
-            "relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-full min-h-[450px]",
+            "relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-full ",
             {
               "min-h-[200px]": coin === "Select currency",
             }
@@ -368,7 +364,7 @@ export default function OseanModal({
                         <Dropdown.Trigger>
                           <button
                             type="button"
-                            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-fit flex justify-between items-center"
+                            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-fit flex justify-between items-center max-xs:w-full"
                           >
                             <span className="flex items-center">
                               {network.icon && (
@@ -381,6 +377,7 @@ export default function OseanModal({
                                 />
                               )}
                               {network.label}
+                              {!network.label && "Select network"}
                             </span>
                             <svg
                               className="w-4 h-4 ml-2"
@@ -427,7 +424,7 @@ export default function OseanModal({
                         <Dropdown.Trigger>
                           <button
                             type="button"
-                            className="px-3 w-fit py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 flex justify-between items-center"
+                            className="px-3 w-fit py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 flex justify-between items-center  max-xs:w-full"
                           >
                             <span className="flex items-center">
                               {coin !== "Select currency" && (
