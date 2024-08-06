@@ -84,7 +84,9 @@ const cardElementOptions = {
 const CustomCardElement = () => {
   return (
     <div className="p-6 mt-8 bg-white rounded-lg box-shadow">
-      <label className="text-lg font-semibold text-gray-700 mb-4">Add a New Payment Method</label>
+      <label className="text-lg font-semibold text-gray-700 mb-4">
+        Add a New Payment Method
+      </label>
       <div className="p-3 border border-gray-300 rounded-md shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
         <CardElement
           options={cardElementOptions}
@@ -201,13 +203,17 @@ export const CardPayment = ({
         txHash={"card"}
         discount={5}
       />
-      <div className={cn("bg-white box-shadow rounded p-6 w-full my-10", className)}>
+      <div className={cn("bg-white box-shadow rounded p-6 w-full", className)}>
         <div>
-          <p className=" md:text-lg font-semibold text-gray-700 mb-4">Saved Payment Methods</p>
+          <p className=" md:text-lg font-semibold text-gray-700 mb-4">
+            Saved Payment Methods
+          </p>
           {/* <Skeleton count={3} /> */}
 
           <ul className="space-y-3">
-            {paymentMethods.length < 1 && <p>There are no configured payment methods.</p>}
+            {paymentMethods.length < 1 && (
+              <p>There are no configured payment methods.</p>
+            )}
             {paymentMethods.map((method) => (
               <label
                 htmlFor={method.id}
@@ -227,10 +233,12 @@ export const CardPayment = ({
                   )}
                   <div className="text-gray-600 w-full flex items-center justify-between font-medium">
                     <div>
-                      [{method.get("card").brand?.toUpperCase()}] ending in **** {method.get("card").last4}
+                      [{method.get("card").brand?.toUpperCase()}] ending in ****{" "}
+                      {method.get("card").last4}
                     </div>
                     <span className="text-gray-500 text-sm ml-2">
-                      &mdash; Expires {method.get("card").exp_month}/{method.get("card").exp_year}
+                      &mdash; Expires {method.get("card").exp_month}/
+                      {method.get("card").exp_year}
                     </span>
                   </div>
                 </div>
@@ -262,7 +270,11 @@ export const CardPayment = ({
 
         {/* <button onClick={handleSignOut}>Sign Out</button> */}
 
-        {<AddPaymentMethodForm retrievePaymentMethods={retrievePaymentMethods} />}
+        {
+          <AddPaymentMethodForm
+            retrievePaymentMethods={retrievePaymentMethods}
+          />
+        }
 
         {/* <button
           className="mt-5 bg-blue-500 text-white p-2 rounded-md"
@@ -278,7 +290,11 @@ export const CardPayment = ({
   );
 };
 
-const AddPaymentMethodForm = ({ retrievePaymentMethods }: { retrievePaymentMethods: () => void }) => {
+const AddPaymentMethodForm = ({
+  retrievePaymentMethods,
+}: {
+  retrievePaymentMethods: () => void;
+}) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -324,10 +340,7 @@ const AddPaymentMethodForm = ({ retrievePaymentMethods }: { retrievePaymentMetho
   };
 
   return (
-    <form
-      className="w-full"
-      onSubmit={handleSubmit}
-    >
+    <form className="w-full" onSubmit={handleSubmit}>
       <div className="mt-4 mb-8">
         <CustomCardElement />
       </div>
