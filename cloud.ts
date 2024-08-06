@@ -1,6 +1,7 @@
 const Moralis = require("moralis").default;
 const Parse = require("parse/node");
 const { Web3 } = require("web3");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const DOMAIN = "oseandao.com";
 const STATEMENT = "Sign this message to connect your wallet to OseanDAO";
@@ -655,4 +656,211 @@ Parse.Cloud.beforeSave("_User", async (request: any) => {
   if (!savedEthAddress && authData?.moralisEth) {
     user.set("ethAddress", authData.moralisEth.id);
   }
+
+  /// STRIPE
+
+  const alreadySetup = user.get("customerId");
+
+  if (!alreadySetup) {
+    // Run createStripeCustomer function if the user is new
+    const customer = await stripe.customers.create({ email: user.get("email") });
+    // Creates an stripe setupIntent, that will enable the stripe lib to perform
+    // a single operation related to payments
+    const intent = await stripe.setupIntents.create({
+      customer: customer.id,
+    });
+
+    // Set and save the stripe ids to the Parse.User object
+    user.set({
+      customerId: customer.id,
+      setupSecret: intent.client_secret,
+    });
+  }
+});
+
+/// STRIPE
+
+/**
+ * Stripe Helpers
+ */
+
+const formatAmount = (amount: any, currency: any) => {
+  amount = zeroDecimalCurrency(amount, currency) ? amount : (amount / 100).toFixed(2);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+  }).format(amount);
+};
+
+// Format amount for Stripe
+const formatAmountForStripe = (amount: any, currency: any) => {
+  return zeroDecimalCurrency(amount, currency) ? amount : Math.round(amount * 100);
+};
+
+// Check if we have a zero decimal currency
+// https://stripe.com/docs/currencies#zero-decimal
+const zeroDecimalCurrency = (amount: any, currency: any) => {
+  let numberFormat = new Intl.NumberFormat(["en-US"], {
+    style: "currency",
+    currency: currency,
+    currencyDisplay: "symbol",
+  });
+  const parts = numberFormat.formatToParts(amount);
+  let zeroDecimalCurrency = true;
+  for (let part of parts) {
+    if (part.type === "decimal") {
+      zeroDecimalCurrency = false;
+    }
+  }
+  return zeroDecimalCurrency;
+};
+
+Parse.Cloud.define("addNewPaymentMethod", async (request: any) => {
+  // Get Parse.User object
+  const userQuery = new Parse.Query(Parse.User);
+  userQuery.equalTo("objectId", request.params.userId);
+  let user = await userQuery.first({ useMasterKey: true });
+
+  // Retrieve complete stripe payment method by its id
+  const stripePaymentMethod = await stripe.paymentMethods.retrieve(request.params.paymentMethodId);
+
+  // Create a new SetupIntent so the customer can add a new method next time.
+  const intent = await stripe.setupIntents.create({
+    customer: `${stripePaymentMethod.customer}`,
+  });
+  user.set("setupSecret", intent.client_secret);
+  user = await user.save(null, { useMasterKey: true });
+
+  // Creates a new Parse object in the PaymentMethod class
+  let paymentMethod = new Parse.Object("PaymentMethod");
+
+  paymentMethod.set({
+    user: user,
+    type: "card",
+    stripeId: stripePaymentMethod.id,
+    card: stripePaymentMethod.card,
+    isDefault: true,
+  });
+
+  await paymentMethod.save();
+
+  // Mark all the other methods besides this of this user isDefault to false
+  {
+    const query = new Parse.Query("PaymentMethod");
+    query.equalTo("user", user);
+    const paymentMethods = await query.find({ useMasterKey: true });
+
+    for (const method of paymentMethods) {
+      if (method.id !== paymentMethod.id) {
+        method.set("isDefault", false);
+        await method.save();
+      }
+    }
+  }
+
+  return true;
+});
+
+Parse.Cloud.define("setPreferredPaymentMethod", async (request: any) => {
+  const user = request.user;
+  const { paymentMethodId } = request.params;
+
+  // Find the payment method in the database
+  const PaymentMethod = new Parse.Query("PaymentMethod");
+  PaymentMethod.equalTo("objectId", paymentMethodId);
+  const paymentMethod = await PaymentMethod.first({
+    useMasterKey: true,
+  });
+
+  if (!paymentMethod) {
+    throw new Error("Payment method not found");
+  }
+
+  // Find all the other ones of this user and set them to not preferred
+  const PaymentMethods = new Parse.Query("PaymentMethod");
+  PaymentMethods.equalTo("user", user);
+  const paymentMethods = await PaymentMethods.find({ useMasterKey: true });
+
+  for (const method of paymentMethods) {
+    method.set("isDefault", false);
+    await method.save();
+  }
+
+  // Set the preferred one
+  paymentMethod.set("isDefault", true);
+  await paymentMethod.save();
+
+  return paymentMethod;
+});
+
+Parse.Cloud.define("attemptStripePayment", async (request: any) => {
+  const user = request.user;
+  const { selectedOffer, selectedExtras, network, amountEur } = request.params;
+
+  // Create the payment intent
+  const currency = "usd";
+  const amount = formatAmountForStripe(amountEur, currency);
+
+  // Get the default payment method of the user
+  const paymentMethodQuery = new Parse.Query("PaymentMethod");
+  paymentMethodQuery.equalTo("user", user);
+  paymentMethodQuery.equalTo("isDefault", true);
+  const paymentMethod = await paymentMethodQuery.first({ useMasterKey: true });
+
+  if (!paymentMethod) {
+    throw new Error("No default payment method");
+  }
+
+  // Look up the Stripe customer id.
+  const customer = user.get("customerId");
+
+  // Create a charge using an unique idempotency key
+  // to protect against double charges.
+  const idempotencyKey = new Date().getTime();
+  const payment = await stripe.paymentIntents.create(
+    {
+      amount,
+      currency,
+      customer,
+      payment_method: paymentMethod.get("stripeId"),
+      off_session: false,
+      confirm: true,
+      confirmation_method: "manual",
+      return_url: "http://localhost:3005/",
+    },
+    { idempotencyKey }
+  );
+
+  // If the result is successful, write it back to the database.
+  let Payment = new Parse.Object("Payment");
+  Payment.set({
+    user: user,
+    data: payment,
+  });
+
+  // Create a new quote and mark it as settled for compatibility with the order
+
+  // Save this quote in the database
+  const Quote = Parse.Object.extend("Quote");
+  const quote = new Quote();
+  quote.set("currency", currency);
+  quote.set("network", network);
+  quote.set("amountEur", amountEur);
+  quote.set("status", "settled");
+  quote.set("selectedOffer", selectedOffer);
+  quote.set("selectedExtras", selectedExtras);
+
+  await quote.save(null, { useMasterKey: true });
+
+  // Create a new order in the `Order` class
+  const Order = Parse.Object.extend("Order");
+  const order = new Order();
+
+  order.set("user", user);
+  order.set("offer", selectedOffer);
+  order.set("quote", quote);
+  order.set("status", "awaiting_admin_validation");
+
+  await order.save(null, { useMasterKey: true });
+  return order;
 });

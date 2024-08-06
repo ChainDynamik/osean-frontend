@@ -19,9 +19,10 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 interface PaymentModalProps {
   children?: ReactNode;
   amountUsd: number;
+  offer: any;
 }
 
-export default function PaymentModal({ children, amountUsd, totalFee }: PaymentModalProps) {
+export default function PaymentModal({ children, amountUsd, offer }: PaymentModalProps) {
   type PaymentMethodType = "card" | "wire";
   const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(null);
 
@@ -30,7 +31,6 @@ export default function PaymentModal({ children, amountUsd, totalFee }: PaymentM
   };
   const { transactionOpen, toggleTransactionModal, paymentModalIsOpen, setPaymentModal } = useTransactionStore();
   const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
-  const { selectedOffer } = useSelectedOfferStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -103,10 +103,7 @@ export default function PaymentModal({ children, amountUsd, totalFee }: PaymentM
                 />
               </div>
               <div className="flex gap-4 flex-col">
-                <OseanModal
-                  fee={totalFee}
-                  amountUsd={amountUsd}
-                >
+                <OseanModal amountUsd={amountUsd}>
                   <Button className="mb-2 whitespace-nowrap font-bold">
                     <span>
                       <Image
@@ -122,8 +119,11 @@ export default function PaymentModal({ children, amountUsd, totalFee }: PaymentM
                   </Button>
                 </OseanModal>
 
-                <CardModal>
-                  <Button className="mb-2 !px-0 whitespace-nowrap font-bold">CARD (0% DISCOUNT)</Button>
+                <CardModal
+                  amountEur={offer?.price as number}
+                  offer={offer}
+                >
+                  <Button className="mb-2 !px-0 whitespace-nowrap font-bold">CARD (5% DISCOUNT)</Button>
                 </CardModal>
               </div>
             </div>
@@ -134,11 +134,11 @@ export default function PaymentModal({ children, amountUsd, totalFee }: PaymentM
             <ul>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
                 <span className="font-normal">Trip Base Price</span>
-                <span className="font-bold">{selectedOffer?.price} EUR</span>
+                <span className="font-bold">{offer?.price} EUR</span>
               </li>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
                 <span className="font-normal">Obligatory Extras Price</span>
-                <span className="font-bold">{selectedOffer?.obligatoryExtrasPrice} EUR</span>
+                <span className="font-bold">{offer?.obligatoryExtrasPrice} EUR</span>
               </li>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
                 <span className="font-normal">Selected Extras Price </span>
@@ -167,7 +167,7 @@ export default function PaymentModal({ children, amountUsd, totalFee }: PaymentM
               <hr />
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
                 <span className="font-normal">Payable Today</span>
-                <span className="font-bold">{selectedOffer?.price} EUR</span>
+                <span className="font-bold">{offer?.price} EUR</span>
               </li>
             </ul>
           </div>

@@ -69,18 +69,35 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, o
               </div>
               <div>
                 <h2 className="text-xl font-semibold mb-4 text-blue-600 uppercase">PAYMENT DETAILS</h2>
-                <InfoItem
-                  label="Paid Amount"
-                  value={`${offer?.quote?.amountInQuote?.toLocaleString()} ${offer?.quote?.currency}`}
-                />
-                <InfoItem
-                  label="Exchange Rate"
-                  value={`1 ${offer?.quote?.currency} = $${offer?.quote?.quoteUnitPrice}`}
-                />
-                <InfoItem
-                  label="Invoice Status"
-                  value="Pending admin approval"
-                />
+
+                {offer?.quote?.chain ? (
+                  <>
+                    <InfoItem
+                      label="Paid Amount"
+                      value={`${offer?.quote?.amountInQuote?.toLocaleString()} ${offer?.quote?.currency}`}
+                    />
+                    <InfoItem
+                      label="Exchange Rate"
+                      value={`1 ${offer?.quote?.currency} = $${offer?.quote?.quoteUnitPrice}`}
+                    />
+                    <InfoItem
+                      label="Invoice Status"
+                      value="Pending admin approval"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <InfoItem
+                      label="Paid Amount"
+                      value={`${offer?.quote?.amountEur?.toLocaleString()} EUR `}
+                    />
+
+                    <InfoItem
+                      label="Invoice Status"
+                      value="Pending admin approval"
+                    />
+                  </>
+                )}
               </div>
             </div>
 

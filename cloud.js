@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 var Moralis = require("moralis").default;
 var Web3 = require("web3").Web3;
+var stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 var DOMAIN = "oseandao.com";
 var STATEMENT = "Sign this message to connect your wallet to OseanDAO";
 var URI = "https://oseandao.com";
@@ -1159,7 +1160,7 @@ Parse.Cloud.define("createOrder", function (request) { return __awaiter(_this, v
     });
 }); });
 Parse.Cloud.beforeSave("_User", function (request) { return __awaiter(_this, void 0, void 0, function () {
-    var user, savedEthAddress, authData, query, existingUser;
+    var user, savedEthAddress, authData, query, existingUser, alreadySetup, customer, intent;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -1180,7 +1181,218 @@ Parse.Cloud.beforeSave("_User", function (request) { return __awaiter(_this, voi
                 if (!savedEthAddress && (authData === null || authData === void 0 ? void 0 : authData.moralisEth)) {
                     user.set("ethAddress", authData.moralisEth.id);
                 }
-                return [2 /*return*/];
+                alreadySetup = user.get("customerId");
+                if (!!alreadySetup) return [3 /*break*/, 5];
+                return [4 /*yield*/, stripe.customers.create({ email: user.get("email") })];
+            case 3:
+                customer = _a.sent();
+                return [4 /*yield*/, stripe.setupIntents.create({
+                        customer: customer.id,
+                    })];
+            case 4:
+                intent = _a.sent();
+                // Set and save the stripe ids to the Parse.User object
+                user.set({
+                    customerId: customer.id,
+                    setupSecret: intent.client_secret,
+                });
+                _a.label = 5;
+            case 5: return [2 /*return*/];
+        }
+    });
+}); });
+/// STRIPE
+/**
+ * Stripe Helpers
+ */
+var formatAmount = function (amount, currency) {
+    amount = zeroDecimalCurrency(amount, currency) ? amount : (amount / 100).toFixed(2);
+    return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: currency,
+    }).format(amount);
+};
+// Format amount for Stripe
+var formatAmountForStripe = function (amount, currency) {
+    return zeroDecimalCurrency(amount, currency) ? amount : Math.round(amount * 100);
+};
+// Check if we have a zero decimal currency
+// https://stripe.com/docs/currencies#zero-decimal
+var zeroDecimalCurrency = function (amount, currency) {
+    var numberFormat = new Intl.NumberFormat(["en-US"], {
+        style: "currency",
+        currency: currency,
+        currencyDisplay: "symbol",
+    });
+    var parts = numberFormat.formatToParts(amount);
+    var zeroDecimalCurrency = true;
+    for (var _i = 0, parts_1 = parts; _i < parts_1.length; _i++) {
+        var part = parts_1[_i];
+        if (part.type === "decimal") {
+            zeroDecimalCurrency = false;
+        }
+    }
+    return zeroDecimalCurrency;
+};
+Parse.Cloud.define("addNewPaymentMethod", function (request) { return __awaiter(_this, void 0, void 0, function () {
+    var userQuery, user, stripePaymentMethod, intent, paymentMethod, query, paymentMethods, _i, paymentMethods_1, method;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userQuery = new Parse.Query(Parse.User);
+                userQuery.equalTo("objectId", request.params.userId);
+                return [4 /*yield*/, userQuery.first({ useMasterKey: true })];
+            case 1:
+                user = _a.sent();
+                return [4 /*yield*/, stripe.paymentMethods.retrieve(request.params.paymentMethodId)];
+            case 2:
+                stripePaymentMethod = _a.sent();
+                return [4 /*yield*/, stripe.setupIntents.create({
+                        customer: "".concat(stripePaymentMethod.customer),
+                    })];
+            case 3:
+                intent = _a.sent();
+                user.set("setupSecret", intent.client_secret);
+                return [4 /*yield*/, user.save(null, { useMasterKey: true })];
+            case 4:
+                user = _a.sent();
+                paymentMethod = new Parse.Object("PaymentMethod");
+                paymentMethod.set({
+                    user: user,
+                    type: "card",
+                    stripeId: stripePaymentMethod.id,
+                    card: stripePaymentMethod.card,
+                    isDefault: true,
+                });
+                return [4 /*yield*/, paymentMethod.save()];
+            case 5:
+                _a.sent();
+                query = new Parse.Query("PaymentMethod");
+                query.equalTo("user", user);
+                return [4 /*yield*/, query.find({ useMasterKey: true })];
+            case 6:
+                paymentMethods = _a.sent();
+                _i = 0, paymentMethods_1 = paymentMethods;
+                _a.label = 7;
+            case 7:
+                if (!(_i < paymentMethods_1.length)) return [3 /*break*/, 10];
+                method = paymentMethods_1[_i];
+                if (!(method.id !== paymentMethod.id)) return [3 /*break*/, 9];
+                method.set("isDefault", false);
+                return [4 /*yield*/, method.save()];
+            case 8:
+                _a.sent();
+                _a.label = 9;
+            case 9:
+                _i++;
+                return [3 /*break*/, 7];
+            case 10: return [2 /*return*/, true];
+        }
+    });
+}); });
+Parse.Cloud.define("setPreferredPaymentMethod", function (request) { return __awaiter(_this, void 0, void 0, function () {
+    var user, paymentMethodId, PaymentMethod, paymentMethod, PaymentMethods, paymentMethods, _i, paymentMethods_2, method;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                user = request.user;
+                paymentMethodId = request.params.paymentMethodId;
+                PaymentMethod = new Parse.Query("PaymentMethod");
+                PaymentMethod.equalTo("objectId", paymentMethodId);
+                return [4 /*yield*/, PaymentMethod.first({
+                        useMasterKey: true,
+                    })];
+            case 1:
+                paymentMethod = _a.sent();
+                if (!paymentMethod) {
+                    throw new Error("Payment method not found");
+                }
+                PaymentMethods = new Parse.Query("PaymentMethod");
+                PaymentMethods.equalTo("user", user);
+                return [4 /*yield*/, PaymentMethods.find({ useMasterKey: true })];
+            case 2:
+                paymentMethods = _a.sent();
+                _i = 0, paymentMethods_2 = paymentMethods;
+                _a.label = 3;
+            case 3:
+                if (!(_i < paymentMethods_2.length)) return [3 /*break*/, 6];
+                method = paymentMethods_2[_i];
+                method.set("isDefault", false);
+                return [4 /*yield*/, method.save()];
+            case 4:
+                _a.sent();
+                _a.label = 5;
+            case 5:
+                _i++;
+                return [3 /*break*/, 3];
+            case 6:
+                // Set the preferred one
+                paymentMethod.set("isDefault", true);
+                return [4 /*yield*/, paymentMethod.save()];
+            case 7:
+                _a.sent();
+                return [2 /*return*/, paymentMethod];
+        }
+    });
+}); });
+Parse.Cloud.define("attemptStripePayment", function (request) { return __awaiter(_this, void 0, void 0, function () {
+    var user, _a, selectedOffer, selectedExtras, network, amountEur, currency, amount, paymentMethodQuery, paymentMethod, customer, idempotencyKey, payment, Payment, Quote, quote, Order, order;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                user = request.user;
+                _a = request.params, selectedOffer = _a.selectedOffer, selectedExtras = _a.selectedExtras, network = _a.network, amountEur = _a.amountEur;
+                currency = "usd";
+                amount = formatAmountForStripe(amountEur, currency);
+                paymentMethodQuery = new Parse.Query("PaymentMethod");
+                paymentMethodQuery.equalTo("user", user);
+                paymentMethodQuery.equalTo("isDefault", true);
+                return [4 /*yield*/, paymentMethodQuery.first({ useMasterKey: true })];
+            case 1:
+                paymentMethod = _b.sent();
+                if (!paymentMethod) {
+                    throw new Error("No default payment method");
+                }
+                customer = user.get("customerId");
+                idempotencyKey = new Date().getTime();
+                return [4 /*yield*/, stripe.paymentIntents.create({
+                        amount: amount,
+                        currency: currency,
+                        customer: customer,
+                        payment_method: paymentMethod.get("stripeId"),
+                        off_session: false,
+                        confirm: true,
+                        confirmation_method: "manual",
+                        return_url: "http://localhost:3005/",
+                    }, { idempotencyKey: idempotencyKey })];
+            case 2:
+                payment = _b.sent();
+                Payment = new Parse.Object("Payment");
+                Payment.set({
+                    user: user,
+                    data: payment,
+                });
+                Quote = Parse.Object.extend("Quote");
+                quote = new Quote();
+                quote.set("currency", currency);
+                quote.set("network", network);
+                quote.set("amountEur", amountEur);
+                quote.set("status", "settled");
+                quote.set("selectedOffer", selectedOffer);
+                quote.set("selectedExtras", selectedExtras);
+                return [4 /*yield*/, quote.save(null, { useMasterKey: true })];
+            case 3:
+                _b.sent();
+                Order = Parse.Object.extend("Order");
+                order = new Order();
+                order.set("user", user);
+                order.set("offer", selectedOffer);
+                order.set("quote", quote);
+                order.set("status", "awaiting_admin_validation");
+                return [4 /*yield*/, order.save(null, { useMasterKey: true })];
+            case 4:
+                _b.sent();
+                return [2 /*return*/, order];
         }
     });
 }); });

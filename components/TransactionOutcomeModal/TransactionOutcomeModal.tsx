@@ -16,6 +16,7 @@ import { useAddress } from "@thirdweb-dev/react";
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 type TransactionOutcomeModalProps = {
+  amountEur?: number;
   quote: OSMQuote | undefined;
   isLoading?: boolean | null;
   isOpen: boolean;
@@ -25,6 +26,7 @@ type TransactionOutcomeModalProps = {
 };
 
 export default function TransactionOutcomeModal({
+  amountEur,
   isOpen,
   quote,
   onOpenChange,
@@ -83,39 +85,47 @@ export default function TransactionOutcomeModal({
                 alt="logo"
                 className="mr-2"
               />
-              <span>
-                {quote?.amountInQuote} {quote?.currency}
-              </span>
+              {quote ? (
+                <span>
+                  {quote?.amountInQuote} {quote?.currency}
+                </span>
+              ) : (
+                <span>{amountEur?.toLocaleString()} EUR</span>
+              )}
             </div>
             <p className="text-green-600 !mb-0 font-semibold">Discount: {discount}%</p>
             <div className="mt-6 w-full">
+              {quote && (
+                <div className="flex justify-between text-gray-700 mb-2">
+                  <span>Payment</span>
+                  <span>{quote?.chain === "eth" ? "Ethereum" : "Binance Smart Chain"}</span>
+                </div>
+              )}
               <div className="flex justify-between text-gray-700 mb-2">
-                <span>Network</span>
-                <span>{quote?.chain === "eth" ? "Ethereum" : "Binance Smart Chain"}</span>
-              </div>
-              <div className="flex justify-between text-gray-700 mb-2">
-                <span>Paid in</span>
-                <span>{quote?.currency}</span>
+                <span>Paid with</span>
+                <span>{quote ? quote?.currency : "Credit Card"}</span>
               </div>
 
               <div className="flex justify-between text-gray-700 mb-2">
                 <span>Transaction Time</span>
                 <span>{new Date().toLocaleDateString()}</span>
               </div>
-              <div className="flex justify-between text-gray-700 mb-2">
-                <span>Transaction Hash</span>
-                <Link
-                  href={
-                    quote?.chain === "eth"
-                      ? `https://sepolia.etherscan.io/tx/${txHash}`
-                      : `https://testnet.bscscan.com/tx/${txHash}`
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="text-indigo-600">{txHash && truncateAddress(txHash)}</span>
-                </Link>
-              </div>
+              {quote && (
+                <div className="flex justify-between text-gray-700 mb-2">
+                  <span>Transaction Hash</span>
+                  <Link
+                    href={
+                      quote?.chain === "eth"
+                        ? `https://sepolia.etherscan.io/tx/${txHash}`
+                        : `https://testnet.bscscan.com/tx/${txHash}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="text-indigo-600">{txHash && truncateAddress(txHash)}</span>
+                  </Link>
+                </div>
+              )}
             </div>
             <div className="flex ">
               {/* <button className="bg-gray-200 text-gray-700 rounded-md px-4 py-2">Download invoice</button> */}

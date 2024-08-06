@@ -188,7 +188,10 @@ export default function BookingForm({ price, offer, className, securityDeposit }
           </p>
         )}
         <Suspense fallback={<p>loading...</p>}>
-          <PaymentModal amountUsd={offer?.price || 0}>
+          <PaymentModal
+            amountUsd={offer?.price || 0}
+            offer={offer}
+          >
             <Button
               type="submit"
               className="mt-4 w-full !pb-[14px] text-lg !font-bold uppercase relative pt-3 tracking-widest disabled:!cursor-not-allowed disabled:!opacity-50"

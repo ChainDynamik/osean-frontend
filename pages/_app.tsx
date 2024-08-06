@@ -28,6 +28,8 @@ import { MoralisProvider, useMoralis } from "react-moralis";
 import { createThirdwebClient } from "thirdweb";
 import { useCurrencyConverter } from "../util/hooks/useCurrencyConverter";
 import axios from "axios";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 
 // const ThirdwebMoralisLinker = () => {
 //   const { user, authenticate, isInitialized, Moralis, logout } = useMoralis();
@@ -186,6 +188,11 @@ export const client = createThirdwebClient({
   clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID as string,
 });
 
+const STRIPE_PUBLISHABLE_KEY =
+  "pk_test_51PVHdoP8OFUlQpz11ymIiTzfiMzbdJKD7MnHdzPj1muaNABjVY6ZdUwF1Z4Ug2tO5FDYsxMdo4jizckqABvJ2etp00z9udYNLD";
+
+const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
+
 function MyApp({ Component, pageProps }: AppProps) {
   const [selectedChain, setSelectedChain] = useState("sepolia");
 
@@ -200,86 +207,88 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <MoralisProvider
-      serverUrl={process.env.NEXT_PUBLIC_PARSE_SERVER_URL as string}
-      appId={process.env.NEXT_PUBLIC_PARSE_APP_ID as string}
-    >
-      <ChainContext.Provider value={{ selectedChain, setSelectedChain }}>
-        <ThirdwebProvider
-          clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
-          // secretKey={process.env.NEXT_PUBLIC_TEMPLATE_SECRET_KEY}
-          activeChain={selectedChain}
-          supportedWallets={[
-            metamaskWallet(),
-            coinbaseWallet(),
-            walletConnect(),
-            trustWallet(),
-            embeddedWallet({
-              auth: {
-                options: ["email", "google", "facebook", "apple"],
-              },
-            }),
-          ]}
-          sdkOptions={{
-            gatewayUrls: ["https://ipfs.io/ipfs/"],
-          }}
-        >
-          <ChakraProvider>
-            <ThirdwebMoralisLinker />
-            {/* <GallaryBlock /> */}
-            <Head>
-              <meta
-                name="viewport"
-                content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1, viewport-fit=cover"
-              />
-              <meta
-                name="description"
-                content="Osean is a crypto currency project designed to invest in Yachting industry"
-              />
-              <meta
-                name="theme-color"
-                content="#1FC7D4"
-              />
-              <meta
-                name="twitter:image"
-                content="https://osean.online/osean200.png"
-              />
-              <meta
-                name="twitter:description"
-                content="Osean is a crypto currency project designed to invest in Yachting industry"
-              />
-              <meta
-                name="twitter:card"
-                content="summary_large_image"
-              />
-              <meta
-                name="twitter:title"
-                content="🌊 OSEAN DAO - Osean DAO dapp"
-              />
-              <title>Osean DAO</title>
-            </Head>
-            {/* <PhotoGallery /> */}
-            <OseanHeaderLinks />
+    <Elements stripe={stripePromise}>
+      <MoralisProvider
+        serverUrl={process.env.NEXT_PUBLIC_PARSE_SERVER_URL as string}
+        appId={process.env.NEXT_PUBLIC_PARSE_APP_ID as string}
+      >
+        <ChainContext.Provider value={{ selectedChain, setSelectedChain }}>
+          <ThirdwebProvider
+            clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
+            // secretKey={process.env.NEXT_PUBLIC_TEMPLATE_SECRET_KEY}
+            activeChain={selectedChain}
+            supportedWallets={[
+              metamaskWallet(),
+              coinbaseWallet(),
+              walletConnect(),
+              trustWallet(),
+              embeddedWallet({
+                auth: {
+                  options: ["email", "google", "facebook", "apple"],
+                },
+              }),
+            ]}
+            sdkOptions={{
+              gatewayUrls: ["https://ipfs.io/ipfs/"],
+            }}
+          >
+            <ChakraProvider>
+              <ThirdwebMoralisLinker />
+              {/* <GallaryBlock /> */}
+              <Head>
+                <meta
+                  name="viewport"
+                  content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1, viewport-fit=cover"
+                />
+                <meta
+                  name="description"
+                  content="Osean is a crypto currency project designed to invest in Yachting industry"
+                />
+                <meta
+                  name="theme-color"
+                  content="#1FC7D4"
+                />
+                <meta
+                  name="twitter:image"
+                  content="https://osean.online/osean200.png"
+                />
+                <meta
+                  name="twitter:description"
+                  content="Osean is a crypto currency project designed to invest in Yachting industry"
+                />
+                <meta
+                  name="twitter:card"
+                  content="summary_large_image"
+                />
+                <meta
+                  name="twitter:title"
+                  content="🌊 OSEAN DAO - Osean DAO dapp"
+                />
+                <title>Osean DAO</title>
+              </Head>
+              {/* <PhotoGallery /> */}
+              <OseanHeaderLinks />
 
-            <OseanHeader />
-            {/* Progress bar when navigating between pages */}
-            <NextNProgress
-              color="var(--color-tertiary)"
-              startPosition={0.3}
-              stopDelayMs={200}
-              height={3}
-              showOnShallow={true}
-            />
-            <SwapContextProvider>
-              <SwapContextProviderETH>
-                <Component {...pageProps} />
-              </SwapContextProviderETH>
-            </SwapContextProvider>
-            <OseanFooter />
-          </ChakraProvider>
-        </ThirdwebProvider>
-      </ChainContext.Provider>
-    </MoralisProvider>
+              <OseanHeader />
+              {/* Progress bar when navigating between pages */}
+              <NextNProgress
+                color="var(--color-tertiary)"
+                startPosition={0.3}
+                stopDelayMs={200}
+                height={3}
+                showOnShallow={true}
+              />
+              <SwapContextProvider>
+                <SwapContextProviderETH>
+                  <Component {...pageProps} />
+                </SwapContextProviderETH>
+              </SwapContextProvider>
+              <OseanFooter />
+            </ChakraProvider>
+          </ThirdwebProvider>
+        </ChainContext.Provider>
+      </MoralisProvider>
+    </Elements>
   );
 }
 

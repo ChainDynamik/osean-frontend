@@ -115,6 +115,7 @@ const BookingsTable: React.FC = () => {
     query.equalTo("user", user);
     query.include("offer");
     query.include("quote");
+    query.descending("createdAt");
     const results = await query.find();
     const resultsJson = results.map((result) => result.toJSON());
     setBookings(resultsJson);
@@ -316,6 +317,7 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
+                      image={yachtImages[booking.objectId]}
                     >
                       <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.startBase}</p>
                     </BookingsDetailsModal>
@@ -340,7 +342,11 @@ const BookingsTable: React.FC = () => {
                     border="2px solid #cccccc"
                     minWidth="200px"
                   >
-                    <BookingsDetailsModal id={booking.objectId}>
+                    <BookingsDetailsModal
+                      id={booking.objectId}
+                      offer={booking}
+                      image={yachtImages[booking.objectId]}
+                    >
                       {/* format should be Awaiting Admin Validation from awaiting_admin_validation */}
                       <p
                         className="font-semibold text-sm mb-0 py-4 text-capitalize

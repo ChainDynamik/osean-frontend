@@ -6,6 +6,7 @@ import Button from "../Button/Button";
 import Image from "next/image";
 import BlueCardAnimation from "../../assets/lottie/blue-coin.json";
 import dynamic from "next/dynamic";
+import { CardPayment } from "../CardPayment/CardPayment";
 
 // components/PaymentForm.js
 
@@ -30,9 +31,7 @@ const PaymentForm = () => {
     <div className=" mx-auto p-6 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-semibold mb-4">Payment Details</h2>
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">
-          Email address
-        </label>
+        <label className="block text-sm font-medium text-gray-700">Email address</label>
         <input
           type="email"
           value={email}
@@ -71,9 +70,7 @@ const PaymentForm = () => {
       {paymentMethod === "card" && (
         <>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Card Details
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Card Details</label>
             <input
               type="text"
               name="name"
@@ -156,16 +153,16 @@ const PaymentForm = () => {
 
 export default function CardModal({
   children,
-  enrollId,
+  amountEur,
+  offer,
 }: {
   children?: ReactNode;
-  enrollId?: string;
+  amountEur: number;
+  offer: any;
 }) {
   type PaymentMethodType = "card" | "wire";
   //   const { paymentModalIsOpen, setPaymentModalIsOpen } = useAppStore();
-  const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(
-    null
-  );
+  const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(null);
 
   const handlePaymentChoice = (choice: PaymentMethodType) => {
     setPaymentMethod(choice);
@@ -199,7 +196,10 @@ export default function CardModal({
               />
             </svg>
           </Modal.Close>
-          <PaymentForm />
+          <CardPayment
+            amountEur={amountEur}
+            offer={offer}
+          />
         </div>
       </Modal.Content>
     </Modal.Root>
