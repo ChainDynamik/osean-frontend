@@ -28,29 +28,6 @@ Trigger.displayName = "DropdownTrigger";
  * Content
  * -----------------------------------------------------------------------------------------------*/
 
-// type ContentElement = ElementRef<typeof DropdownMenu.Content>;
-// type ContentProps = ComponentPropsWithoutRef<typeof DropdownMenu.Content>;
-
-// const Content = forwardRef<ContentElement, ContentProps>((props, ref) => {
-//   return (
-//     <DropdownMenu.Portal>
-//       <DropdownMenu.Content
-//         className={cn(
-//           "bg-primary",
-//           //   "origin-[--radix-popover-content-transform-origin]",
-//           // Animation enter
-//           "data-[state=open]:data-[side=top]:animate-slide-from-top data-[state=open]:data-[side=bottom]:animate-slide-from-bottom data-[state=open]:data-[side=left]:animate-slide-from-left data-[state=open]:data-[side=right]:animate-slide-from-right",
-//           // Animation out
-//           "data-[state=closed]:data-[side=top]:animate-slide-to-top data-[state=closed]:data-[side=bottom]:animate-slide-to-bottom data-[state=closed]:data-[side=left]:animate-slide-to-left data-[state=closed]:data-[side=right]:animate-slide-to-right"
-//         )}
-//         ref={ref}
-//         {...props}
-//       />
-//     </DropdownMenu.Portal>
-//   );
-// });
-// Content.displayName = "DropdownContent";
-
 type ContentElement = ElementRef<typeof DropdownMenu.Content>;
 type ContentProps = ComponentPropsWithoutRef<typeof DropdownMenu.Content> & {
   overlayClassname?: string;

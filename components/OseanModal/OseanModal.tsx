@@ -9,11 +9,22 @@ import { Spinner } from "../../src/components/Spinner";
 import { motion } from "framer-motion";
 import { sleep } from "../../helpers";
 import Moralis from "moralis-v1";
-import { getContract, prepareContractCall, sendAndConfirmTransaction, toWei } from "thirdweb";
+import {
+  getContract,
+  prepareContractCall,
+  sendAndConfirmTransaction,
+  toWei,
+} from "thirdweb";
 import { useSendTransaction } from "thirdweb/react";
 import { sendTransaction } from "thirdweb";
 import { createWallet } from "thirdweb/wallets";
-import { useAddress, useContract, useContractWrite, useSigner, useWallet } from "@thirdweb-dev/react";
+import {
+  useAddress,
+  useContract,
+  useContractWrite,
+  useSigner,
+  useWallet,
+} from "@thirdweb-dev/react";
 import { client } from "../../pages/_app";
 import chain from "../../cost/chain";
 import { oseanOrderManagementABI } from "../../abi";
@@ -28,6 +39,8 @@ import toast from "react-hot-toast";
 import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
 import { useSelectedExtrasStore } from "../../util/store/extraStore";
 import { useMoralis } from "react-moralis";
+import { cn } from "../../util";
+import { Dropdown } from "../Dropdown/Dropdown";
 
 const options = [
   {
@@ -49,28 +62,6 @@ const options = [
 export const oseanDiscount = 15;
 export const ethDiscount = 10;
 export const bnbDiscount = 10;
-
-// {
-//   "amountUsd": 10,
-//   "amountInWei": "2857142857142857",
-//   "amountInEth": 0.002857142857142857,
-//   "ethUnitPrice": 3500,
-//   "expirationTime": 1722381316,
-//   "requiredSigner": "0xaa477e690cb9a37f66e6c3657d9d43e235baf463",
-//   "signature": "0xe9c12fc7e590419e25127bc7d77eef8771d4ac42df16263fa1cd0ba470a25ed655e19d601435ae942ecd35e390b0e5aae71e6ef9a7dbdd23e8132eb2a16a9f471c",
-//   "message": "2857142857142857_1722381316_0xaa477e690cb9a37f66e6c3657d9d43e235baf463",
-//   "signatureRaw": {
-//       "message": "2857142857142857_1722381316_0xaa477e690cb9a37f66e6c3657d9d43e235baf463",
-//       "messageHash": "0x2922ba052bb869c0c4797407ed4003882c70deb56b47af25599cefdfa1c4c457",
-//       "v": "0x1c",
-//       "r": "0xe9c12fc7e590419e25127bc7d77eef8771d4ac42df16263fa1cd0ba470a25ed6",
-//       "s": "0x55e19d601435ae942ecd35e390b0e5aae71e6ef9a7dbdd23e8132eb2a16a9f47",
-//       "signature": "0xe9c12fc7e590419e25127bc7d77eef8771d4ac42df16263fa1cd0ba470a25ed655e19d601435ae942ecd35e390b0e5aae71e6ef9a7dbdd23e8132eb2a16a9f471c"
-//   },
-//   "createdAt": "2024-07-30T23:10:16.403Z",
-//   "updatedAt": "2024-07-30T23:10:16.403Z",
-//   "objectId": "yO4oJtH1IY"
-// }
 
 export type OSMQuote = {
   amountUsd: number;
@@ -111,6 +102,7 @@ const renderer = ({ hours, minutes, seconds, completed }: any) => {
     );
   }
 };
+
 export default function OseanModal({
   children,
   enrollId,
@@ -124,32 +116,42 @@ export default function OseanModal({
 }) {
   const [network, setNetwork] = useState(options[0]);
   const [coin, setCoin] = useState("Select currency");
-  const [showNetworkDropdown, setShowNetworkDropdown] = useState(false);
-  const [showCoinDropdown, setShowCoinDropdown] = useState(false);
 
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
 
-  const { transactionOpen, toggleTransactionModal, setOseanModalIsOpen, oseanModalIsOpen } = useTransactionStore();
+  const {
+    transactionOpen,
+    toggleTransactionModal,
+    setOseanModalIsOpen,
+    oseanModalIsOpen,
+  } = useTransactionStore();
 
   const { selectedOffer } = useSelectedOfferStore();
-  const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
+  const selectedExtras = useSelectedExtrasStore(
+    (state) => state.selectedExtras
+  );
 
-  const { contract: ethOsean } = useContract(process.env.NEXT_PUBLIC_ETH_OSEAN_CONTRACT_ADDRESS);
-  const { contract: ethOom } = useContract(process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS);
+  const { contract: ethOsean } = useContract(
+    process.env.NEXT_PUBLIC_ETH_OSEAN_CONTRACT_ADDRESS
+  );
+  const { contract: ethOom } = useContract(
+    process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS
+  );
   const { mutateAsync: approve } = useContractWrite(ethOsean, "approve");
-  const { mutateAsync: fullfillOrderEth } = useContractWrite(ethOom, "fullfillOrderEth");
-  const { mutateAsync: fullfillOrderOsean } = useContractWrite(ethOom, "fullfillOrderOsean");
+  const { mutateAsync: fullfillOrderEth } = useContractWrite(
+    ethOom,
+    "fullfillOrderEth"
+  );
+  const { mutateAsync: fullfillOrderOsean } = useContractWrite(
+    ethOom,
+    "fullfillOrderOsean"
+  );
 
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
-
   const [loadingText, setLoadingText] = useState("Preparing quote...");
-
   const [isLoading, setIsLoading] = useState(false);
-
   const [quote, setQuote] = useState<OSMQuote>();
-
   const { user } = useMoralis();
-
   console.log(user);
 
   async function verifyQuoteSettled(quote: OSMQuote) {
@@ -179,7 +181,9 @@ export default function OseanModal({
     if (coin === "Select currency") return;
     if (!network.value) return;
     if (transactionHash) return;
-    console.log(`calling generateQuote with ${amountUsd}, ${coin}, ${network.value}`);
+    console.log(
+      `calling generateQuote with ${amountUsd}, ${coin}, ${network.value}`
+    );
 
     let amountWithDiscount = 0;
 
@@ -255,7 +259,6 @@ export default function OseanModal({
 
   const [isFetchingQuote, setIsFetchingQuote] = useState(true);
 
-  // Calculate the 20% discount and the amount to pay
   const discount = fee * 0.2;
   const discountedFee = fee - discount;
 
@@ -275,18 +278,26 @@ export default function OseanModal({
   }, [quote]);
 
   return (
-    <Modal.Root
-      open={oseanModalIsOpen}
-      onOpenChange={setOseanModalIsOpen}
-    >
+    <Modal.Root open={oseanModalIsOpen} onOpenChange={setOseanModalIsOpen}>
       <Modal.Trigger>{children}</Modal.Trigger>
 
       <Modal.Content
-        className={`max-[500px]:w-[90%] max-[500px]:max-w-none max-md:w-4/5 w-fit max-w-fit !min-w-fit ${
-          transactionOpen && "!hidden"
-        }`}
+        className={cn(
+          `max-[500px]:w-[90%] max-[500px]:max-w-[90%] max-md:w-4/5 md:!min-w-[700px] max-w-fit`,
+          {
+            "max-md:w-[400px] max-md:max-w-[400px]  xs:!min-w-[400px] md:!min-w-[400px]":
+              coin === "Select currency",
+          }
+        )}
       >
-        <div className="relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-[600px] min-h-[450px]">
+        <div
+          className={cn(
+            "relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-full min-h-[450px]",
+            {
+              "min-h-[200px]": coin === "Select currency",
+            }
+          )}
+        >
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">
             <svg
               width="100%"
@@ -305,7 +316,7 @@ export default function OseanModal({
 
           <div className="flex flex-col gap-4">
             <div className="text-center mb-6">
-              <h2 className="text-2xl mx-auto w-fit flex font-semibold text-gray-900">
+              <h2 className="text-xl xs:text-2xl mx-auto w-fit flex font-semibold text-gray-900">
                 Pay with{" "}
                 <div className="flex gap-1 ml-2 items-center">
                   <Image
@@ -313,9 +324,11 @@ export default function OseanModal({
                     height={30}
                     width={30}
                     alt="osean"
-                    className="w-6 -translate-y-0.5"
+                    className="w-3 xs:w-6 -translate-y-0.5"
                   />
-                  <p className="font-bold inline-block !mb-0 !text-black !text-2xl ">OSEAN</p>
+                  <p className="font-bold inline-block !mb-0 !text-black text-xl xs:text-2xl ">
+                    OSEAN
+                  </p>
                 </div>
               </h2>
             </div>
@@ -324,245 +337,231 @@ export default function OseanModal({
                 <div className="flex ">
                   <Spinner />
                   <motion.div
-                    // left-right animation breathe
                     animate={{ x: [0, 10, 0] }}
                     transition={{ duration: 1, repeat: Infinity }}
                     className="flex gap-2 ml-2"
                   >
-                    {/* Remove this, TransactionOutcomeModal is already called inside the tenary for you, this is to just showcase the code working */}
                     <TransactionOutcomeModal
                       quote={quote}
                       isOpen={transactionModalOpen}
                       onOpenChange={setTransactionModalOpen}
                     />
-                    {/* <Button
-                      className="w-fit !p-2"
-                      onClick={() => setTransactionModalOpen(!transactionModalOpen)}
-                    >
-                      Toggle Modal
-                    </Button> */}
                     <p className="my-auto text-xl">{loadingText}</p>
                   </motion.div>
                 </div>
               ) : (
                 <>
                   <div className="flex flex-col gap-2">
-                    <label className="block text-sm font-medium text-gray-700">Network and Coin</label>
-                    <div className="flex gap-2 justify-between">
-                      <div className="relative">
-                        <button
-                          type="button"
-                          className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full flex justify-between items-center"
-                          onClick={() => setShowNetworkDropdown(!showNetworkDropdown)}
-                        >
-                          <span className="flex items-center">
-                            {network.icon && (
+                    <label className="block text-sm font-medium text-gray-700">
+                      Network and Coin
+                    </label>
+
+                    <div
+                      className={cn(
+                        "flex gap-2 justify-between max-xs:flex-col",
+                        {
+                          "flex-col": coin === "Select currency",
+                        }
+                      )}
+                    >
+                      <Dropdown.Root>
+                        <Dropdown.Trigger>
+                          <button
+                            type="button"
+                            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full flex justify-between items-center"
+                          >
+                            <span className="flex items-center">
+                              {network.icon && (
+                                <Image
+                                  src={network.icon}
+                                  height={5}
+                                  width={5}
+                                  alt={network.label}
+                                  className="mr-2"
+                                />
+                              )}
+                              {network.label}
+                            </span>
+                            <svg
+                              className="w-4 h-4 ml-2"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 9l-7 7-7-7"
+                              ></path>
+                            </svg>
+                          </button>
+                        </Dropdown.Trigger>
+                        <Dropdown.Content>
+                          {options.map((option) => (
+                            <Dropdown.Item
+                              key={option.value}
+                              onClick={() => setNetwork(option)}
+                            >
+                              <div className="flex items-center">
+                                {option.icon && (
+                                  <Image
+                                    src={option.icon}
+                                    height={5}
+                                    width={5}
+                                    alt={option.label}
+                                    className="mr-2"
+                                  />
+                                )}
+                                <span className="font-normal block truncate">
+                                  {option.label}
+                                </span>
+                              </div>
+                            </Dropdown.Item>
+                          ))}
+                        </Dropdown.Content>
+                      </Dropdown.Root>
+
+                      <Dropdown.Root>
+                        <Dropdown.Trigger>
+                          <button
+                            type="button"
+                            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full flex justify-between items-center"
+                          >
+                            <span className="flex items-center">
                               <Image
-                                src={network.icon}
+                                src={coin === "ETH" ? "/eth.svg" : "/logo.png"}
                                 height={5}
                                 width={5}
-                                alt={network.label}
+                                alt="osean"
                                 className="mr-2"
                               />
-                            )}
-                            {network.label}
-                          </span>
-                          <svg
-                            className="w-4 h-4 ml-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M19 9l-7 7-7-7"
-                            ></path>
-                          </svg>
-                        </button>
-                        {showNetworkDropdown && (
-                          <ul className="absolute mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                            {options.map((option) => (
-                              <li
-                                key={option.value}
-                                className="text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
-                                onClick={() => {
-                                  setNetwork(option);
-                                  setShowNetworkDropdown(false);
-                                }}
-                              >
-                                <div className="flex items-center">
-                                  {option.icon && (
-                                    <Image
-                                      src={option.icon}
-                                      height={5}
-                                      width={5}
-                                      alt={option.label}
-                                      className="mr-2"
-                                    />
-                                  )}
-                                  <span className="font-normal block truncate">{option.label}</span>
-                                </div>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                      <div className="relative">
-                        <button
-                          type="button"
-                          className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full flex justify-between items-center"
-                          onClick={() => setShowCoinDropdown(!showCoinDropdown)}
-                        >
-                          <span className="flex items-center">
-                            <Image
-                              src={coin === "ETH" ? "/eth.svg" : "/logo.png"}
-                              height={5}
-                              width={5}
-                              alt="osean"
-                              className="mr-2"
-                            />
-                            {coin}
-                          </span>
-                          <svg
-                            className="w-4 h-4 ml-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M19 9l-7 7-7-7"
-                            ></path>
-                          </svg>
-                        </button>
-                        {showCoinDropdown && (
-                          <ul className="absolute mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                            <li
-                              className="text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
-                              onClick={() => {
-                                setCoin("ETH");
-                                setShowCoinDropdown(false);
-                              }}
+                              {coin}
+                            </span>
+                            <svg
+                              className="w-4 h-4 ml-2"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
                             >
-                              <div className="flex items-center">
-                                <Image
-                                  src="/eth.svg"
-                                  height={5}
-                                  width={5}
-                                  alt="osean"
-                                  className="mr-2"
-                                />
-                                <span className="font-normal block truncate">ETH</span>
-                              </div>
-                            </li>
-                            <li
-                              className="text-gray-900 cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
-                              onClick={() => {
-                                setCoin("OSEAN");
-                                setShowCoinDropdown(false);
-                              }}
-                            >
-                              <div className="flex items-center">
-                                <Image
-                                  src="/logo.png"
-                                  height={5}
-                                  width={5}
-                                  alt="osean"
-                                  className="mr-2"
-                                />
-                                <span className="font-normal block truncate">OSEAN</span>
-                              </div>
-                            </li>
-                          </ul>
-                        )}
-                      </div>
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M19 9l-7 7-7-7"
+                              ></path>
+                            </svg>
+                          </button>
+                        </Dropdown.Trigger>
+                        <Dropdown.Content>
+                          <Dropdown.Item onClick={() => setCoin("ETH")}>
+                            <div className="flex items-center">
+                              <Image
+                                src="/eth.svg"
+                                height={5}
+                                width={5}
+                                alt="osean"
+                                className="mr-2"
+                              />
+                              <span className="font-normal block truncate">
+                                ETH
+                              </span>
+                            </div>
+                          </Dropdown.Item>
+                          <Dropdown.Item onClick={() => setCoin("OSEAN")}>
+                            <div className="flex items-center">
+                              <Image
+                                src="/logo.png"
+                                height={5}
+                                width={5}
+                                alt="osean"
+                                className="mr-2"
+                              />
+                              <span className="font-normal block truncate">
+                                OSEAN
+                              </span>
+                            </div>
+                          </Dropdown.Item>
+                        </Dropdown.Content>
+                      </Dropdown.Root>
                     </div>
                   </div>
-                  {coin !== "Select currency" && network.value !== "Select network" && (
-                    <>
-                      <div className="flex flex-col my-0">
-                        <label className="block text-sm font-medium text-gray-700">Currency conversion</label>
-                        <p className="text-sm text-gray-500 ">
-                          1 {coin} = ${quote?.quoteUnitPrice}
-                        </p>
-                        {quote && (
-                          <div className="text-sm text-gray-500">
-                            Quote expires in{" "}
-                            <Countdown
-                              date={quote?.expirationTime * 1000}
-                              renderer={renderer}
+                  {coin !== "Select currency" &&
+                    network.value !== "Select network" && (
+                      <>
+                        <div className="flex flex-col my-0">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Currency conversion
+                          </label>
+                          <p className="text-sm text-gray-500 ">
+                            1 {coin} = ${quote?.quoteUnitPrice}
+                          </p>
+                          {quote && (
+                            <div className="text-sm text-gray-500">
+                              Quote expires in{" "}
+                              <Countdown
+                                date={quote?.expirationTime * 1000}
+                                renderer={renderer}
+                              />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex flex-col ">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Discounts:
+                          </label>
+                          <p className="text-sm !font-bold text-green-500">
+                            {coin === "ETH"
+                              ? ethDiscount
+                              : coin === "OSEAN"
+                              ? oseanDiscount
+                              : bnbDiscount
+                              ? coin === "BNB"
+                              : bnbDiscount}
+                            % Discount Applied for {coin} payments
+                          </p>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Amount to pay
+                          </label>
+                          <p className="text-sm text-gray-900">
+                            {quote?.amountInQuote} {coin}
+                          </p>
+                        </div>
+                        <div className="flex flex-col gap-4">
+                          {transactionHash && (
+                            <TransactionOutcomeModal
+                              quote={quote}
+                              isOpen={transactionModalOpen}
+                              onOpenChange={setTransactionModalOpen}
+                              txHash={transactionHash || "0x0"}
+                              discount={
+                                coin === "ETH"
+                                  ? ethDiscount
+                                  : coin === "OSEAN"
+                                  ? oseanDiscount
+                                  : bnbDiscount
+                                  ? coin === "BNB"
+                                  : bnbDiscount
+                              }
                             />
-                            {/* <p>{quote?.objectId}</p> */}
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex flex-col ">
-                        <label className="block text-sm font-medium text-gray-700">Discounts:</label>
-                        <p className="text-sm !font-bold text-green-500">
-                          {coin === "ETH"
-                            ? ethDiscount
-                            : coin === "OSEAN"
-                            ? oseanDiscount
-                            : bnbDiscount
-                            ? coin === "BNB"
-                            : bnbDiscount}
-                          % Discount Applied for {coin} payments
-                        </p>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <label className="block text-sm font-medium text-gray-700">Amount to pay</label>
-                        <p className="text-sm text-gray-900">
-                          {quote?.amountInQuote} {coin}
-                        </p>
-                      </div>
-                      <div className="flex flex-col gap-4">
-                        {transactionHash && (
-                          <TransactionOutcomeModal
-                            quote={quote}
-                            isOpen={transactionModalOpen}
-                            onOpenChange={setTransactionModalOpen}
-                            txHash={transactionHash || "0x0"}
-                            discount={
-                              coin === "ETH"
-                                ? ethDiscount
-                                : coin === "OSEAN"
-                                ? oseanDiscount
-                                : bnbDiscount
-                                ? coin === "BNB"
-                                : bnbDiscount
-                            }
-                          />
-                        )}
-                        <Button
-                          isLoading={isLoading}
-                          onClick={async (e: any) => {
-                            e.preventDefault();
+                          )}
+                          <Button
+                            isLoading={isLoading}
+                            onClick={async (e: any) => {
+                              e.preventDefault();
 
-                            await pay();
-                          }}
-                        >
-                          Pay {quote?.amountInQuote.toFixed(6)} {coin}
-                          {/* {isLoading ? "Loading..." : `Pay ${discountedFee.toFixed(2)}`} */}
-                          {/* <div className="flex gap-1 ml-2 items-center">
-                          <Image
-                            src="/logo.png"
-                            height={50}
-                            width={50}
-                            alt="osean"
-                            className="w-5 -translate-y-0.5"
-                          />
-                          <p className="font-bold inline-block !mb-0 !text-white">$OSEAN </p>
-                        </div> */}
-                        </Button>
-                      </div>
-                    </>
-                  )}
+                              await pay();
+                            }}
+                          >
+                            Pay {quote?.amountInQuote.toFixed(6)} {coin}
+                          </Button>
+                        </div>
+                      </>
+                    )}
                 </>
               )}
             </div>
