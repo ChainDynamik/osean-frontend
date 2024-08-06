@@ -43,10 +43,10 @@ import { cn } from "../../util";
 import { Dropdown } from "../Dropdown/Dropdown";
 
 const options = [
-  {
-    value: "Select",
-    label: "Select network",
-  },
+  // {
+  //   value: "Select",
+  //   label: "Select network",
+  // },
   {
     value: "ETH",
     label: "Ethereum",
@@ -368,7 +368,7 @@ export default function OseanModal({
                         <Dropdown.Trigger>
                           <button
                             type="button"
-                            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full flex justify-between items-center"
+                            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-fit flex justify-between items-center"
                           >
                             <span className="flex items-center">
                               {network.icon && (
@@ -427,16 +427,21 @@ export default function OseanModal({
                         <Dropdown.Trigger>
                           <button
                             type="button"
-                            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 w-full flex justify-between items-center"
+                            className="px-3 w-fit py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 flex justify-between items-center"
                           >
                             <span className="flex items-center">
-                              <Image
-                                src={coin === "ETH" ? "/eth.svg" : "/logo.png"}
-                                height={5}
-                                width={5}
-                                alt="osean"
-                                className="mr-2"
-                              />
+                              {coin !== "Select currency" && (
+                                <Image
+                                  src={
+                                    coin === "ETH" ? "/eth.svg" : "/logo.png"
+                                  }
+                                  height={5}
+                                  width={5}
+                                  alt="osean"
+                                  className="mr-2"
+                                />
+                              )}
+
                               {coin}
                             </span>
                             <svg
