@@ -22,6 +22,10 @@ import CurrencyDropdown from "../../components/CurrencyDropdown/CurrencyDropdown
 import { getModelFromYachtId } from "../../const/boat-models";
 import { format } from "date-fns";
 import { Pagination } from "antd"; // Import Ant Design's Pagination component
+import dynamic from "next/dynamic";
+import LoadingLottie from "../../assets/lottie/loading.json";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 type Extra = {
   id: number;
@@ -78,6 +82,7 @@ export default function Offers() {
   const [offers, setOffers] = useState<OfferWithBoat[]>([]);
   const [sortOption, setSortOption] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [isFiltering, setIsFiltering] = useState<boolean>(false); // Step 1: Add isFiltering state
   const { yachts, getBoatById } = useYachts();
   const [currentPage, setCurrentPage] = useState(1);
   const { isMobile } = useScreenSize();
@@ -104,6 +109,7 @@ export default function Offers() {
   const { tripStart, tripEnd } = useTripStore();
 
   async function fetchOffers() {
+    setIsFiltering(true); // Step 2: Set isFiltering to true when fetching starts
     const dateFrom = format(tripStart, "yyyy-MM-dd");
     const dateTo = format(tripEnd, "yyyy-MM-dd");
 
@@ -163,6 +169,7 @@ export default function Offers() {
       console.error("Error fetching offers:", error);
     } finally {
       setLoading(false);
+      setIsFiltering(false); // Step 2: Set isFiltering to false when fetching ends
     }
   }
 
@@ -423,9 +430,19 @@ export default function Offers() {
               <Button className="w-fit mx-auto">Get Quote</Button>
             </div>
           )}
-          {loading && loadingCards}
+          {loading ||
+            (isFiltering && (
+              <div className="flex py-40 justify-center items-center">
+                <Lottie
+                  animationData={LoadingLottie}
+                  loop={true}
+                  className="w-80"
+                />
+              </div>
+            ))}
 
           {!loading &&
+            !isFiltering &&
             sortedOffers.length > 0 &&
             currentPageData.map((data, index) => {
               const offerObject = data;

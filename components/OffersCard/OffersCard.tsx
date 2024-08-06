@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import Icon from "../icon-selector/icon-selector";
 import Button from "../Button/Button";
 import PreviewImage from "../PreviewImage/PreviewImage";
@@ -19,23 +17,9 @@ export type OffersCardProps = {
   id: number;
   startBase: string;
   startBaseId: number;
-  endBase: string;
   price: number;
   startPrice: number;
-  length: number;
   currency: string;
-  people: string;
-  imageUrl?: string;
-  dateFrom: string;
-  dateTo: string;
-  cabins: string;
-  berths: string;
-  year: string;
-  products: string[];
-  company: string;
-  model: string;
-  name: string;
-  loading?: boolean;
   rawOffer: Reservation;
 };
 
@@ -47,48 +31,47 @@ const OffersCard: React.FC<OffersCardProps> = ({
   startPrice,
   currency,
   id,
-  loading,
   rawOffer,
 }) => {
   const { Moralis, isInitialized } = useMoralis();
   const [boatData, setBoatData] = useState<any>(null);
-  const [loadingBoatData, setLoadingBoatData] = useState(true);
 
-  const mainImage = boatData?.images.find((image) => image.description === "Main image");
+  const mainImage = boatData?.images.find(
+    (image) => image.description === "Main image"
+  );
 
-  const { selectedOffer, setSelectedOffer } = useSelectedOfferStore();
-  const { currency: userSelectedCurrency } = useOfferApiFilterState((state) => state);
+  const { setSelectedOffer } = useSelectedOfferStore();
+  const { currency: userSelectedCurrency } = useOfferApiFilterState(
+    (state) => state
+  );
 
   const { convertEurToCurrency } = useCurrencyConverter();
 
   const boatModels = useOfferApiFilterState((state) => state.boatModels);
 
-  const imageUrl = mainImage ? mainImage.url : boatData?.images[0]?.url || "/images/placeholder-yacht.jpg";
+  const imageUrl = mainImage
+    ? mainImage.url
+    : boatData?.images[0]?.url || "/images/placeholder-yacht.jpg";
 
   useEffect(() => {
     async function fetchData() {
       if (isInitialized) {
         const data = await fetchBoatDataFromDb(id.toString());
-        // console.log(data, "individual my");
-
         setBoatData(data);
-        setLoadingBoatData(false);
       }
     }
 
     fetchData();
   }, [id, isInitialized, Moralis]);
 
-  const calculateDiscountPercentage = (startPrice: number, price: number): number => {
+  const calculateDiscountPercentage = (
+    startPrice: number,
+    price: number
+  ): number => {
     return Math.round(((startPrice - price) / startPrice) * 100);
   };
 
   const discountPercentage = calculateDiscountPercentage(startPrice, price);
-  // console.log(boatData, "my boat");
-
-  // if (boatModels.length > 0 && !boatModels.includes(boatData?.model)) {
-  //   return null;
-  // }
 
   return (
     <div
@@ -97,19 +80,15 @@ const OffersCard: React.FC<OffersCardProps> = ({
       )}
     >
       <div className="flex md:gap-4 max-md:flex-col">
-        <div className="relative md:min-h-full max-md:h-[160px] max-h-[200px] lg:w-[350px] lg:h-full border-[1.5px] rounded-l-lg overflow-hidden aspect-video">
-          {loading || loadingBoatData ? (
-            <Skeleton height="100%" />
-          ) : (
-            <PreviewImage src={imageUrl || boatData?.imageUrl}>
-              <img
-                className="w-full h-full object-cover aspect-video"
-                src={imageUrl || boatData?.imageUrl}
-                alt={yacht}
-              />
-            </PreviewImage>
-          )}
-          {!loading && !loadingBoatData && discountPercentage > 0 && (
+        <div className="relative md:min-h-full max-md:h-[160px] max-h-[192px] lg:w-[350px] lg:h-full border-[1.5px] rounded-l-lg overflow-hidden aspect-video">
+          <PreviewImage src={imageUrl || boatData?.imageUrl}>
+            <img
+              className="w-full h-full object-cover aspect-video"
+              src={imageUrl || boatData?.imageUrl}
+              alt={yacht}
+            />
+          </PreviewImage>
+          {discountPercentage > 0 && (
             <span className="bg-negative px-2 rounded-lg inline-block left-2 text-white font-extrabold absolute top-2">
               -{discountPercentage}%
             </span>
@@ -117,7 +96,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
         </div>
         <div className="w-full py-3 pr-4 max-md:pl-4">
           <p className="text-lg text-primary mb-[0.7rem]">
-            {loading || loadingBoatData ? <Skeleton width={100} /> : `${boatData?.model} (${boatData?.year})`}
+            {boatData?.model} ({boatData?.year})
           </p>
           <div className="flex justify-between max-md:flex-col gap-4 max-[1200px]:flex-col">
             <div>
@@ -128,13 +107,8 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     className="w-4 -translate-y-[1px] text-black"
                   />
                   <p className="mb-0 text-black text-xs">
-                    {loading || loadingBoatData ? (
-                      <Skeleton width={100} />
-                    ) : (
-                      <>
-                        <span className="font-bold">Base:</span> {startBase} ({getBaseCountryFromBaseId(startBaseId)})
-                      </>
-                    )}
+                    <span className="font-bold">Base:</span> {startBase} (
+                    {getBaseCountryFromBaseId(startBaseId)})
                   </p>
                 </div>
               </div>
@@ -142,20 +116,20 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 <div className="flex gap-1 items-center">
                   <span className="bg-black/70 rounded-full size-1.5"></span>
                   <p className="mb-0 text-black text-xs">
-                    {loading || loadingBoatData ? <Skeleton width={30} /> : `${boatData?.cabins} cab`}
+                    {boatData?.cabins} cab
                   </p>
                 </div>
                 <div className="flex gap-1 items-center">
                   <span className="bg-black/70 rounded-full size-1.5"></span>
-                  <p className="mb-0 text-black text-xs">
-                    {loading || loadingBoatData ? <Skeleton width={30} /> : `${boatData?.wc} WCs`}
-                  </p>
+                  <p className="mb-0 text-black text-xs">{boatData?.wc} WCs</p>
                 </div>
                 <div className="flex gap-1 items-center">
-                  {boatData?.maxPeopleOnBoard && <span className="bg-black/70 rounded-full size-1.5"></span>}
+                  {boatData?.maxPeopleOnBoard && (
+                    <span className="bg-black/70 rounded-full size-1.5"></span>
+                  )}
                   <p className="mb-0 text-black text-xs">
-                    {loading || (loadingBoatData && <Skeleton width={30} />)}
-                    {boatData?.maxPeopleOnBoard && `${boatData?.maxPeopleOnBoard} people`}
+                    {boatData?.maxPeopleOnBoard &&
+                      `${boatData?.maxPeopleOnBoard} people`}
                   </p>
                 </div>
               </div>
@@ -166,7 +140,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     className="w-4 -translate-y-[1px] text-black"
                   />
                   <p className="mb-0 text-black text-xs">
-                    {loading || loadingBoatData ? <Skeleton width={50} /> : <span>{boatData?.kind}</span>}
+                    <span>{boatData?.kind}</span>
                   </p>
                 </div>
                 <div className="flex gap-1 items-center">
@@ -177,16 +151,12 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     />
                   </div>
                   <p className="mb-0 capitalize text-black text-xs">
-                    {loading || loadingBoatData ? (
-                      <Skeleton width={100} />
-                    ) : (
-                      boatData?.products?.map((product, index) => (
-                        <span key={index}>
-                          {product.name}
-                          {index < boatData?.products?.length - 1 && ","}
-                        </span>
-                      ))
-                    )}
+                    {boatData?.products?.map((product, index) => (
+                      <span key={index}>
+                        {product.name}
+                        {index < boatData?.products?.length - 1 && ","}
+                      </span>
+                    ))}
                   </p>
                 </div>
                 <div className="flex gap-1 items-center">
@@ -195,7 +165,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     className="w-4 -translate-y-[1px] text-black"
                   />
                   <p className="mb-0 text-black text-xs">
-                    {loading || loadingBoatData ? <Skeleton width={50} /> : <span>{boatData?.boatLength}m</span>}
+                    <span>{boatData?.boatLength}m</span>
                   </p>
                 </div>
                 <div className="flex gap-1 items-center">
@@ -204,7 +174,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     className="w-4 -translate-y-[1px] text-black"
                   />
                   <p className="mb-0 text-black text-xs">
-                    {loading || loadingBoatData ? <Skeleton width={50} /> : <span>{boatData?.year}</span>}
+                    <span>{boatData?.year}</span>
                   </p>
                 </div>
               </div>
@@ -215,11 +185,10 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   <p className="text-xs text-black mb-0 line-through">
                     Original price -{" "}
                     <span className="text-green-500">
-                      {loading || loadingBoatData ? (
-                        <Skeleton width={50} />
-                      ) : (
-                        convertEurToCurrency({ eurPrice: startPrice, currency: userSelectedCurrency })?.toLocaleString()
-                      )}
+                      {convertEurToCurrency({
+                        eurPrice: startPrice,
+                        currency: userSelectedCurrency,
+                      })?.toLocaleString()}
                       {userSelectedCurrency === "eur"
                         ? "€"
                         : userSelectedCurrency === "usd"
@@ -237,7 +206,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   <p className="mb-0 text-sm text-black ">
                     Discount -{" "}
                     <span className="text-green-500">
-                      {loading || loadingBoatData ? <Skeleton width={50} /> : discountPercentage}%
+                      {discountPercentage}%
                     </span>
                   </p>
                 </>
@@ -245,11 +214,10 @@ const OffersCard: React.FC<OffersCardProps> = ({
               <p className=" mb-0 text-sm text-black ">
                 Price -{" "}
                 <span className="text-green-500">
-                  {loading || loadingBoatData ? (
-                    <Skeleton width={50} />
-                  ) : (
-                    convertEurToCurrency({ eurPrice: price, currency: userSelectedCurrency })?.toLocaleString()
-                  )}
+                  {convertEurToCurrency({
+                    eurPrice: price,
+                    currency: userSelectedCurrency,
+                  })?.toLocaleString()}
                   {userSelectedCurrency === "eur"
                     ? "€"
                     : userSelectedCurrency === "usd"
@@ -274,7 +242,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   variant="outline"
                   className="p-2.5 text-sm whitespace-nowrap"
                 >
-                  {loading || loadingBoatData ? <Skeleton width={100} /> : "View Details"}
+                  View Details
                 </Button>
               </Link>
             </div>
