@@ -17,18 +17,17 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, o
   return (
     <Modal.Root>
       <Modal.Trigger asChild>{children}</Modal.Trigger>
-      <Modal.Content className="w-full max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl">
-        <div className="relative bg-white">
-          <Modal.Close>
-            <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors">
-              <Icon
-                iconType="cancel"
-                className="w-6 h-6"
-              />
-            </button>
-          </Modal.Close>
-
+      <Modal.Content className="w-full max-w-[90%] lg:max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl">
+        <div className="relative bg-white w-full">
           <div className="relative h-80 bg-blue-600 w-full">
+            <Modal.Close>
+              <button className="absolute px-1 py-0.5 rounded-md bg-black z-50 top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors">
+                <Icon
+                  iconType="cancel"
+                  className="w-6 h-6 text-white"
+                />
+              </button>
+            </Modal.Close>
             <Image
               src={image}
               layout="fill"

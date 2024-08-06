@@ -257,7 +257,7 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={yachtImages[booking.objectId]}
+                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
                     >
                       <p className="font-semibold text-sm mb-0 py-4">{booking.objectId}</p>
                     </BookingsDetailsModal>
