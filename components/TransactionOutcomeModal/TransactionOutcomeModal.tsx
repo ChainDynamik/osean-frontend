@@ -93,23 +93,26 @@ export default function TransactionOutcomeModal({
                 <span>{amountEur?.toLocaleString()} EUR</span>
               )}
             </div>
-            <p className="text-green-600 !mb-0 font-semibold">Discount: {discount}%</p>
+            <p className="text-green-600 !mb-0 font-semibold ">Discount: {discount}%</p>
             <div className="mt-6 w-full">
               {quote && (
-                <div className="flex justify-between text-gray-700 mb-2">
-                  <span>Payment</span>
-                  <span>{quote?.chain === "eth" ? "Ethereum" : "Binance Smart Chain"}</span>
-                </div>
-              )}
-              <div className="flex justify-between text-gray-700 mb-2">
-                <span>Paid with</span>
-                <span>{quote ? quote?.currency : "Credit Card"}</span>
-              </div>
+                <>
+                  <div className="flex justify-between text-gray-700 mb-2">
+                    <span>Payment</span>
+                    <span>{quote?.chain === "eth" ? "Ethereum" : "Binance Smart Chain"}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-700 mb-2">
+                    <span>Paid with</span>
+                    <span>{quote ? quote?.currency : "Credit Card"}</span>
+                  </div>
 
-              <div className="flex justify-between text-gray-700 mb-2">
-                <span>Transaction Time</span>
-                <span>{new Date().toLocaleDateString()}</span>
-              </div>
+                  <div className="flex justify-between text-gray-700 mb-2">
+                    <span>Transaction Time</span>
+                    <span>{new Date().toLocaleDateString()}</span>
+                  </div>
+                </>
+              )}
+
               {quote && (
                 <div className="flex justify-between text-gray-700 mb-2">
                   <span>Transaction Hash</span>
