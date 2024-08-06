@@ -229,7 +229,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                         : userSelectedCurrency === "bnb"
                         ? " BNB"
                         : userSelectedCurrency === "osean"
-                        ? " $OSN"
+                        ? " $OSEAN"
                         : "€"}
                     </span>
                   </p>
@@ -259,7 +259,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     : userSelectedCurrency === "bnb"
                     ? " BNB"
                     : userSelectedCurrency === "osean"
-                    ? " $OSN"
+                    ? " $OSEAN"
                     : "€"}
                 </span>
               </p>

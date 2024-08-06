@@ -46,6 +46,10 @@ const options = [
   },
 ];
 
+export const oseanDiscount = 15;
+export const ethDiscount = 10;
+export const bnbDiscount = 10;
+
 // {
 //   "amountUsd": 10,
 //   "amountInWei": "2857142857142857",
@@ -176,8 +180,25 @@ export default function OseanModal({
     if (!network.value) return;
     if (transactionHash) return;
     console.log(`calling generateQuote with ${amountUsd}, ${coin}, ${network.value}`);
+
+    let amountWithDiscount = 0;
+
+    switch (coin) {
+      case "ETH":
+        amountWithDiscount = amountUsd * ethDiscount;
+        break;
+      case "OSEAN":
+        amountWithDiscount = amountUsd * oseanDiscount;
+        break;
+      case "BNB":
+        amountWithDiscount = amountUsd * bnbDiscount;
+        break;
+      default:
+        break;
+    }
+
     const quote = await Moralis.Cloud.run("generateQuote", {
-      amountUsd,
+      amountUsd: amountWithDiscount,
       currency: coin,
       network: network.value,
       selectedExtras,
@@ -481,10 +502,19 @@ export default function OseanModal({
                           </div>
                         )}
                       </div>
-                      {/* <div className="flex flex-col ">
+                      <div className="flex flex-col ">
                         <label className="block text-sm font-medium text-gray-700">Discounts:</label>
-                        <p className="text-sm !font-bold text-green-500">20% Discount </p>
-                      </div> */}
+                        <p className="text-sm !font-bold text-green-500">
+                          {coin === "ETH"
+                            ? ethDiscount
+                            : coin === "OSEAN"
+                            ? oseanDiscount
+                            : bnbDiscount
+                            ? coin === "BNB"
+                            : bnbDiscount}
+                          % Discount Applied for {coin} payments
+                        </p>
+                      </div>
                       <div className="flex flex-col gap-2">
                         <label className="block text-sm font-medium text-gray-700">Amount to pay</label>
                         <p className="text-sm text-gray-900">
@@ -498,6 +528,15 @@ export default function OseanModal({
                             isOpen={transactionModalOpen}
                             onOpenChange={setTransactionModalOpen}
                             txHash={transactionHash || "0x0"}
+                            discount={
+                              coin === "ETH"
+                                ? ethDiscount
+                                : coin === "OSEAN"
+                                ? oseanDiscount
+                                : bnbDiscount
+                                ? coin === "BNB"
+                                : bnbDiscount
+                            }
                           />
                         )}
                         <Button

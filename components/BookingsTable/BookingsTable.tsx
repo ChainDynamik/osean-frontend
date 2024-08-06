@@ -90,6 +90,7 @@ const BookingsTable: React.FC = () => {
   const { Moralis, isInitialized, user } = useMoralis();
 
   const [bookings, setBookings] = useState<Offer[]>([]);
+  const [yachtImages, setYachtImages] = useState({});
 
   const [name, setName] = useState("");
   const [surName, setSurName] = useState("");
@@ -117,8 +118,44 @@ const BookingsTable: React.FC = () => {
     const results = await query.find();
     const resultsJson = results.map((result) => result.toJSON());
     setBookings(resultsJson);
+
+    // Fetch yacht images for all bookings
+    const images = {};
+    for (const booking of resultsJson) {
+      if (booking.offer?.yachtId) {
+        const imageUrl = await fetchYachtImage(booking);
+        images[booking.objectId] = imageUrl;
+      }
+    }
+    setYachtImages(images);
   }
 
+  const fetchYachtImage = async (booking: any) => {
+    if (!booking.offer?.yachtId) return null;
+
+    const Yacht = Moralis.Object.extend("Yacht");
+    const query = new Moralis.Query(Yacht);
+    query.equalTo("bookingManagerId", booking.offer.yachtId);
+
+    try {
+      const yacht = await query.first();
+      if (yacht) {
+        const images = yacht.get("images");
+        const mainImage = images.find((img) => img.description === "Main image");
+        // Strip spaces from the URL
+
+        const url = mainImage?.url.replace(/\s/g, "%20");
+
+        console.log("Yacht image URL:", url);
+
+        return url;
+      }
+    } catch (error) {
+      console.error("Error fetching yacht image:", error);
+    }
+
+    return null;
+  };
   console.log(bookings);
 
   const handleSearch = (text: string) => {
@@ -199,10 +236,11 @@ const BookingsTable: React.FC = () => {
                     <div className="py-4">
                       <PreviewImage src="/images/top-boats/boat-eight.jpg">
                         <Image
-                          src="/images/top-boats/boat-eight.jpg"
+                          src={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
                           width={80}
                           height={80}
-                          className="rounded-full mx-auto aspect-square "
+                          className="rounded-full mx-auto aspect-square"
+                          alt="boat"
                         />
                       </PreviewImage>
                     </div>
@@ -218,6 +256,7 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
+                      image={yachtImages[booking.objectId]}
                     >
                       <p className="font-semibold text-sm mb-0 py-4">{booking.objectId}</p>
                     </BookingsDetailsModal>
@@ -233,6 +272,7 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
+                      image={yachtImages[booking.objectId]}
                     >
                       <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.yacht}</p>
                     </BookingsDetailsModal>
@@ -248,6 +288,7 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
+                      image={yachtImages[booking.objectId]}
                     >
                       <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.dateFrom}</p>
                     </BookingsDetailsModal>

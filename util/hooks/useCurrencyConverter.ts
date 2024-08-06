@@ -43,8 +43,6 @@ export const useCurrencyConverter = () => {
   }
 
   async function updateAllPrices() {
-    console.log(`updating all prices`);
-
     const now = new Date().getTime();
     const valueExpirationDate = 120_000;
 
@@ -85,10 +83,6 @@ export const useCurrencyConverter = () => {
     currency: "eth" | "bnb" | "osean" | "usd";
   }) {
     let conversionOutput = 0;
-
-    console.log(`EUR Price: ${eurPrice}`);
-    console.log(`Currency: ${currency}`);
-    console.log(`eurPrice type: ${typeof eurPrice}`);
 
     if (currency === "usd") {
       conversionOutput = eurPrice * eurUnitUsdPrice;

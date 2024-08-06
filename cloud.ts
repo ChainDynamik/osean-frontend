@@ -488,7 +488,7 @@ Parse.Cloud.define("getServerTime", () => {
 async function getSettingsKey(key: string) {
   const query = new Parse.Query("Global");
   query.equalTo("key", key);
-  const settings = await query.first();
+  const settings = await query.first({ useMasterKey: true });
 
   if (!settings) {
     throw new Error(`Settings key ${key} not found`);
@@ -510,7 +510,7 @@ Parse.Cloud.define("generateQuote", async (request: any) => {
     query.equalTo("status", "pending");
     query.equalTo("requiredSigner", request.user.get("ethAddress"));
     query.greaterThanOrEqualTo("expirationTime", Math.floor(Date.now() / 1000));
-    const existingQuote = await query.first();
+    const existingQuote = await query.first({ useMasterKey: true });
 
     if (existingQuote) {
       return existingQuote.toJSON();
@@ -548,7 +548,7 @@ Parse.Cloud.define("generateQuote", async (request: any) => {
   quote.set("selectedOffer", selectedOffer);
   quote.set("selectedExtras", selectedExtras);
 
-  await quote.save();
+  await quote.save(null, { useMasterKey: true });
 
   return quote.toJSON();
 
@@ -562,7 +562,7 @@ Parse.Cloud.define("generateQuote", async (request: any) => {
   //     query.equalTo("status", "pending");
   //     query.equalTo("requiredSigner", request.user.get("ethAddress"));
   //     query.greaterThanOrEqualTo("expirationTime", Math.floor(Date.now() / 1000));
-  //     const existingQuote = await query.first();
+  //     const existingQuote = await query.first({useMasterKey: true});
 
   //     if (existingQuote) {
   //       return existingQuote.toJSON();
@@ -596,7 +596,7 @@ Parse.Cloud.define("generateQuote", async (request: any) => {
   //   quote.set("signature", signature.signature);
   //   quote.set("message", message);
   //   quote.set("signatureRaw", signature);
-  //   await quote.save();
+  //   await quote.save(null, {useMasterKey: true})
 
   //   return quote.toJSON();
   // }
@@ -612,7 +612,7 @@ Parse.Cloud.define("createOrder", async (request: any) => {
     const query = new Parse.Query(Order);
     query.notEqualTo("status", "settled");
     query.equalTo("user", user);
-    const existingOrder = await query.first();
+    const existingOrder = await query.first({ useMasterKey: true });
 
     // If exists, throw an error
     if (existingOrder) {
@@ -631,20 +631,28 @@ Parse.Cloud.define("createOrder", async (request: any) => {
   order.set("quoteExpiryDate", expiryDate);
   order.set("user", user);
 
-  await order.save();
+  await order.save(null, { useMasterKey: true });
   return order.toJSON();
 });
 
-// Parse.Cloud.beforeSave("_User", async (request: any) => {
-//   const user = request.object;
+Parse.Cloud.beforeSave("_User", async (request: any) => {
+  const user = request.object;
 
-//   if (!user.get("ethAddress")) {
-//     // Check if it's in the authData object as authData.moralisEth.address
-//     const authData = user.get("authData");
-//     const ethAddress = authData?.moralisEth?.id;
+  const savedEthAddress = user.get("ethAddress");
+  const authData = user.get("authData");
 
-//     if (ethAddress) {
-//       user.set("ethAddress", ethAddress);
-//     }
-//   }
-// });
+  // Cancel if the address inside the authData is already belonging to another user
+  if (authData?.moralisEth) {
+    const query = new Parse.Query(Parse.User);
+    query.equalTo("ethAddress", authData.moralisEth.id);
+    const existingUser = await query.first({ useMasterKey: true });
+
+    if (existingUser && existingUser.id !== user.id) {
+      throw new Error("Address already belongs to another user");
+    }
+  }
+
+  if (!savedEthAddress && authData?.moralisEth) {
+    user.set("ethAddress", authData.moralisEth.id);
+  }
+});

@@ -1058,7 +1058,7 @@ function getSettingsKey(key) {
                 case 0:
                     query = new Parse.Query("Global");
                     query.equalTo("key", key);
-                    return [4 /*yield*/, query.first()];
+                    return [4 /*yield*/, query.first({ useMasterKey: true })];
                 case 1:
                     settings = _a.sent();
                     if (!settings) {
@@ -1082,7 +1082,7 @@ Parse.Cloud.define("generateQuote", function (request) { return __awaiter(_this,
                 query.equalTo("status", "pending");
                 query.equalTo("requiredSigner", request.user.get("ethAddress"));
                 query.greaterThanOrEqualTo("expirationTime", Math.floor(Date.now() / 1000));
-                return [4 /*yield*/, query.first()];
+                return [4 /*yield*/, query.first({ useMasterKey: true })];
             case 1:
                 existingQuote = _c.sent();
                 if (existingQuote) {
@@ -1118,7 +1118,7 @@ Parse.Cloud.define("generateQuote", function (request) { return __awaiter(_this,
                 quote.set("signatureRaw", signature);
                 quote.set("selectedOffer", selectedOffer);
                 quote.set("selectedExtras", selectedExtras);
-                return [4 /*yield*/, quote.save()];
+                return [4 /*yield*/, quote.save(null, { useMasterKey: true })];
             case 4:
                 _c.sent();
                 return [2 /*return*/, quote.toJSON()];
@@ -1136,7 +1136,7 @@ Parse.Cloud.define("createOrder", function (request) { return __awaiter(_this, v
                 query = new Parse.Query(Order_1);
                 query.notEqualTo("status", "settled");
                 query.equalTo("user", user);
-                return [4 /*yield*/, query.first()];
+                return [4 /*yield*/, query.first({ useMasterKey: true })];
             case 1:
                 existingOrder = _a.sent();
                 // If exists, throw an error
@@ -1151,21 +1151,36 @@ Parse.Cloud.define("createOrder", function (request) { return __awaiter(_this, v
                 order.set("status", "pending");
                 order.set("quoteExpiryDate", expiryDate);
                 order.set("user", user);
-                return [4 /*yield*/, order.save()];
+                return [4 /*yield*/, order.save(null, { useMasterKey: true })];
             case 2:
                 _a.sent();
                 return [2 /*return*/, order.toJSON()];
         }
     });
 }); });
-// Parse.Cloud.beforeSave("_User", async (request: any) => {
-//   const user = request.object;
-//   if (!user.get("ethAddress")) {
-//     // Check if it's in the authData object as authData.moralisEth.address
-//     const authData = user.get("authData");
-//     const ethAddress = authData?.moralisEth?.id;
-//     if (ethAddress) {
-//       user.set("ethAddress", ethAddress);
-//     }
-//   }
-// });
+Parse.Cloud.beforeSave("_User", function (request) { return __awaiter(_this, void 0, void 0, function () {
+    var user, savedEthAddress, authData, query, existingUser;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                user = request.object;
+                savedEthAddress = user.get("ethAddress");
+                authData = user.get("authData");
+                if (!(authData === null || authData === void 0 ? void 0 : authData.moralisEth)) return [3 /*break*/, 2];
+                query = new Parse.Query(Parse.User);
+                query.equalTo("ethAddress", authData.moralisEth.id);
+                return [4 /*yield*/, query.first({ useMasterKey: true })];
+            case 1:
+                existingUser = _a.sent();
+                if (existingUser && existingUser.id !== user.id) {
+                    throw new Error("Address already belongs to another user");
+                }
+                _a.label = 2;
+            case 2:
+                if (!savedEthAddress && (authData === null || authData === void 0 ? void 0 : authData.moralisEth)) {
+                    user.set("ethAddress", authData.moralisEth.id);
+                }
+                return [2 /*return*/];
+        }
+    });
+}); });

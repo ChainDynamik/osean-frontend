@@ -188,7 +188,7 @@ export default function YachtCard({
                     : userSelectedCurrency === "bnb"
                     ? " BNB"
                     : userSelectedCurrency === "osean"
-                    ? " $OSN"
+                    ? " $OSEAN"
                     : "€"}
                 </span>
               </p>

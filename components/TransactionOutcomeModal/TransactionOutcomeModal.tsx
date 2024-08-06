@@ -21,9 +21,16 @@ type TransactionOutcomeModalProps = {
   isOpen: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
   txHash: string;
+  discount: number;
 };
 
-export default function TransactionOutcomeModal({ isOpen, quote, onOpenChange, txHash }: TransactionOutcomeModalProps) {
+export default function TransactionOutcomeModal({
+  isOpen,
+  quote,
+  onOpenChange,
+  txHash,
+  discount,
+}: TransactionOutcomeModalProps) {
   const address = useAddress();
 
   return (
@@ -80,7 +87,7 @@ export default function TransactionOutcomeModal({ isOpen, quote, onOpenChange, t
                 {quote?.amountInQuote} {quote?.currency}
               </span>
             </div>
-            <p className="text-green-600 !mb-0 font-semibold">Discount: 1%</p>
+            <p className="text-green-600 !mb-0 font-semibold">Discount: {discount}%</p>
             <div className="mt-6 w-full">
               <div className="flex justify-between text-gray-700 mb-2">
                 <span>Network</span>
