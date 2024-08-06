@@ -22,15 +22,28 @@ interface PaymentModalProps {
   offer: any;
 }
 
-export default function PaymentModal({ children, amountUsd, offer }: PaymentModalProps) {
+export default function PaymentModal({
+  children,
+  amountUsd,
+  offer,
+}: PaymentModalProps) {
   type PaymentMethodType = "card" | "wire";
-  const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(null);
+  const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(
+    null
+  );
 
   const handlePaymentChoice = (choice: PaymentMethodType) => {
     setPaymentMethod(choice);
   };
-  const { transactionOpen, toggleTransactionModal, paymentModalIsOpen, setPaymentModal } = useTransactionStore();
-  const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
+  const {
+    transactionOpen,
+    toggleTransactionModal,
+    paymentModalIsOpen,
+    setPaymentModal,
+  } = useTransactionStore();
+  const selectedExtras = useSelectedExtrasStore(
+    (state) => state.selectedExtras
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -42,14 +55,13 @@ export default function PaymentModal({ children, amountUsd, offer }: PaymentModa
   };
 
   return (
-    <Modal.Root
-      open={paymentModalIsOpen}
-      onOpenChange={setPaymentModal}
-    >
+    <Modal.Root open={paymentModalIsOpen} onOpenChange={setPaymentModal}>
       <Modal.Trigger>{children}</Modal.Trigger>
 
-      <Modal.Content className={`max-[500px]:w-[90%] max-[500px]:max-w-none max-md:w-4/5  w-fit max-w-fit !min-w-fit`}>
-        <div className="relative bg-white pt-4 pb-10 px-20 rounded-md shadow-lg w-full">
+      <Modal.Content
+        className={`max-[500px]:w-[90%] max-[500px]:max-w-[90%] max-md:!w-fit max-w-fit max-md:min-w-[0px] md:min-w-[0px]`}
+      >
+        <div className="relative bg-white pt-4 pb-10 px-[1.5rem] md:!px-14 rounded-md shadow-lg w-full">
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">
             <svg
               width="100%"
@@ -95,17 +107,19 @@ export default function PaymentModal({ children, amountUsd, offer }: PaymentModa
           {!paymentMethod && (
             <div className="flex flex-col mt-4 items-center">
               <div className="flex gap-2 items-center mt-4 mb-4">
-                <h3 className="text-3xl !mb-0 font-bold text-gray-900">Payment Method</h3>
+                <h3 className="max-sm:text-[1.6rem] text-3xl !mb-0 font-bold whitespace-nowrap text-gray-900">
+                  Payment Method
+                </h3>
                 <Lottie
                   animationData={BlueCardAnimation}
                   loop={false}
-                  className="w-20 -translate-y-1"
+                  className="max-sm:w-10 w-20 -translate-y-1"
                 />
               </div>
               <div className="flex gap-4 flex-col">
                 <OseanModal amountUsd={amountUsd}>
-                  <Button className="mb-2 whitespace-nowrap font-bold">
-                    <span>
+                  <Button className="mb-2 whitespace-nowrap font-bold max-xs:!px-3">
+                    <div>
                       <Image
                         src="/logo.png"
                         height={50}
@@ -113,24 +127,27 @@ export default function PaymentModal({ children, amountUsd, offer }: PaymentModa
                         alt="osean"
                         className="w-8 mr-2"
                       />
+                    </div>
+                    <span className="font-bold inline-block mr-2">CRYPTO </span>
+                    <span className="text-green-400 !font-bold max-xs:text-xs">
+                      (20% DISCOUNT)
                     </span>
-                    <span className="font-bold inline-block mr-2">CRYPTO </span>{" "}
-                    <span className="text-green-400 !font-bold">(20% DISCOUNT)</span>
                   </Button>
                 </OseanModal>
 
-                <CardModal
-                  amountEur={offer?.price as number}
-                  offer={offer}
-                >
-                  <Button className="mb-2 !px-0 whitespace-nowrap font-bold">CARD (5% DISCOUNT)</Button>
+                <CardModal amountEur={offer?.price as number} offer={offer}>
+                  <Button className="mb-2 !px-0 whitespace-nowrap font-bold">
+                    CARD (5% DISCOUNT)
+                  </Button>
                 </CardModal>
               </div>
             </div>
           )}
 
           <div className="mt-6">
-            <h4 className="text-lg font-bold text-gray-900 mb-2">Reservation Summary</h4>
+            <h4 className="text-lg font-bold text-gray-900 mb-2">
+              Reservation Summary
+            </h4>
             <ul>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
                 <span className="font-normal">Trip Base Price</span>
@@ -138,11 +155,16 @@ export default function PaymentModal({ children, amountUsd, offer }: PaymentModa
               </li>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
                 <span className="font-normal">Obligatory Extras Price</span>
-                <span className="font-bold">{offer?.obligatoryExtrasPrice} EUR</span>
+                <span className="font-bold">
+                  {offer?.obligatoryExtrasPrice} EUR
+                </span>
               </li>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
                 <span className="font-normal">Selected Extras Price </span>
-                <span className="font-bold">{selectedExtras.reduce((acc, extra) => acc + extra.price, 0)} EUR</span>
+                <span className="font-bold">
+                  {selectedExtras.reduce((acc, extra) => acc + extra.price, 0)}{" "}
+                  EUR
+                </span>
               </li>
               {selectedExtras.length > 0 && (
                 <div className="mt-2">
