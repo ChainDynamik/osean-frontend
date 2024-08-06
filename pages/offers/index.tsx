@@ -430,16 +430,15 @@ export default function Offers() {
               <Button className="w-fit mx-auto">Get Quote</Button>
             </div>
           )}
-          {loading ||
-            (isFiltering && (
-              <div className="flex py-40 justify-center items-center">
-                <Lottie
-                  animationData={LoadingLottie}
-                  loop={true}
-                  className="w-80"
-                />
-              </div>
-            ))}
+          {(loading || isFiltering) && (
+            <div className="flex py-40 justify-center items-center">
+              <Lottie
+                animationData={LoadingLottie}
+                loop={true}
+                className="w-80"
+              />
+            </div>
+          )}
 
           {!loading &&
             !isFiltering &&

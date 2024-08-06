@@ -3,9 +3,12 @@
 import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import { Swiper, SwiperSlide, Navigation, Pagination } from "../../util/libs/slider";
+import {
+  Swiper,
+  SwiperSlide,
+  Navigation,
+  Pagination,
+} from "../../util/libs/slider";
 import AddToWishlist from "../../assets/icons-components/add-to-wishlist";
 import { ChevronLeftIcon } from "../../assets/icons-components/chevronLeft";
 import { ChevronRightIcon } from "../../assets/icons-components/chevronRight";
@@ -32,12 +35,11 @@ export type ListingItemTypes = {
   cabins: number;
   berths: number;
   boatManufacturingDate: string;
-  loading?: boolean; // Add a loading prop
 };
 
 export default function YachtCard({
   id,
-  slides,
+  slides = [],
   caption,
   base,
   baseId,
@@ -49,27 +51,30 @@ export default function YachtCard({
   berths,
   name,
   length,
-  loading = false, // Default loading to false
 }: ListingItemTypes) {
-  const RouteComponent = loading ? "div" : "Link";
-
-  const { currency: userSelectedCurrency } = useOfferApiFilterState((state) => state);
+  const { currency: userSelectedCurrency } = useOfferApiFilterState(
+    (state) => state
+  );
   const { convertEurToCurrency } = useCurrencyConverter();
 
   return (
     <div
       className={cn(
-        "listing-card shadow-card  transition-all duration-300 ease-in-out border-[1px] border-black/20 rounded-xl px-2.5 group/item relative inline-flex w-full flex-col",
-        {
-          "ring-offset-2 hover:bg-primary/15 ring-primary hover:ring-1": !loading,
-        }
+        "listing-card shadow-card transition-all duration-300 ease-in-out border-[1px] border-black/20 rounded-xl px-2.5 group/item relative inline-flex w-full flex-col",
+        "ring-offset-2 hover:bg-primary/15 ring-primary hover:ring-1"
       )}
     >
       <div className="relative w-full overflow-hidden rounded-xl">
         <div className="listing-item after:absolute after:bottom-0 after:left-0 after:z-[1] after:h-1/4 after:w-full after:bg-gradient-to-t after:from-black/25">
-          {loading ? (
-            <Skeleton height={150} />
-          ) : (
+          {slides.length < 1 && (
+            <img
+              className="aspect-[34/20] pt-2 !rounded-[0.5rem] aspectvideo bg-gray-lighter"
+              src={"/images/placeholder-yacht.jpg"}
+              alt={"placeholder"}
+            />
+          )}
+
+          {slides.length > 0 && (
             <Swiper
               className="!static"
               modules={[Pagination, Navigation]}
@@ -129,14 +134,9 @@ export default function YachtCard({
         <div className="content pt-3 text-black">
           <div className="text-blue-800 text-lg mb-0.5">
             <span className="font-bold">
-              {loading ? <Skeleton width={150} /> : `${caption} (${boatManufacturingDate})`}
+              {`${caption} (${boatManufacturingDate})`}
             </span>
-            {/* <span className="inline-block mx-1.5">|</span>
-            <span>{name}</span> */}
           </div>
-          {/* <h4 className="text-ellipsis mb-0.5 text-gray-dark !text-lg 2xl:mb-1.5">
-            {loading ? <Skeleton width={200} /> : title}
-          </h4> */}
           <div className="flex flex-col gap-1 my-2">
             <div className="flex items-center gap-0.5">
               <Icon
@@ -144,55 +144,39 @@ export default function YachtCard({
                 className="w-4 -translate-y-[1px] text-black"
               />
               <p className="mb-0 text-black text-xs">
-                <span className="font-bold">Base:</span> {base} ({getBaseCountryFromBaseId(baseId)})
+                <span className="font-bold">Base:</span> {base} (
+                {getBaseCountryFromBaseId(baseId)})
               </p>
             </div>
           </div>
           <div className="flex gap-3 items-center">
-            {loading ? (
-              <>
-                <Skeleton width={50} />
-                <span className="bg-gray-400 rounded-full size-1.5"></span>
-                <Skeleton width={50} />
-                <span className="bg-gray-400 rounded-full size-1.5"></span>
-                <Skeleton width={50} />
-              </>
-            ) : (
-              <>
-                <p className="mb-0 text-black ">{cabins} cabins</p>
-                <span className="bg-gray-400 rounded-full size-1.5"></span>
-                <p className="mb-0 text-black ">{berths} berths</p>
-                <span className="bg-gray-400 rounded-full size-1.5"></span>
-                <p className="mb-0 text-black ">{length}m</p>
-              </>
-            )}
+            <p className="mb-0 text-black ">{cabins} cabins</p>
+            <span className="bg-gray-400 rounded-full size-1.5"></span>
+            <p className="mb-0 text-black ">{berths} berths</p>
+            <span className="bg-gray-400 rounded-full size-1.5"></span>
+            <p className="mb-0 text-black ">{length}m</p>
           </div>
           <div className="flex mt-2 flex-wrap items-center justify-between gap-3">
-            {loading ? (
-              <Skeleton width={100} />
-            ) : (
-              <p className="text-gray-light">
-                <span className="inline-block mr-1.5">From</span>
-
-                <span className="font-bold text-black xl:text-xl 3xl:text-xl">
-                  {convertEurToCurrency({
-                    eurPrice: Number(price.replace("€", "")),
-                    currency: userSelectedCurrency,
-                  })?.toLocaleString()}
-                  {userSelectedCurrency === "eur"
-                    ? "€"
-                    : userSelectedCurrency === "usd"
-                    ? "$"
-                    : userSelectedCurrency === "eth"
-                    ? " ETH"
-                    : userSelectedCurrency === "bnb"
-                    ? " BNB"
-                    : userSelectedCurrency === "osean"
-                    ? " $OSEAN"
-                    : "€"}
-                </span>
-              </p>
-            )}
+            <p className="text-gray-light">
+              <span className="inline-block mr-1.5">From</span>
+              <span className="font-bold text-black xl:text-xl 3xl:text-xl">
+                {convertEurToCurrency({
+                  eurPrice: Number(price.replace("€", "")),
+                  currency: userSelectedCurrency,
+                })?.toLocaleString()}
+                {userSelectedCurrency === "eur"
+                  ? "€"
+                  : userSelectedCurrency === "usd"
+                  ? "$"
+                  : userSelectedCurrency === "eth"
+                  ? " ETH"
+                  : userSelectedCurrency === "bnb"
+                  ? " BNB"
+                  : userSelectedCurrency === "osean"
+                  ? " $OSEAN"
+                  : "€"}
+              </span>
+            </p>
           </div>
         </div>
       </Link>

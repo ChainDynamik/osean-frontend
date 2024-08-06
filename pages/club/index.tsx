@@ -12,6 +12,10 @@ import { fetchBoatDataFromDb } from "../../helpers";
 import { Pagination } from "antd"; // Import Ant Design's Pagination component
 import Icon from "../../components/icon-selector/icon-selector"; // Assuming the Icon component is available
 import CurrencyDropdown from "../../components/CurrencyDropdown/CurrencyDropdown";
+import dynamic from "next/dynamic";
+import LoadingLottie from "../../assets/lottie/loading.json";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 const ITEMS_PER_PAGE = 12; // Number of items per page
 
@@ -62,10 +66,16 @@ function RandomBoatsGrid() {
 
   const getOrderedImages = (images: any) => {
     if (!images) return [];
-    const mainImage = images.find((image: any) => image.description === "Main image");
-    const interiorImage = images.find((image: any) => image.description === "Interior image");
+    const mainImage = images.find(
+      (image: any) => image.description === "Main image"
+    );
+    const interiorImage = images.find(
+      (image: any) => image.description === "Interior image"
+    );
     const otherImages = images.filter(
-      (image: any) => image.description !== "Main image" && image.description !== "Interior image"
+      (image: any) =>
+        image.description !== "Main image" &&
+        image.description !== "Interior image"
     );
 
     const orderedImages = [];
@@ -78,31 +88,21 @@ function RandomBoatsGrid() {
 
   const isLoading = !yachts || yachts.length === 0;
 
-  const loadingCards = Array.from({ length: 8 }, (_, index) => (
-    <YachtCard
-      key={index}
-      loading={true}
-      cabins={0}
-      berths={0}
-      id={index}
-      slides={[]}
-      title=""
-      caption=""
-      slug=""
-      location=""
-      price=""
-      boatManufacturingDate=""
-    />
-  ));
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const currentPageData = offersWithBoats?.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const currentPageData = offersWithBoats?.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   // Function to customize the pagination item rendering
-  const itemRender = (_: number, type: "page" | "prev" | "next", originalElement: React.ReactNode) => {
+  const itemRender = (
+    _: number,
+    type: "page" | "prev" | "next",
+    originalElement: React.ReactNode
+  ) => {
     if (type === "prev") {
       return (
         <a className="flex max-sm:py-2 hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
@@ -112,14 +112,18 @@ function RandomBoatsGrid() {
               className="rotate-90 w-4 text-black group-hover:!text-white transition-all duration-300 ease-in-out"
             />
           </div>
-          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">Previous</p>
+          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">
+            Previous
+          </p>
         </a>
       );
     }
     if (type === "next") {
       return (
         <a className="flex max-sm:py-2 hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
-          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">Next</p>
+          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">
+            Next
+          </p>
           <div>
             <Icon
               iconType={"chevron"}
@@ -134,43 +138,49 @@ function RandomBoatsGrid() {
 
   return (
     <>
+      {currentPageData.length < 1 && (
+        <div className="flex mx-auto py-32 pb-40 justify-center items-center">
+          <Lottie animationData={LoadingLottie} loop={true} className="w-80 " />
+        </div>
+      )}
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 3xl:gap-y-10">
-        {isLoading
-          ? loadingCards
-          : currentPageData?.map((item, index) => {
-              const slides = getOrderedImages(item.boat?.images); // Get the ordered images
+        {currentPageData.length > 0 &&
+          currentPageData?.map((item, index) => {
+            const slides = getOrderedImages(item.boat?.images); // Get the ordered images
 
-              const startPrice = item.offer?.startPrice;
-              const currentPrice = item.offer?.price;
+            const startPrice = item.offer?.startPrice;
+            const currentPrice = item.offer?.price;
 
-              const discountPercentage = Math.round(((startPrice - currentPrice) / startPrice) * 100);
+            const discountPercentage = Math.round(
+              ((startPrice - currentPrice) / startPrice) * 100
+            );
 
-              console.log(item);
+            console.log(item);
 
-              return (
-                <YachtCard
-                  id={item.boat?.bookingManagerId}
-                  loading={false}
-                  cabins={item.boat?.cabins}
-                  length={item.boat?.boatLength}
-                  berths={item.boat?.berths}
-                  base={item.boat?.homeBase}
-                  baseId={item.offer?.startBaseId}
-                  key={`single-boat-${index}`}
-                  slides={slides}
-                  title={item.boat?.kind}
-                  name={item.boat?.name}
-                  caption={item.boat?.model}
-                  slug="slug"
-                  location={item.boat?.homeBase}
-                  price={item.offer?.price + "€"}
-                  discount={discountPercentage}
-                  boatManufacturingDate={item.boat?.year?.toString()}
-                />
-              );
-            })}
+            return (
+              <YachtCard
+                id={item.boat?.bookingManagerId}
+                loading={false}
+                cabins={item.boat?.cabins}
+                length={item.boat?.boatLength}
+                berths={item.boat?.berths}
+                base={item.boat?.homeBase}
+                baseId={item.offer?.startBaseId}
+                key={`single-boat-${index}`}
+                slides={slides}
+                title={item.boat?.kind}
+                name={item.boat?.name}
+                caption={item.boat?.model}
+                slug="slug"
+                location={item.boat?.homeBase}
+                price={item.offer?.price + "€"}
+                discount={discountPercentage}
+                boatManufacturingDate={item.boat?.year?.toString()}
+              />
+            );
+          })}
       </div>
-      {!isLoading && (
+      {currentPageData.length > 0 && (
         <div className="flex justify-center pt-8 items-center">
           <Pagination
             current={currentPage}
