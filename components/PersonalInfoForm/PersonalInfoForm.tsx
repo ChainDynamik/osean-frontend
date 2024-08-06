@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useAddress, useEmbeddedWallet, useEmbeddedWalletUserEmail } from "@thirdweb-dev/react";
 
 export default function PersonalInfoForm() {
-  const { Moralis, isInitialized, user } = useMoralis();
+  const { Moralis, isInitialized, user, login } = useMoralis();
 
   const { data: userEmail } = useEmbeddedWalletUserEmail();
 

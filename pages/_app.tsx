@@ -109,7 +109,7 @@ import axios from "axios";
 // };
 
 const ThirdwebMoralisLinker = () => {
-  const { user, authenticate, isInitialized, Moralis } = useMoralis();
+  const { user, authenticate, isInitialized, Moralis, logout, _setUser } = useMoralis();
   const address = useAddress();
 
   const wallet = useWallet();
@@ -124,12 +124,38 @@ const ThirdwebMoralisLinker = () => {
       networkType: "evm",
     });
 
-    // const signedMessage = await wallet?.signMessage(message);
+    const signedMessage = await wallet?.signMessage(message);
 
-    await authenticate({
-      signingMessage: message,
-      throwOnError: true,
+    // Challenge the parse server for authentication
+    const request = await axios({
+      method: "POST",
+      url: "https://parse-osean.dappstation.eu/server/users",
+      data: {
+        authData: {
+          moralisEth: {
+            id: address,
+            signature: signedMessage,
+            data: message,
+          },
+        },
+        _ApplicationId: "345735ed2a1752402440e3ea7f0c0985094e8d79",
+        _ClientVersion: "js1.12.0",
+        _InstallationId: "f372a82b-0b8a-41cc-8b73-4b582b269dd6",
+      },
     });
+
+    const sessionToken = request.data.sessionToken;
+
+    const randomPassword = Math.random().toString(36).slice(-8);
+    const loggedInUser = await Moralis.User.become(sessionToken);
+
+    console.log("Logged in user", loggedInUser);
+    _setUser(loggedInUser);
+
+    // await authenticate({
+    //   signingMessage: message,
+    //   throwOnError: true,
+    // });
 
     // if(user && address) {
     //   const provider = new
@@ -139,11 +165,19 @@ const ThirdwebMoralisLinker = () => {
     // }
   }
 
-  console.log(user);
-
   useEffect(() => {
     if (address && isInitialized) checkLink();
   }, [address, user, isInitialized]);
+
+  console.log(user);
+
+  useEffect(() => {
+    if (wallet)
+      wallet?.on("disconnect", () => {
+        console.log("Parse Session Disconnected");
+        logout();
+      });
+  }, [wallet]);
 
   return <>p</>;
 };
