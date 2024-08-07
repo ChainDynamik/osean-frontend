@@ -204,7 +204,6 @@ export default function TopBoatsPage() {
       </div>
       <section className="py-16 mt-0 px-4 max-w-[1200px] mx-auto">
         <SailYourWay />
-        <WertOseanTopUp chain={"eth"} />
 
         <div className="mb-12 flex items-center justify-between">
           <div className="">
