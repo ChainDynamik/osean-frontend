@@ -23,10 +23,7 @@ interface FetchOffersQuery {
   dateTo?: string;
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {
     currency,
     minLength,

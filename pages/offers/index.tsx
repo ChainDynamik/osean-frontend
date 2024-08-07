@@ -395,8 +395,8 @@ export default function Offers() {
             </div>
           </div>
 
-          {!loading && sortedOffers.length === 0 && (
-            <div className="flex flex-col gap-4">
+          {!loading && sortedOffers.length === 0 && !isFiltering && (
+            <div className="flex flex-col gap-4 pt-44">
               <p className="text-lg font-semibold mb-0 ">No results, please configure filters</p>
               <Button className="w-fit mx-auto">Get Quote</Button>
             </div>
@@ -428,14 +428,16 @@ export default function Offers() {
                 />
               );
             })}
-          <Pagination
-            current={currentPage}
-            total={sortedOffers.length}
-            pageSize={ITEMS_PER_PAGE}
-            onChange={handlePageChange}
-            showSizeChanger={false}
-            itemRender={itemRender} // Use the custom item render function
-          />
+          {sortedOffers.length > 0 && (
+            <Pagination
+              current={currentPage}
+              total={sortedOffers.length}
+              pageSize={ITEMS_PER_PAGE}
+              onChange={handlePageChange}
+              showSizeChanger={false}
+              itemRender={itemRender} // Use the custom item render function
+            />
+          )}
         </div>
       </div>
     </main>
