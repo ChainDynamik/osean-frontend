@@ -319,8 +319,8 @@ export default function OseanModal({
               ) : (
                 <>
                   <div className="flex flex-col gap-2">
-                    <p>current osean balance: {oseanBalanceEth?.displayValue} $OSEAN</p>
-                    <WertOseanTopUp />
+                    {/* <p>current osean balance: {oseanBalanceEth?.displayValue} $OSEAN</p>
+                    <WertOseanTopUp /> */}
                     <label className="block text-sm font-medium text-gray-700">Network and Coin</label>
 
                     <div

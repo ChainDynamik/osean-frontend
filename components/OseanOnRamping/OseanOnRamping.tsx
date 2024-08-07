@@ -158,11 +158,12 @@ const OseanOnRamping = () => {
             color="black"
           />
           <InputRightAddon
-            children={"EUR"}
             bg="white"
             color="black"
             className="uppercase"
-          />
+          >
+            EUR
+          </InputRightAddon>
         </InputGroup>
         <Button
           onClick={attemptOseanTopup}
