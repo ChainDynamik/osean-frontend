@@ -4,9 +4,7 @@ import axios from "axios";
 import { BOOKING_MANAGER_API_ROOT } from "../../helpers";
 import { BookingManagerYacht } from "../../types/booking-manager/core";
 import useYachts from "../../hooks/useYachts";
-import OffersCard, {
-  OffersCardProps,
-} from "../../components/OffersCard/OffersCard";
+import OffersCard, { OffersCardProps } from "../../components/OffersCard/OffersCard";
 import OfferApiFilter from "../../components/OfferApiFilter/OfferApiFilter";
 import { useTripStore } from "../../util/store/tripStore";
 import { useOfferApiFilterState } from "../../util/store/useOfferApiFilterState";
@@ -109,49 +107,44 @@ export default function Offers() {
   const { tripStart, tripEnd } = useTripStore();
 
   async function fetchOffers() {
-    setIsFiltering(true); // Step 2: Set isFiltering to true when fetching starts
+    setIsFiltering(true);
     const dateFrom = format(tripStart, "yyyy-MM-dd");
     const dateTo = format(tripEnd, "yyyy-MM-dd");
 
     let queryString = `/api/fetchOffers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
 
-    if (minLength) {
-      queryString += `&minLength=${minLength}`;
-    }
-    if (maxLength) {
-      queryString += `&maxLength=${maxLength}`;
-    }
-    if (minBerths) {
-      queryString += `&minBerths=${minBerths}`;
-    }
-    if (maxBerths) {
-      queryString += `&maxBerths=${maxBerths}`;
-    }
-    if (minYear) {
-      queryString += `&minYearOfBuild=${minYear}`;
-    }
-    if (maxYear) {
-      queryString += `&maxYearOfBuild=${maxYear}`;
-    }
-    if (productFilters) {
-      queryString += `&productName=${productFilters}`;
-    }
-    if (kindFilters.length > 0) {
-      queryString += `&kind=${kindFilters.join(",")}`;
-    }
-    if (passengersOnBoard) {
-      queryString += `&passengersOnBoard=${passengersOnBoard}`;
-    }
-    if (minCabins) {
-      queryString += `&minCabins=${minCabins}`;
-    }
+    if (minLength) queryString += `&minLength=${minLength}`;
+    if (maxLength) queryString += `&maxLength=${maxLength}`;
+    if (minBerths) queryString += `&minBerths=${minBerths}`;
+    if (maxBerths) queryString += `&maxBerths=${maxBerths}`;
+    if (minYear) queryString += `&minYearOfBuild=${minYear}`;
+    if (maxYear) queryString += `&maxYearOfBuild=${maxYear}`;
+    if (productFilters) queryString += `&productName=${productFilters}`;
+    if (kindFilters.length > 0) queryString += `&kind=${kindFilters.join(",")}`;
+    if (passengersOnBoard) queryString += `&passengersOnBoard=${passengersOnBoard}`;
+    if (minCabins) queryString += `&minCabins=${minCabins}`;
+
+    const baseFromIds = [];
+    const countryNames = [];
+
     if (countries.length > 0) {
       for (const country of countries) {
         if (!isNaN(Number(country))) {
-          queryString += `&baseFromId=${country}`;
-        } else queryString += `&country=${countries.join(",")}`;
+          baseFromIds.push(country);
+        } else {
+          countryNames.push(country);
+        }
+      }
+
+      if (baseFromIds.length > 0) {
+        queryString += `&baseFromId=${baseFromIds.join(",")}`;
+      }
+
+      if (countryNames.length > 0) {
+        queryString += `&country=${countryNames.join(",")}`;
       }
     }
+
     console.log(queryString, "new query");
 
     try {
@@ -169,7 +162,7 @@ export default function Offers() {
       console.error("Error fetching offers:", error);
     } finally {
       setLoading(false);
-      setIsFiltering(false); // Step 2: Set isFiltering to false when fetching ends
+      setIsFiltering(false);
     }
   }
 
@@ -194,13 +187,8 @@ export default function Offers() {
     minCabins,
   ]);
 
-  const mapOfferToProps = (
-    offer: Reservation,
-    boat: BookingManagerYacht
-  ): OffersCardProps => {
-    const productNames = boat?.products?.map((product) =>
-      product.name.toLowerCase()
-    );
+  const mapOfferToProps = (offer: Reservation, boat: BookingManagerYacht): OffersCardProps => {
+    const productNames = boat?.products?.map((product) => product.name.toLowerCase());
 
     return {
       id: offer?.yachtId,
@@ -223,8 +211,7 @@ export default function Offers() {
     const withinPriceRange = +data.price >= priceRange[0];
     const withinPriceMaxRange = +data.price <= priceRange[1];
     const boatModel = getModelFromYachtId(data.yachtId.toString());
-    const isBoatModelSelected =
-      boatModels.length === 0 || boatModels.includes(boatModel);
+    const isBoatModelSelected = boatModels.length === 0 || boatModels.includes(boatModel);
 
     return withinPriceRange && withinPriceMaxRange && isBoatModelSelected;
   });
@@ -267,10 +254,7 @@ export default function Offers() {
     setCurrentPage(page);
   };
 
-  const currentPageData = sortedOffers.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  const currentPageData = sortedOffers.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   useEffect(() => {
     console.log("Pagination active items:", currentPageData);
@@ -279,11 +263,7 @@ export default function Offers() {
   const [mobileFilterIsOpen, setMobileFilterIsOpen] = useState(false);
 
   // Function to customize the pagination item rendering
-  const itemRender = (
-    _: number,
-    type: "page" | "prev" | "next",
-    originalElement: React.ReactNode
-  ) => {
+  const itemRender = (_: number, type: "page" | "prev" | "next", originalElement: React.ReactNode) => {
     if (type === "prev") {
       return (
         <a className="flex max-sm:py-2 hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
@@ -293,18 +273,14 @@ export default function Offers() {
               className="rotate-90 w-4 text-black group-hover:!text-white transition-all duration-300 ease-in-out"
             />
           </div>
-          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">
-            Previous
-          </p>
+          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">Previous</p>
         </a>
       );
     }
     if (type === "next") {
       return (
         <a className="flex max-sm:py-2 hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
-          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">
-            Next
-          </p>
+          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">Next</p>
           <div>
             <Icon
               iconType={"chevron"}
@@ -341,7 +317,10 @@ export default function Offers() {
             }}
             className="lg:hidden absolute right-4 top-4"
           >
-            <Icon iconType="cancel" className="w-7  text-black" />
+            <Icon
+              iconType="cancel"
+              className="w-7  text-black"
+            />
           </div>
           <OfferApiFilter />
         </div>
@@ -360,9 +339,7 @@ export default function Offers() {
               "
               />
             </div>
-            <p className="mb-0 w-full text-xs pr-3">
-              Where would you like to cruise?
-            </p>
+            <p className="mb-0 w-full text-xs pr-3">Where would you like to cruise?</p>
             <div className="py-2.5 px-2.5 border-l border-l-primary">
               <Icon
                 iconType="filter"
@@ -412,21 +389,15 @@ export default function Offers() {
             </div>
             <div className="mr-auto">
               Previewing Yachts Available from{"  "}
-              <span className="text-primary font-bold mx-2">
-                {format(new Date(tripStart), "MMM dd, yyyy")}
-              </span>{" "}
-              to {"  "}
-              <span className="text-primary font-bold ml-2">
-                {format(new Date(tripEnd), "MMM dd, yyyy")}
-              </span>
+              <span className="text-primary font-bold mx-2">{format(new Date(tripStart), "MMM dd, yyyy")}</span> to{" "}
+              {"  "}
+              <span className="text-primary font-bold ml-2">{format(new Date(tripEnd), "MMM dd, yyyy")}</span>
             </div>
           </div>
 
           {!loading && sortedOffers.length === 0 && (
             <div className="flex flex-col gap-4">
-              <p className="text-lg font-semibold mb-0 ">
-                No results, please configure filters
-              </p>
+              <p className="text-lg font-semibold mb-0 ">No results, please configure filters</p>
               <Button className="w-fit mx-auto">Get Quote</Button>
             </div>
           )}
