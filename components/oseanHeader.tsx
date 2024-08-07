@@ -312,6 +312,12 @@ export const OseanHeader: React.FC = () => {
                         );
                       }}
                       modalTitleIconUrl={"https://osean.online/osean200.png"}
+                      // displayBalanceToken={{
+                      //   1: process.env.NEXT_PUBLIC_ETH_OSEAN_CONTRACT_ADDRESS as string,
+                      //   56: process.env.NEXT_PUBLIC_BSC_OSEAN_CONTRACT_ADDRESS as string,
+                      //   11155111: process.env.NEXT_PUBLIC_ETH_OSEAN_CONTRACT_ADDRESS as string,
+                      //   96: process.env.NEXT_PUBLIC_BSC_OSEAN_CONTRACT_ADDRESS as string,
+                      // }}
                     />
                   </a>
                 </form>

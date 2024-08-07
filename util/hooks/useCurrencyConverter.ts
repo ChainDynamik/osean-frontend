@@ -78,9 +78,11 @@ export const useCurrencyConverter = () => {
   function convertEurToCurrency({
     eurPrice,
     currency,
+    maxDecimal,
   }: {
     eurPrice: number;
     currency: "eth" | "bnb" | "osean" | "usd";
+    maxDecimal?: number;
   }) {
     let conversionOutput = 0;
 
@@ -102,7 +104,11 @@ export const useCurrencyConverter = () => {
     }
 
     if (currency === "eth" || currency === "bnb" || currency === "osean") {
-      return conversionOutput.toLocaleString();
+      if (maxDecimal) {
+        return conversionOutput.toFixed(maxDecimal);
+      } else {
+        return conversionOutput.toLocaleString();
+      }
     }
 
     return conversionOutput.toFixed(0);

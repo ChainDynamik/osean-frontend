@@ -29,7 +29,7 @@ const nextConfig = {
   basePath: "",
   images: {
     domains: ["osean.online", "www.booking-manager.com"],
-    unoptimized: true,
+    unoptimized: false,
   },
   staticPageGenerationTimeout: 1000,
   typescript: {

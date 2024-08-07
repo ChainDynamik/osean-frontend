@@ -38,6 +38,9 @@ var _this = this;
 var Moralis = require("moralis").default;
 var Web3 = require("web3").Web3;
 var stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+var wertPrivateKey = process.env.WERT_PRIVATE_KEY;
+var wertTestnet = true;
+var signSmartContractData = require("@wert-io/widget-sc-signer").signSmartContractData;
 var DOMAIN = "oseandao.com";
 var STATEMENT = "Sign this message to connect your wallet to OseanDAO";
 var URI = "https://oseandao.com";
@@ -1394,5 +1397,24 @@ Parse.Cloud.define("attemptStripePayment", function (request) { return __awaiter
                 _b.sent();
                 return [2 /*return*/, order];
         }
+    });
+}); });
+/// WERT
+Parse.Cloud.define("signWertPaymentRequest", function (request) { return __awaiter(_this, void 0, void 0, function () {
+    var user, _a, commodity, network, commodity_amount, sc_address, sc_input_data, options, signedData;
+    return __generator(this, function (_b) {
+        user = request.user;
+        _a = request.params, commodity = _a.commodity, network = _a.network, commodity_amount = _a.commodity_amount, sc_address = _a.sc_address, sc_input_data = _a.sc_input_data;
+        options = {
+            address: user.get("ethAddress"),
+            commodity: commodity,
+            network: network,
+            // Round commodity to maximum 8 decimals
+            commodity_amount: Math.round(Number(commodity_amount) * 1e8) / 1e8,
+            sc_address: sc_address,
+            sc_input_data: sc_input_data,
+        };
+        signedData = signSmartContractData(options, wertPrivateKey);
+        return [2 /*return*/, signedData];
     });
 }); });

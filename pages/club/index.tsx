@@ -14,6 +14,7 @@ import Icon from "../../components/icon-selector/icon-selector"; // Assuming the
 import CurrencyDropdown from "../../components/CurrencyDropdown/CurrencyDropdown";
 import dynamic from "next/dynamic";
 import LoadingLottie from "../../assets/lottie/loading.json";
+import { WertOseanTopUp } from "../../components/WertOseanTopUp/WertOseanTopUp";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
@@ -66,16 +67,10 @@ function RandomBoatsGrid() {
 
   const getOrderedImages = (images: any) => {
     if (!images) return [];
-    const mainImage = images.find(
-      (image: any) => image.description === "Main image"
-    );
-    const interiorImage = images.find(
-      (image: any) => image.description === "Interior image"
-    );
+    const mainImage = images.find((image: any) => image.description === "Main image");
+    const interiorImage = images.find((image: any) => image.description === "Interior image");
     const otherImages = images.filter(
-      (image: any) =>
-        image.description !== "Main image" &&
-        image.description !== "Interior image"
+      (image: any) => image.description !== "Main image" && image.description !== "Interior image"
     );
 
     const orderedImages = [];
@@ -92,17 +87,10 @@ function RandomBoatsGrid() {
     setCurrentPage(page);
   };
 
-  const currentPageData = offersWithBoats?.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
+  const currentPageData = offersWithBoats?.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   // Function to customize the pagination item rendering
-  const itemRender = (
-    _: number,
-    type: "page" | "prev" | "next",
-    originalElement: React.ReactNode
-  ) => {
+  const itemRender = (_: number, type: "page" | "prev" | "next", originalElement: React.ReactNode) => {
     if (type === "prev") {
       return (
         <a className="flex max-sm:py-2 hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
@@ -112,18 +100,14 @@ function RandomBoatsGrid() {
               className="rotate-90 w-4 text-black group-hover:!text-white transition-all duration-300 ease-in-out"
             />
           </div>
-          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">
-            Previous
-          </p>
+          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">Previous</p>
         </a>
       );
     }
     if (type === "next") {
       return (
         <a className="flex max-sm:py-2 hover:bg-primary group transition-all duration-300 ease-in-out items-center gap-1 px-2  border border-black/50 rounded-md">
-          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">
-            Next
-          </p>
+          <p className="mb-0 max-sm:hidden group-hover:!text-white transition-all duration-300 ease-in-out">Next</p>
           <div>
             <Icon
               iconType={"chevron"}
@@ -140,7 +124,11 @@ function RandomBoatsGrid() {
     <>
       {currentPageData.length < 1 && (
         <div className="flex mx-auto py-32 pb-40 justify-center items-center">
-          <Lottie animationData={LoadingLottie} loop={true} className="w-80 " />
+          <Lottie
+            animationData={LoadingLottie}
+            loop={true}
+            className="w-80 "
+          />
         </div>
       )}
       <div className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 3xl:gap-y-10">
@@ -151,9 +139,7 @@ function RandomBoatsGrid() {
             const startPrice = item.offer?.startPrice;
             const currentPrice = item.offer?.price;
 
-            const discountPercentage = Math.round(
-              ((startPrice - currentPrice) / startPrice) * 100
-            );
+            const discountPercentage = Math.round(((startPrice - currentPrice) / startPrice) * 100);
 
             console.log(item);
 
@@ -218,6 +204,7 @@ export default function TopBoatsPage() {
       </div>
       <section className="py-16 mt-0 px-4 max-w-[1200px] mx-auto">
         <SailYourWay />
+        <WertOseanTopUp chain={"eth"} />
 
         <div className="mb-12 flex items-center justify-between">
           <div className="">

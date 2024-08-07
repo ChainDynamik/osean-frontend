@@ -4,6 +4,7 @@ export const oseanOrderManagementABI = [
     inputs: [
       { name: "_oseanToken", type: "address", internalType: "address" },
       { name: "_backEndWallet", type: "address", internalType: "address" },
+      { name: "_uniswapRouter", type: "address", internalType: "address" },
     ],
     stateMutability: "nonpayable",
   },
@@ -13,6 +14,16 @@ export const oseanOrderManagementABI = [
     inputs: [],
     outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "buyOseanTokenWithEth",
+    inputs: [
+      { name: "_slippagePercentage", type: "uint256", internalType: "uint256" },
+      { name: "_oseanTokensDestination", type: "address", internalType: "address" },
+    ],
+    outputs: [],
+    stateMutability: "payable",
   },
   {
     type: "function",
@@ -37,6 +48,28 @@ export const oseanOrderManagementABI = [
   },
   {
     type: "function",
+    name: "fullfillOrderOsean",
+    inputs: [
+      { name: "_tokenAmount", type: "uint256", internalType: "uint256" },
+      { name: "message", type: "string", internalType: "string" },
+      { name: "_messageHash", type: "bytes32", internalType: "bytes32" },
+      { name: "v", type: "uint8", internalType: "uint8" },
+      { name: "r", type: "bytes32", internalType: "bytes32" },
+      { name: "s", type: "bytes32", internalType: "bytes32" },
+      { name: "referenceQuoteId", type: "string", internalType: "string" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "getPaymentLength",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "operators",
     inputs: [{ name: "", type: "address", internalType: "address" }],
     outputs: [{ name: "", type: "bool", internalType: "bool" }],
@@ -56,6 +89,17 @@ export const oseanOrderManagementABI = [
     outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
+  {
+    type: "function",
+    name: "payments",
+    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      { name: "referenceQuoteId", type: "string", internalType: "string" },
+      { name: "from", type: "address", internalType: "address" },
+      { name: "amount", type: "uint256", internalType: "uint256" },
+    ],
+    stateMutability: "view",
+  },
   { type: "function", name: "renounceOwnership", inputs: [], outputs: [], stateMutability: "nonpayable" },
   {
     type: "function",
@@ -73,6 +117,13 @@ export const oseanOrderManagementABI = [
   },
   {
     type: "function",
+    name: "setUniswapRouter",
+    inputs: [{ name: "_uniswapRouter", type: "address", internalType: "address" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "transferOwnership",
     inputs: [{ name: "newOwner", type: "address", internalType: "address" }],
     outputs: [],
@@ -80,10 +131,26 @@ export const oseanOrderManagementABI = [
   },
   {
     type: "function",
+    name: "uniswapRouter",
+    inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "contract IUniswapRouter02" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "usedHashes",
     inputs: [{ name: "", type: "bytes32", internalType: "bytes32" }],
     outputs: [{ name: "", type: "bool", internalType: "bool" }],
     stateMutability: "view",
+  },
+  {
+    type: "event",
+    name: "OseanPurchase",
+    inputs: [
+      { name: "from", type: "address", indexed: true, internalType: "address" },
+      { name: "amount", type: "uint256", indexed: false, internalType: "uint256" },
+    ],
+    anonymous: false,
   },
   {
     type: "event",
@@ -102,6 +169,18 @@ export const oseanOrderManagementABI = [
       { name: "amount", type: "uint256", indexed: false, internalType: "uint256" },
       { name: "referenceQuoteId", type: "string", indexed: false, internalType: "string" },
     ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "TestAddress",
+    inputs: [{ name: "message", type: "address", indexed: false, internalType: "address" }],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "TestString",
+    inputs: [{ name: "message", type: "string", indexed: false, internalType: "string" }],
     anonymous: false,
   },
 ] as const;

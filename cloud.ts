@@ -3,6 +3,11 @@ const Parse = require("parse/node");
 const { Web3 } = require("web3");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
+const wertPrivateKey = process.env.WERT_PRIVATE_KEY;
+const wertTestnet = true;
+
+const { signSmartContractData } = require("@wert-io/widget-sc-signer");
+
 const DOMAIN = "oseandao.com";
 const STATEMENT = "Sign this message to connect your wallet to OseanDAO";
 const URI = "https://oseandao.com";
@@ -863,4 +868,27 @@ Parse.Cloud.define("attemptStripePayment", async (request: any) => {
 
   await order.save(null, { useMasterKey: true });
   return order;
+});
+
+/// WERT
+
+Parse.Cloud.define("signWertPaymentRequest", async (request: any) => {
+  const user = request.user;
+  const { commodity, network, commodity_amount, sc_address, sc_input_data } = request.params;
+
+  // Create a configuration object with signed data
+
+  const options = {
+    address: user.get("ethAddress"),
+    commodity,
+    network,
+    // Round commodity to maximum 8 decimals
+    commodity_amount: Math.round(Number(commodity_amount) * 1e8) / 1e8,
+    sc_address,
+    sc_input_data,
+  };
+
+  const signedData = signSmartContractData(options, wertPrivateKey);
+
+  return signedData;
 });

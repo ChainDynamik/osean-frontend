@@ -1,45 +1,27 @@
 "use client";
 
-import React, { ReactNode, useEffect, useState } from "react";
-import Modal from "../Modal/Modal";
-import Button from "../Button/Button";
-import { useTransactionStore } from "../../util/store";
-import TransactionOutcomeModal from "../TransactionOutcomeModal/TransactionOutcomeModal";
-import { Spinner } from "../../src/components/Spinner";
+import { Image } from "@chakra-ui/react";
+import { useContract, useContractWrite } from "@thirdweb-dev/react";
 import { motion } from "framer-motion";
 import Moralis from "moralis-v1";
-import {
-  getContract,
-  prepareContractCall,
-  sendAndConfirmTransaction,
-  toWei,
-} from "thirdweb";
-import { useSendTransaction } from "thirdweb/react";
-import { sendTransaction } from "thirdweb";
-import { createWallet } from "thirdweb/wallets";
-import {
-  useAddress,
-  useContract,
-  useContractWrite,
-  useSigner,
-  useWallet,
-} from "@thirdweb-dev/react";
-import { client } from "../../pages/_app";
-import chain from "../../cost/chain";
-import { oseanOrderManagementABI } from "../../abi";
-import { ethereum, sepolia } from "thirdweb/chains";
-import { ethers5Adapter } from "thirdweb/adapters/ethers5";
-import { Image } from "@chakra-ui/react";
+import { ReactNode, useEffect, useState } from "react";
 import { Web3 } from "web3";
+import { Spinner } from "../../src/components/Spinner";
+import { useTransactionStore } from "../../util/store";
+import Button from "../Button/Button";
+import Modal from "../Modal/Modal";
+import TransactionOutcomeModal from "../TransactionOutcomeModal/TransactionOutcomeModal";
 const web3 = new Web3();
 
+import { useBalance } from "@thirdweb-dev/react";
 import Countdown from "react-countdown";
 import toast from "react-hot-toast";
-import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
-import { useSelectedExtrasStore } from "../../util/store/extraStore";
 import { useMoralis } from "react-moralis";
 import { cn } from "../../util";
+import { useSelectedExtrasStore } from "../../util/store/extraStore";
+import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
 import { Dropdown } from "../Dropdown/Dropdown";
+import { WertOseanTopUp } from "../WertOseanTopUp/WertOseanTopUp";
 
 type optionsType = {
   value: string;
@@ -115,39 +97,27 @@ export default function OseanModal({
   fee: number;
   amountUsd: number;
 }) {
-  const [network, setNetwork] = useState<optionsType | string>(
-    "Select network"
-  );
+  const [network, setNetwork] = useState<optionsType | string>("Select network");
   const [coin, setCoin] = useState("Select currency");
 
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
 
-  const {
-    transactionOpen,
-    toggleTransactionModal,
-    setOseanModalIsOpen,
-    oseanModalIsOpen,
-  } = useTransactionStore();
+  const { transactionOpen, toggleTransactionModal, setOseanModalIsOpen, oseanModalIsOpen } = useTransactionStore();
 
   const { selectedOffer } = useSelectedOfferStore();
-  const selectedExtras = useSelectedExtrasStore(
-    (state) => state.selectedExtras
-  );
+  const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
 
-  const { contract: ethOsean } = useContract(
+  const { contract: ethOsean } = useContract(process.env.NEXT_PUBLIC_ETH_OSEAN_CONTRACT_ADDRESS);
+  const { contract: ethOom } = useContract(process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS);
+  const { mutateAsync: approve } = useContractWrite(ethOsean, "approve");
+  const { mutateAsync: fullfillOrderEth } = useContractWrite(ethOom, "fullfillOrderEth");
+  const { mutateAsync: fullfillOrderOsean } = useContractWrite(ethOom, "fullfillOrderOsean");
+
+  const { data: oseanBalanceEth, refetch: refreshOseanBalanceEth } = useBalance(
     process.env.NEXT_PUBLIC_ETH_OSEAN_CONTRACT_ADDRESS
   );
-  const { contract: ethOom } = useContract(
-    process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS
-  );
-  const { mutateAsync: approve } = useContractWrite(ethOsean, "approve");
-  const { mutateAsync: fullfillOrderEth } = useContractWrite(
-    ethOom,
-    "fullfillOrderEth"
-  );
-  const { mutateAsync: fullfillOrderOsean } = useContractWrite(
-    ethOom,
-    "fullfillOrderOsean"
+  const { data: oseanBalanceBnb, refetch: refreshOseanBalanceBnb } = useBalance(
+    process.env.NEXT_PUBLIC_BNB_OSEAN_CONTRACT_ADDRESS
   );
 
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
@@ -184,9 +154,7 @@ export default function OseanModal({
     if (coin === "Select currency") return;
     if (typeof network === "string") return;
     if (transactionHash) return;
-    console.log(
-      `calling generateQuote with ${amountUsd}, ${coin}, ${network.value}`
-    );
+    console.log(`calling generateQuote with ${amountUsd}, ${coin}, ${network.value}`);
 
     let amountWithDiscount = 0;
 
@@ -280,26 +248,24 @@ export default function OseanModal({
     };
   }, [quote]);
 
+  console.log(oseanBalanceEth);
+
   return (
-    <Modal.Root open={oseanModalIsOpen} onOpenChange={setOseanModalIsOpen}>
+    <Modal.Root
+      open={oseanModalIsOpen}
+      onOpenChange={setOseanModalIsOpen}
+    >
       <Modal.Trigger>{children}</Modal.Trigger>
 
       <Modal.Content
-        className={cn(
-          `max-[500px]:w-[90%] max-[500px]:max-w-[90%] max-md:w-4/5 md:!min-w-[700px] max-w-fit`,
-          {
-            "max-md:w-[400px] max-md:max-w-[400px]  xs:!min-w-[400px] md:!min-w-[400px]":
-              coin === "Select currency",
-          }
-        )}
+        className={cn(`max-[500px]:w-[90%] max-[500px]:max-w-[90%] max-md:w-4/5 md:!min-w-[700px] max-w-fit`, {
+          "max-md:w-[400px] max-md:max-w-[400px]  xs:!min-w-[400px] md:!min-w-[400px]": coin === "Select currency",
+        })}
       >
         <div
-          className={cn(
-            "relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-full ",
-            {
-              "min-h-[200px]": coin === "Select currency",
-            }
-          )}
+          className={cn("relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-full ", {
+            "min-h-[200px]": coin === "Select currency",
+          })}
         >
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">
             <svg
@@ -329,9 +295,7 @@ export default function OseanModal({
                     alt="osean"
                     className="w-3 xs:w-6 -translate-y-0.5"
                   />
-                  <p className="font-bold inline-block !mb-0 !text-black text-xl xs:text-2xl ">
-                    OSEAN
-                  </p>
+                  <p className="font-bold inline-block !mb-0 !text-black text-xl xs:text-2xl ">OSEAN</p>
                 </div>
               </h2>
             </div>
@@ -355,17 +319,14 @@ export default function OseanModal({
               ) : (
                 <>
                   <div className="flex flex-col gap-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Network and Coin
-                    </label>
+                    <p>current osean balance: {oseanBalanceEth?.displayValue} $OSEAN</p>
+                    <WertOseanTopUp />
+                    <label className="block text-sm font-medium text-gray-700">Network and Coin</label>
 
                     <div
-                      className={cn(
-                        "flex gap-2 justify-between max-xs:flex-col",
-                        {
-                          "flex-col": coin === "Select currency",
-                        }
-                      )}
+                      className={cn("flex gap-2 justify-between max-xs:flex-col", {
+                        "flex-col": coin === "Select currency",
+                      })}
                     >
                       <Dropdown.Root>
                         <Dropdown.Trigger>
@@ -388,9 +349,7 @@ export default function OseanModal({
                                   className="mr-2"
                                 />
                               )}
-                              {typeof network !== "string"
-                                ? network.label
-                                : "Select network"}
+                              {typeof network !== "string" ? network.label : "Select network"}
                             </span>
                             <svg
                               className="w-4 h-4 ml-2"
@@ -424,9 +383,7 @@ export default function OseanModal({
                                     className="mr-2"
                                   />
                                 )}
-                                <span className="font-normal block truncate">
-                                  {option.label}
-                                </span>
+                                <span className="font-normal block truncate">{option.label}</span>
                               </div>
                             </Dropdown.Item>
                           ))}
@@ -447,9 +404,7 @@ export default function OseanModal({
                             <span className="flex items-center">
                               {coin !== "Select currency" && (
                                 <Image
-                                  src={
-                                    coin === "ETH" ? "/eth.svg" : "/logo.png"
-                                  }
+                                  src={coin === "ETH" ? "/eth.svg" : "/logo.png"}
                                   height={5}
                                   width={5}
                                   alt="osean"
@@ -485,9 +440,7 @@ export default function OseanModal({
                                 alt="osean"
                                 className="mr-2"
                               />
-                              <span className="font-normal block truncate">
-                                ETH
-                              </span>
+                              <span className="font-normal block truncate">ETH</span>
                             </div>
                           </Dropdown.Item>
                           <Dropdown.Item onClick={() => setCoin("OSEAN")}>
@@ -499,89 +452,80 @@ export default function OseanModal({
                                 alt="osean"
                                 className="mr-2"
                               />
-                              <span className="font-normal block truncate">
-                                OSEAN
-                              </span>
+                              <span className="font-normal block truncate">OSEAN</span>
                             </div>
                           </Dropdown.Item>
                         </Dropdown.Content>
                       </Dropdown.Root>
                     </div>
                   </div>
-                  {coin !== "Select currency" &&
-                    typeof network !== "string" && (
-                      <>
-                        <div className="flex flex-col my-0">
-                          <label className="block text-sm font-medium text-gray-700">
-                            Currency conversion
-                          </label>
-                          <p className="text-sm text-gray-500 ">
-                            1 {coin} = ${quote?.quoteUnitPrice}
-                          </p>
-                          {quote && (
-                            <div className="text-sm text-gray-500">
-                              Quote expires in{" "}
-                              <Countdown
-                                date={quote?.expirationTime * 1000}
-                                renderer={renderer}
-                              />
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex flex-col ">
-                          <label className="block text-sm font-medium text-gray-700">
-                            Discounts:
-                          </label>
-                          <p className="text-sm !font-bold text-green-500">
-                            {coin === "ETH"
-                              ? ethDiscount
-                              : coin === "OSEAN"
-                              ? oseanDiscount
-                              : bnbDiscount
-                              ? coin === "BNB"
-                              : bnbDiscount}
-                            % Discount Applied for {coin} payments
-                          </p>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="block text-sm font-medium text-gray-700">
-                            Amount to pay
-                          </label>
-                          <p className="text-sm text-gray-900">
-                            {quote?.amountInQuote} {coin}
-                          </p>
-                        </div>
-                        <div className="flex flex-col gap-4">
-                          {transactionHash && (
-                            <TransactionOutcomeModal
-                              quote={quote}
-                              isOpen={transactionModalOpen}
-                              onOpenChange={setTransactionModalOpen}
-                              txHash={transactionHash || "0x0"}
-                              discount={
-                                coin === "ETH"
-                                  ? ethDiscount
-                                  : coin === "OSEAN"
-                                  ? oseanDiscount
-                                  : bnbDiscount
-                                  ? coin === "BNB"
-                                  : bnbDiscount
-                              }
+                  {coin !== "Select currency" && typeof network !== "string" && (
+                    <>
+                      <div className="flex flex-col my-0">
+                        <label className="block text-sm font-medium text-gray-700">Currency conversion</label>
+                        <p className="text-sm text-gray-500 ">
+                          1 {coin} = ${quote?.quoteUnitPrice}
+                        </p>
+                        {quote && (
+                          <div className="text-sm text-gray-500">
+                            Quote expires in{" "}
+                            <Countdown
+                              date={quote?.expirationTime * 1000}
+                              renderer={renderer}
                             />
-                          )}
-                          <Button
-                            isLoading={isLoading}
-                            onClick={async (e: any) => {
-                              e.preventDefault();
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-col ">
+                        <label className="block text-sm font-medium text-gray-700">Discounts:</label>
+                        <p className="text-sm !font-bold text-green-500">
+                          {coin === "ETH"
+                            ? ethDiscount
+                            : coin === "OSEAN"
+                            ? oseanDiscount
+                            : bnbDiscount
+                            ? coin === "BNB"
+                            : bnbDiscount}
+                          % Discount Applied for {coin} payments
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <label className="block text-sm font-medium text-gray-700">Amount to pay</label>
+                        <p className="text-sm text-gray-900">
+                          {quote?.amountInQuote} {coin}
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-4">
+                        {transactionHash && (
+                          <TransactionOutcomeModal
+                            quote={quote}
+                            isOpen={transactionModalOpen}
+                            onOpenChange={setTransactionModalOpen}
+                            txHash={transactionHash || "0x0"}
+                            discount={
+                              coin === "ETH"
+                                ? ethDiscount
+                                : coin === "OSEAN"
+                                ? oseanDiscount
+                                : bnbDiscount
+                                ? coin === "BNB"
+                                : bnbDiscount
+                            }
+                          />
+                        )}
+                        <Button
+                          isLoading={isLoading}
+                          onClick={async (e: any) => {
+                            e.preventDefault();
 
-                              await pay();
-                            }}
-                          >
-                            Pay {quote?.amountInQuote.toFixed(6)} {coin}
-                          </Button>
-                        </div>
-                      </>
-                    )}
+                            await pay();
+                          }}
+                        >
+                          Pay {quote?.amountInQuote.toFixed(6)} {coin}
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>
