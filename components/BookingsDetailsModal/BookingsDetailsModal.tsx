@@ -5,6 +5,9 @@ import { useMoralis } from "react-moralis";
 import Moralis from "moralis-v1";
 import Icon from "../icon-selector/icon-selector";
 import { Offer } from "../BookingsTable/BookingsTable";
+import { generateBlockExplorerLink, truncateAddress } from "../../helpers";
+import { IS_TESTNET } from "../../const/contractAddresses";
+import Button from "../Button/Button";
 
 type DetailsComponentProps = {
   children: ReactNode;
@@ -73,11 +76,16 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, o
                   <>
                     <InfoItem
                       label="Paid Amount"
-                      value={`${offer?.quote?.amountInQuote?.toLocaleString()} ${offer?.quote?.currency}`}
+                      value={`${offer?.quote?.amountInQuote?.toFixed(5)} ${offer?.quote?.currency}`}
                     />
                     <InfoItem
                       label="Exchange Rate"
                       value={`1 ${offer?.quote?.currency} = $${offer?.quote?.quoteUnitPrice}`}
+                    />
+                    <InfoItem
+                      label="TX"
+                      value={`${truncateAddress(offer?.quote?.txHash)}`}
+                      link={generateBlockExplorerLink(offer?.quote?.txHash, offer?.quote?.chain)}
                     />
                     <InfoItem
                       label="Invoice Status"
@@ -88,7 +96,7 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, o
                   <>
                     <InfoItem
                       label="Paid Amount"
-                      value={`${offer?.quote?.amountEur?.toLocaleString()} EUR `}
+                      value={`${offer?.quote?.amountEur?.toFixed(3)} EUR `}
                     />
 
                     <InfoItem
@@ -152,15 +160,29 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, o
             </div>
           </div>
         </div>
+        <div className="flex gap-2 w-full mx-3">
+          <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">Booking Confirmation</Button>
+          <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">Click to fill Crew list</Button>
+          <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">Base Information</Button>
+        </div>
       </Modal.Content>
     </Modal.Root>
   );
 };
 
-const InfoItem: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+const InfoItem: React.FC<{ label: string; value: string; link?: string }> = ({ label, value, link }) => (
   <div className="mb-2">
-    <span className="font-bold text-gray-600">{label}:</span> <span className="text-gray-800">{value}</span>
+    <span className="font-bold text-gray-600">{label}: </span>
+    {link ? (
+      <a
+        href={link}
+        className="text-blue-600 hover:underline"
+      >
+        {value}
+      </a>
+    ) : (
+      <span className="text-gray-800">{value}</span>
+    )}
   </div>
 );
-
 export default BookingsDetailsModal;

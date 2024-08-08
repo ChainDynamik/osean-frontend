@@ -11,14 +11,16 @@ import {
   InputGroup,
   InputRightAddon,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
-import React, { useContext, useState } from "react";
+import { useAddress, useSwitchChain } from "@thirdweb-dev/react";
+import React, { useContext, useEffect, useState } from "react";
 import WertWidget from "@wert-io/widget-initializer";
 import { useMoralis } from "react-moralis";
 import { encodeFunctionData } from "viem";
 import { oseanOrderManagementABI } from "../../abi";
 import { Options } from "@wert-io/widget-initializer/types";
 import { useCurrencyConverter } from "../../util/hooks/useCurrencyConverter";
+import { BSC_OOM_CONTRACT_ADDRESS, ETH_OOM_CONTRACT_ADDRESS, IS_TESTNET } from "../../const/contractAddresses";
+import { Binance, BinanceTestnet, Ethereum, Sepolia } from "@thirdweb-dev/chains";
 
 function generateFunctionCall(ethAddress: string) {
   const data = encodeFunctionData({
@@ -33,27 +35,36 @@ function generateFunctionCall(ethAddress: string) {
 }
 
 const OseanOnRamping = () => {
-  const [chain, setChain] = useState("eth");
+  const [chain, setChain] = useState("none");
   const [amount, setAmount] = useState("");
-  const isTestnet = true;
 
   const { Moralis, user } = useMoralis();
-
   const { convertEurToCurrency } = useCurrencyConverter();
+
+  const switchChain = useSwitchChain();
+
+  async function handleSwitchChain(chain: string) {
+    if (chain === "eth" && IS_TESTNET) {
+      await switchChain(Sepolia.chainId);
+    } else if (chain === "eth" && !IS_TESTNET) {
+      await switchChain(Ethereum.chainId);
+    } else if (chain === "bsc" && IS_TESTNET) {
+      await switchChain(BinanceTestnet.chainId);
+    } else if (chain === "bsc" && !IS_TESTNET) {
+      await switchChain(Binance.chainId);
+    }
+  }
 
   const getNetwork = () => {
     if (chain === "eth") {
-      return isTestnet ? "sepolia" : "ethereum";
+      return IS_TESTNET ? "sepolia" : "ethereum";
     } else {
-      return isTestnet ? "binance" : "binance";
+      return IS_TESTNET ? "bsc" : "bsc";
     }
   };
 
   async function attemptOseanTopup() {
-    const sc_address =
-      chain === "eth"
-        ? process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS
-        : process.env.NEXT_PUBLIC_BNB_OOM_CONTRACT_ADDRESS;
+    const sc_address = chain === "eth" ? ETH_OOM_CONTRACT_ADDRESS : BSC_OOM_CONTRACT_ADDRESS;
 
     const eurPriceFloat = parseFloat(amount);
 
@@ -61,7 +72,7 @@ const OseanOnRamping = () => {
 
     const requiredEth = convertEurToCurrency({
       eurPrice: eurPriceFloat,
-      currency: "eth",
+      currency: chain === "eth" ? "eth" : "bnb",
       maxDecimal: 8,
     });
 
@@ -111,6 +122,12 @@ const OseanOnRamping = () => {
     wertWidget.open();
   }
 
+  // useEffect onChainChange
+
+  useEffect(() => {
+    if (chain) handleSwitchChain(chain);
+  }, [chain]);
+
   return (
     <Card
       p={6}
@@ -145,6 +162,7 @@ const OseanOnRamping = () => {
           bg="white"
           color="black"
         >
+          <option value="none">Select chain</option>
           <option value="eth">Ethereum</option>
           <option value="bsc">Binance</option>
         </Select>

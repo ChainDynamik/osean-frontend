@@ -15,7 +15,7 @@ import { useTripStore } from "../../util/store/tripStore";
 
 const YachtDetailsPage: FC = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { id, test } = router.query;
 
   const [yacht, setYacht] = useState<any>();
 
@@ -60,7 +60,31 @@ const YachtDetailsPage: FC = () => {
 
     console.log(yachtOffers);
 
-    setOffer(yachtOffers[0]);
+    console.log(router);
+
+    const isTestOrderEnabled = test === "true";
+
+    if (isTestOrderEnabled) {
+      console.log(`Test order enabled: ${isTestOrderEnabled}`);
+      let queryString = `/api/fetchOffers?dateFrom=2024-08-17T00%3A00%3A00&dateTo=2024-08-24T00%3A00%3A00`;
+
+      console.log(queryString);
+
+      const request = await axios.get(queryString, {
+        headers: {
+          Authorization: `Bearer ${process.env.BOOKING_MANAGER_API_KEY}`,
+        },
+      });
+      // tsst
+      const offers: Reservation[] = request.data;
+      const firstOffer = offers[0];
+      firstOffer.startPrice = 2;
+      firstOffer.price = 1;
+      setOffer(firstOffer);
+    } else {
+      setOffer(yachtOffers[0]);
+    }
+
     setYacht(yachtDetails);
   }
 

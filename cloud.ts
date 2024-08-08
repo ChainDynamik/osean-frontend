@@ -519,16 +519,23 @@ Parse.Cloud.define("generateQuote", async (request: any) => {
     const existingQuote = await query.first({ useMasterKey: true });
 
     if (existingQuote) {
-      return existingQuote.toJSON();
+      // return existingQuote.toJSON();
     }
   }
 
   const { amountUsd } = request.params;
   const user = request.user;
 
-  const quoteUnitPrice = Number(await getSettingsKey(currency === "ETH" ? "eth-unit-price" : "osean-unit-price"));
+  const quoteUnitPrice =
+    currency === "USDT"
+      ? 1
+      : Number(
+          await getSettingsKey(
+            currency === "ETH" ? "eth-unit-price" : currency === "BNB" ? "bnb-unit-price" : "osean-unit-price"
+          )
+        );
   const amountInQuote = Number(amountUsd) / quoteUnitPrice;
-  const amountInWei = web3.utils.toWei(amountInQuote, "ether");
+  const amountInWei = web3.utils.toWei(amountInQuote, currency === "USDT" ? "mwei" : "ether");
 
   // 5 minutes from now
   const expirationTime = Math.floor(Date.now() / 1000) + 300;

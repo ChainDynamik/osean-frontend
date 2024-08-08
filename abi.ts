@@ -5,6 +5,7 @@ export const oseanOrderManagementABI = [
       { name: "_oseanToken", type: "address", internalType: "address" },
       { name: "_backEndWallet", type: "address", internalType: "address" },
       { name: "_uniswapRouter", type: "address", internalType: "address" },
+      { name: "_usdtToken", type: "address", internalType: "address" },
     ],
     stateMutability: "nonpayable",
   },
@@ -50,7 +51,20 @@ export const oseanOrderManagementABI = [
     type: "function",
     name: "fullfillOrderOsean",
     inputs: [
-      { name: "_tokenAmount", type: "uint256", internalType: "uint256" },
+      { name: "message", type: "string", internalType: "string" },
+      { name: "_messageHash", type: "bytes32", internalType: "bytes32" },
+      { name: "v", type: "uint8", internalType: "uint8" },
+      { name: "r", type: "bytes32", internalType: "bytes32" },
+      { name: "s", type: "bytes32", internalType: "bytes32" },
+      { name: "referenceQuoteId", type: "string", internalType: "string" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "fullfillOrderUsdt",
+    inputs: [
       { name: "message", type: "string", internalType: "string" },
       { name: "_messageHash", type: "bytes32", internalType: "bytes32" },
       { name: "v", type: "uint8", internalType: "uint8" },
@@ -134,6 +148,13 @@ export const oseanOrderManagementABI = [
     name: "uniswapRouter",
     inputs: [],
     outputs: [{ name: "", type: "address", internalType: "contract IUniswapRouter02" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "usdtToken",
+    inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "contract IERC20" }],
     stateMutability: "view",
   },
   {

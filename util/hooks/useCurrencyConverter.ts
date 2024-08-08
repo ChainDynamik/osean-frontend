@@ -100,7 +100,7 @@ export const useCurrencyConverter = () => {
     }
 
     if (conversionOutput === 0) {
-      return eurPrice;
+      return "failed";
     }
 
     if (currency === "eth" || currency === "bnb" || currency === "osean") {
@@ -111,7 +111,7 @@ export const useCurrencyConverter = () => {
       }
     }
 
-    return conversionOutput.toFixed(0);
+    return conversionOutput.toFixed(3);
   }
 
   useEffect(() => {

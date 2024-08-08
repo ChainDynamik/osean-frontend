@@ -18,32 +18,18 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 interface PaymentModalProps {
   children?: ReactNode;
-  amountUsd: number;
   offer: any;
 }
 
-export default function PaymentModal({
-  children,
-  amountUsd,
-  offer,
-}: PaymentModalProps) {
+export default function PaymentModal({ children, offer }: PaymentModalProps) {
   type PaymentMethodType = "card" | "wire";
-  const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(
-    null
-  );
+  const [paymentMethod, setPaymentMethod] = useState<null | PaymentMethodType>(null);
 
   const handlePaymentChoice = (choice: PaymentMethodType) => {
     setPaymentMethod(choice);
   };
-  const {
-    transactionOpen,
-    toggleTransactionModal,
-    paymentModalIsOpen,
-    setPaymentModal,
-  } = useTransactionStore();
-  const selectedExtras = useSelectedExtrasStore(
-    (state) => state.selectedExtras
-  );
+  const { transactionOpen, toggleTransactionModal, paymentModalIsOpen, setPaymentModal } = useTransactionStore();
+  const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -55,7 +41,10 @@ export default function PaymentModal({
   };
 
   return (
-    <Modal.Root open={paymentModalIsOpen} onOpenChange={setPaymentModal}>
+    <Modal.Root
+      open={paymentModalIsOpen}
+      onOpenChange={setPaymentModal}
+    >
       <Modal.Trigger>{children}</Modal.Trigger>
 
       <Modal.Content
@@ -117,7 +106,7 @@ export default function PaymentModal({
                 />
               </div>
               <div className="flex gap-4 flex-col">
-                <OseanModal amountUsd={amountUsd}>
+                <OseanModal offer={offer}>
                   <Button className="mb-2 whitespace-nowrap font-bold max-xs:!px-3">
                     <div>
                       <Image
@@ -129,25 +118,22 @@ export default function PaymentModal({
                       />
                     </div>
                     <span className="font-bold inline-block mr-2">CRYPTO </span>
-                    <span className="text-green-400 !font-bold max-xs:text-xs">
-                      (20% DISCOUNT)
-                    </span>
+                    <span className="text-green-400 !font-bold max-xs:text-xs">(20% DISCOUNT)</span>
                   </Button>
                 </OseanModal>
 
-                <CardModal amountEur={offer?.price as number} offer={offer}>
-                  <Button className="mb-2 !px-0 whitespace-nowrap font-bold">
-                    CARD (5% DISCOUNT)
-                  </Button>
+                <CardModal
+                  amountEur={offer?.price as number}
+                  offer={offer}
+                >
+                  <Button className="mb-2 !px-0 whitespace-nowrap font-bold">CARD (5% DISCOUNT)</Button>
                 </CardModal>
               </div>
             </div>
           )}
 
           <div className="mt-6">
-            <h4 className="text-lg font-bold text-gray-900 mb-2">
-              Reservation Summary
-            </h4>
+            <h4 className="text-lg font-bold text-gray-900 mb-2">Reservation Summary</h4>
             <ul>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
                 <span className="font-normal">Trip Base Price</span>
@@ -155,16 +141,11 @@ export default function PaymentModal({
               </li>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
                 <span className="font-normal">Obligatory Extras Price</span>
-                <span className="font-bold">
-                  {offer?.obligatoryExtrasPrice} EUR
-                </span>
+                <span className="font-bold">{offer?.obligatoryExtrasPrice} EUR</span>
               </li>
               <li className="flex items-center justify-between py-1.5 text-base capitalize text-gray-dark">
                 <span className="font-normal">Selected Extras Price </span>
-                <span className="font-bold">
-                  {selectedExtras.reduce((acc, extra) => acc + extra.price, 0)}{" "}
-                  EUR
-                </span>
+                <span className="font-bold">{selectedExtras.reduce((acc, extra) => acc + extra.price, 0)} EUR</span>
               </li>
               {selectedExtras.length > 0 && (
                 <div className="mt-2">

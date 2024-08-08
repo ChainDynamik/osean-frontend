@@ -1,17 +1,16 @@
 "use client";
 
 import { Image } from "@chakra-ui/react";
-import { useContract, useContractWrite } from "@thirdweb-dev/react";
+import { useChainId, useContract, useContractWrite, useSwitchChain } from "@thirdweb-dev/react";
 import { motion } from "framer-motion";
 import Moralis from "moralis-v1";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { Web3 } from "web3";
 import { Spinner } from "../../src/components/Spinner";
 import { useTransactionStore } from "../../util/store";
 import Button from "../Button/Button";
 import Modal from "../Modal/Modal";
 import TransactionOutcomeModal from "../TransactionOutcomeModal/TransactionOutcomeModal";
-const web3 = new Web3();
 
 import { useBalance } from "@thirdweb-dev/react";
 import Countdown from "react-countdown";
@@ -22,6 +21,10 @@ import { useSelectedExtrasStore } from "../../util/store/extraStore";
 import { useSelectedOfferStore } from "../../util/store/useSelectedOfferStore";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { WertOseanTopUp } from "../WertOseanTopUp/WertOseanTopUp";
+import { useCurrencyConverter } from "../../util/hooks/useCurrencyConverter";
+import { IS_TESTNET } from "../../const/contractAddresses";
+import { Binance, BinanceTestnet, Ethereum, Sepolia } from "@thirdweb-dev/chains";
+import ChainContext from "../../cost/chain";
 
 type optionsType = {
   value: string;
@@ -86,32 +89,40 @@ const renderer = ({ hours, minutes, seconds, completed }: any) => {
   }
 };
 
-export default function OseanModal({
-  children,
-  enrollId,
-  fee,
-  amountUsd,
-}: {
-  children?: ReactNode;
-  enrollId?: string;
-  fee: number;
-  amountUsd: number;
-}) {
+export default function OseanModal({ children, offer }: { children?: ReactNode; offer: any }) {
   const [network, setNetwork] = useState<optionsType | string>("Select network");
   const [coin, setCoin] = useState("Select currency");
 
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
 
   const { transactionOpen, toggleTransactionModal, setOseanModalIsOpen, oseanModalIsOpen } = useTransactionStore();
+  const { selectedChain, setSelectedChain } = useContext(ChainContext);
 
-  const { selectedOffer } = useSelectedOfferStore();
   const selectedExtras = useSelectedExtrasStore((state) => state.selectedExtras);
 
+  const { convertEurToCurrency } = useCurrencyConverter();
+
+  const { contract: ethUsdt } = useContract(process.env.NEXT_PUBLIC_ETH_USDT_CONTRACT_ADDRESS);
   const { contract: ethOsean } = useContract(process.env.NEXT_PUBLIC_ETH_OSEAN_CONTRACT_ADDRESS);
   const { contract: ethOom } = useContract(process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS);
-  const { mutateAsync: approve } = useContractWrite(ethOsean, "approve");
-  const { mutateAsync: fullfillOrderEth } = useContractWrite(ethOom, "fullfillOrderEth");
-  const { mutateAsync: fullfillOrderOsean } = useContractWrite(ethOom, "fullfillOrderOsean");
+
+  const { mutateAsync: ethUsdtApprove } = useContractWrite(ethUsdt, "approve");
+  const { mutateAsync: ethOseanApprove } = useContractWrite(ethOsean, "approve");
+
+  const { mutateAsync: ethFullfillOrderEth } = useContractWrite(ethOom, "fullfillOrderEth");
+  const { mutateAsync: ethFullfillOrderOsean } = useContractWrite(ethOom, "fullfillOrderOsean");
+  const { mutateAsync: ethFullfillOrderUsdt } = useContractWrite(ethOom, "fullfillOrderUsdt");
+
+  const { contract: bscUsdt } = useContract(process.env.NEXT_PUBLIC_BSC_USDT_CONTRACT_ADDRESS);
+  const { contract: bscOsean } = useContract(process.env.NEXT_PUBLIC_BSC_OSEAN_CONTRACT_ADDRESS);
+  const { contract: bscOom } = useContract(process.env.NEXT_PUBLIC_BSC_OOM_CONTRACT_ADDRESS);
+
+  const { mutateAsync: bscUsdtApprove } = useContractWrite(bscUsdt, "approve");
+  const { mutateAsync: bscOseanApprove } = useContractWrite(bscOsean, "approve");
+
+  const { mutateAsync: bscFullfillOrderEth } = useContractWrite(bscOom, "fullfillOrderEth");
+  const { mutateAsync: bscFullfillOrderOsean } = useContractWrite(bscOom, "fullfillOrderOsean");
+  const { mutateAsync: bscFullfillOrderUsdt } = useContractWrite(bscOom, "fullfillOrderUsdt");
 
   const { data: oseanBalanceEth, refetch: refreshOseanBalanceEth } = useBalance(
     process.env.NEXT_PUBLIC_ETH_OSEAN_CONTRACT_ADDRESS
@@ -125,7 +136,11 @@ export default function OseanModal({
   const [isLoading, setIsLoading] = useState(false);
   const [quote, setQuote] = useState<OSMQuote>();
   const { user } = useMoralis();
-  console.log(user);
+
+  const chainId = useChainId();
+  const switchChain = useSwitchChain();
+
+  console.log(selectedChain);
 
   async function verifyQuoteSettled(quote: OSMQuote) {
     const query = new Moralis.Query("Quote");
@@ -150,34 +165,67 @@ export default function OseanModal({
     }
   }
 
-  async function fetchQuote() {
-    if (coin === "Select currency") return;
-    if (typeof network === "string") return;
-    if (transactionHash) return;
-    console.log(`calling generateQuote with ${amountUsd}, ${coin}, ${network.value}`);
+  async function handleSwitchChainIfNecessary() {
+    console.log(`Network: ${network.value}`);
+    console.log(`ChainId: ${chainId}`);
 
-    let amountWithDiscount = 0;
+    console.log(`Selected chain: ${selectedChain}`);
 
-    switch (coin) {
-      case "ETH":
-        amountWithDiscount = amountUsd * ethDiscount;
-        break;
-      case "OSEAN":
-        amountWithDiscount = amountUsd * oseanDiscount;
-        break;
-      case "BNB":
-        amountWithDiscount = amountUsd * bnbDiscount;
-        break;
-      default:
-        break;
+    // @ts-ignore
+    const networkValue = network.value as string;
+
+    if (networkValue === "ETH" && IS_TESTNET && chainId != Sepolia.chainId) {
+      setSelectedChain(Sepolia.slug);
+      await switchChain(Sepolia.chainId);
     }
+    if (networkValue === "ETH" && !IS_TESTNET && chainId != Ethereum.chainId) {
+      setSelectedChain(Ethereum.slug);
+      await switchChain(Ethereum.chainId);
+    }
+    if (networkValue === "BSC" && IS_TESTNET && chainId != BinanceTestnet.chainId) {
+      setSelectedChain(BinanceTestnet.slug);
+      await switchChain(BinanceTestnet.chainId);
+    }
+    if (networkValue === "BSC" && !IS_TESTNET && chainId != Binance.chainId) {
+      setSelectedChain(Binance.slug);
+      await switchChain(Binance.chainId);
+    }
+  }
+
+  async function fetchQuote() {
+    if (coin === "Select currency") {
+      console.log("Currency not selected");
+      return;
+    }
+    if (typeof network === "string") {
+      console.log("Network not selected");
+      return;
+    }
+    // if (transactionHash) return;
+
+    await handleSwitchChainIfNecessary();
+
+    const amountEur = offer?.price;
+    const discountPercentage = coin === "ETH" ? ethDiscount : coin === "OSEAN" ? oseanDiscount : bnbDiscount;
+
+    const amountMinusDiscount = amountEur - (amountEur * discountPercentage) / 100;
+
+    const amountUsd = convertEurToCurrency({
+      eurPrice: amountMinusDiscount,
+      currency: "usd",
+      maxDecimal: 5,
+    });
+
+    console.log(`Original amount: ${amountEur} EUR`);
+    console.log(`Amount after discount: ${amountMinusDiscount} EUR`);
+    console.log(`Amount in USD: ${amountUsd}`);
 
     const quote = await Moralis.Cloud.run("generateQuote", {
-      amountUsd: amountWithDiscount,
+      amountUsd,
       currency: coin,
       network: network.value,
       selectedExtras,
-      selectedOffer,
+      selectedOffer: offer,
     });
     setQuote(quote);
     setIsFetchingQuote(false);
@@ -185,8 +233,12 @@ export default function OseanModal({
 
   async function pay() {
     setIsLoading(true);
+
+    // @ts-ignore
+    const networkValue = network.value as string;
+
     try {
-      if (network.value === "ETH" && coin === "ETH") {
+      if (coin === "ETH" || coin === "BNB") {
         const txValue = quote?.amountInWei as string;
         const message = quote?.message as string;
         const messageHash = quote?.signatureRaw.messageHash;
@@ -195,13 +247,24 @@ export default function OseanModal({
         const s = quote?.signatureRaw.s;
         const referenceQuoteId = quote?.objectId;
 
-        const tx = await fullfillOrderEth({
-          args: [message, messageHash, v, r, s, referenceQuoteId],
-          overrides: { value: txValue },
-        });
+        if (networkValue === "ETH") {
+          console.log("ETH ETH payment");
+          const tx = await ethFullfillOrderEth({
+            args: [message, messageHash, v, r, s, referenceQuoteId],
+            overrides: { value: txValue },
+          });
 
-        setTransactionHash(tx.receipt.transactionHash);
-      } else if (network.value === "ETH" && coin === "OSEAN") {
+          setTransactionHash(tx.receipt.transactionHash);
+        } else {
+          console.log(`BSC BNB payment`);
+          const tx = await bscFullfillOrderEth({
+            args: [message, messageHash, v, r, s, referenceQuoteId],
+            overrides: { value: txValue },
+          });
+
+          setTransactionHash(tx.receipt.transactionHash);
+        }
+      } else if (coin === "OSEAN") {
         const txValue = quote?.amountInWei as string;
         const message = quote?.message as string;
         const messageHash = quote?.signatureRaw.messageHash;
@@ -210,16 +273,67 @@ export default function OseanModal({
         const s = quote?.signatureRaw.s;
         const referenceQuoteId = quote?.objectId;
 
-        // Increase allowance for the contract
-        await approve({
-          args: [process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS, txValue],
-        });
+        if (networkValue === "ETH") {
+          console.log(`ETH OSEAN payment`);
+          // Increase allowance for the contract
+          await ethOseanApprove({
+            args: [process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS, txValue],
+          });
 
-        const tx = await fullfillOrderOsean({
-          args: [txValue, message, messageHash, v, r, s, referenceQuoteId],
-        });
+          const tx = await ethFullfillOrderOsean({
+            args: [message, messageHash, v, r, s, referenceQuoteId],
+          });
 
-        setTransactionHash(tx.receipt.transactionHash);
+          setTransactionHash(tx.receipt.transactionHash);
+        } else {
+          console.log(`BSC OSEAN payment`);
+
+          // Increase allowance for the contract
+          await bscOseanApprove({
+            args: [process.env.NEXT_PUBLIC_BSC_OOM_CONTRACT_ADDRESS, txValue],
+          });
+
+          const tx = await bscFullfillOrderOsean({
+            args: [message, messageHash, v, r, s, referenceQuoteId],
+          });
+
+          setTransactionHash(tx.receipt.transactionHash);
+        }
+      } else if (coin === "USDT") {
+        const txValue = quote?.amountInWei as string;
+        const message = quote?.message as string;
+        const messageHash = quote?.signatureRaw.messageHash;
+        const v = quote?.signatureRaw.v;
+        const r = quote?.signatureRaw.r;
+        const s = quote?.signatureRaw.s;
+        const referenceQuoteId = quote?.objectId;
+
+        if (networkValue === "ETH") {
+          console.log(`ETH USDT payment`);
+          // Increase allowance for the contract
+          await ethUsdtApprove({
+            args: [process.env.NEXT_PUBLIC_ETH_OOM_CONTRACT_ADDRESS, txValue],
+          });
+
+          const tx = await ethFullfillOrderUsdt({
+            args: [message, messageHash, v, r, s, referenceQuoteId],
+          });
+
+          setTransactionHash(tx.receipt.transactionHash);
+        } else {
+          console.log(`BSC USDT payment`);
+
+          // Increase allowance for the contract
+          await bscUsdtApprove({
+            args: [process.env.NEXT_PUBLIC_BSC_OOM_CONTRACT_ADDRESS, txValue],
+          });
+
+          const tx = await bscFullfillOrderUsdt({
+            args: [message, messageHash, v, r, s, referenceQuoteId],
+          });
+
+          setTransactionHash(tx.receipt.transactionHash);
+        }
       }
     } catch (e: any) {
       console.error(e);
@@ -229,9 +343,6 @@ export default function OseanModal({
   }
 
   const [isFetchingQuote, setIsFetchingQuote] = useState(true);
-
-  const discount = fee * 0.2;
-  const discountedFee = fee - discount;
 
   useEffect(() => {
     if (coin && network) fetchQuote();
@@ -248,7 +359,7 @@ export default function OseanModal({
     };
   }, [quote]);
 
-  console.log(oseanBalanceEth);
+  console.log(`selectedChain: ${selectedChain}`);
 
   return (
     <Modal.Root
@@ -404,7 +515,15 @@ export default function OseanModal({
                             <span className="flex items-center">
                               {coin !== "Select currency" && (
                                 <Image
-                                  src={coin === "ETH" ? "/eth.svg" : "/logo.png"}
+                                  src={
+                                    coin === "ETH"
+                                      ? "/eth.svg"
+                                      : coin === "BNB"
+                                      ? "/bsc.svg"
+                                      : coin === "USDT"
+                                      ? "/usd.png"
+                                      : "/logo.png"
+                                  }
                                   height={5}
                                   width={5}
                                   alt="osean"
@@ -431,18 +550,33 @@ export default function OseanModal({
                           </button>
                         </Dropdown.Trigger>
                         <Dropdown.Content>
-                          <Dropdown.Item onClick={() => setCoin("ETH")}>
-                            <div className="flex items-center">
-                              <Image
-                                src="/eth.svg"
-                                height={5}
-                                width={5}
-                                alt="osean"
-                                className="mr-2"
-                              />
-                              <span className="font-normal block truncate">ETH</span>
-                            </div>
-                          </Dropdown.Item>
+                          {network.value === "ETH" ? (
+                            <Dropdown.Item onClick={() => setCoin("ETH")}>
+                              <div className="flex items-center">
+                                <Image
+                                  src="/eth.svg"
+                                  height={5}
+                                  width={5}
+                                  alt="osean"
+                                  className="mr-2"
+                                />
+                                <span className="font-normal block truncate">ETH</span>
+                              </div>
+                            </Dropdown.Item>
+                          ) : (
+                            <Dropdown.Item onClick={() => setCoin("BNB")}>
+                              <div className="flex items-center">
+                                <Image
+                                  src="/bsc.svg"
+                                  height={5}
+                                  width={5}
+                                  alt="bsc"
+                                  className="mr-2"
+                                />
+                                <span className="font-normal block truncate">BNB</span>
+                              </div>
+                            </Dropdown.Item>
+                          )}
                           <Dropdown.Item onClick={() => setCoin("OSEAN")}>
                             <div className="flex items-center">
                               <Image
@@ -453,6 +587,18 @@ export default function OseanModal({
                                 className="mr-2"
                               />
                               <span className="font-normal block truncate">OSEAN</span>
+                            </div>
+                          </Dropdown.Item>
+                          <Dropdown.Item onClick={() => setCoin("USDT")}>
+                            <div className="flex items-center">
+                              <Image
+                                src="/usd.png"
+                                height={5}
+                                width={5}
+                                alt="usd"
+                                className="mr-2"
+                              />
+                              <span className="font-normal block truncate">USDT</span>
                             </div>
                           </Dropdown.Item>
                         </Dropdown.Content>
@@ -481,11 +627,11 @@ export default function OseanModal({
                         <p className="text-sm !font-bold text-green-500">
                           {coin === "ETH"
                             ? ethDiscount
+                            : coin === "BNB"
+                            ? bnbDiscount
                             : coin === "OSEAN"
                             ? oseanDiscount
-                            : bnbDiscount
-                            ? coin === "BNB"
-                            : bnbDiscount}
+                            : 0}
                           % Discount Applied for {coin} payments
                         </p>
                       </div>
@@ -505,11 +651,11 @@ export default function OseanModal({
                             discount={
                               coin === "ETH"
                                 ? ethDiscount
+                                : coin === "BNB"
+                                ? bnbDiscount
                                 : coin === "OSEAN"
                                 ? oseanDiscount
-                                : bnbDiscount
-                                ? coin === "BNB"
-                                : bnbDiscount
+                                : 0
                             }
                           />
                         )}

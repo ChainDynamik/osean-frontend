@@ -30,6 +30,7 @@ import { useCurrencyConverter } from "../util/hooks/useCurrencyConverter";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { Binance, BinanceTestnet, Ethereum, Sepolia } from "@thirdweb-dev/chains";
 
 // const ThirdwebMoralisLinker = () => {
 //   const { user, authenticate, isInitialized, Moralis, logout } = useMoralis();
@@ -116,6 +117,18 @@ const ThirdwebMoralisLinker = () => {
 
   const wallet = useWallet();
 
+  async function checkBrokenSession() {
+    try {
+      const pluginSpecs = await Moralis.Cloud.run("getPluginSpecs", {});
+    } catch (error: any) {
+      const invalidSessionTokenError = error.message.includes("Invalid session token");
+      if (invalidSessionTokenError) {
+        console.log("Invalid session token, logging out");
+        logout();
+      }
+    }
+  }
+
   async function checkLink() {
     if (user) return;
 
@@ -170,6 +183,9 @@ const ThirdwebMoralisLinker = () => {
   useEffect(() => {
     if (address && isInitialized) checkLink();
   }, [address, user, isInitialized]);
+  useEffect(() => {
+    if (isInitialized) checkBrokenSession();
+  }, [isInitialized]);
 
   console.log(user);
 
@@ -216,6 +232,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ThirdwebProvider
             clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
             // secretKey={process.env.NEXT_PUBLIC_TEMPLATE_SECRET_KEY}
+            supportedChains={[Ethereum, Sepolia, Binance, BinanceTestnet]}
             activeChain={selectedChain}
             supportedWallets={[
               metamaskWallet(),
