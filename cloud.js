@@ -1425,3 +1425,24 @@ Parse.Cloud.define("signWertPaymentRequest", function (request) { return __await
         return [2 /*return*/, signedData];
     });
 }); });
+Parse.Cloud.define("getAllOrders", function (request) { return __awaiter(_this, void 0, void 0, function () {
+    var user, isAdmin, query, bookings;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                user = request.user;
+                isAdmin = user.get("isAdmin");
+                if (!isAdmin) {
+                    throw new Error("Unauthorized");
+                }
+                query = new Parse.Query("Order");
+                query.include("user");
+                query.include("quote");
+                query.descending("createdAt");
+                return [4 /*yield*/, query.find({ useMasterKey: true })];
+            case 1:
+                bookings = _a.sent();
+                return [2 /*return*/, bookings.map(function (booking) { return booking.toJSON(); })];
+        }
+    });
+}); });

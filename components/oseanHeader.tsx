@@ -6,6 +6,7 @@ import { ConnectWallet, useAddress, lightTheme } from "@thirdweb-dev/react";
 import { Text, Stack } from "@chakra-ui/react";
 import useScreenSize from "../util/hooks/useScreenSize";
 import { cn } from "../util";
+import { useMoralis } from "react-moralis";
 
 export const OseanHeaderLinks: React.FC = () => {
   return (
@@ -76,6 +77,8 @@ export const OseanHeader: React.FC = () => {
       document.querySelectorAll("#navbarCollapse")[0].classList.toggle("collapse");
     }
   }
+
+  const { user } = useMoralis();
 
   const address = useAddress();
   return (
@@ -212,6 +215,20 @@ export const OseanHeader: React.FC = () => {
                       Club
                     </Link>
                   </li>
+                  {user?.get("isAdmin") === true && (
+                    <li
+                      className="nav-item animated"
+                      data-animation="fadeInDown"
+                      data-animation-delay="1.4s"
+                    >
+                      <Link
+                        className="nav-link"
+                        href="/admin"
+                      >
+                        Admin
+                      </Link>
+                    </li>
+                  )}
 
                   <li
                     className="dropdown show mr-2 px-2 animated"

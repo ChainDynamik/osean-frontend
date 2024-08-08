@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-} from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td, TableContainer } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { cn } from "../../util";
 import BookingsDetailsModal from "../BookingsDetailsModal/BookingsDetailsModal";
@@ -16,29 +8,6 @@ import { Reservation } from "../../pages/offers";
 import Moralis from "moralis-v1";
 import PreviewImage from "../PreviewImage/PreviewImage";
 import Image from "next/image";
-
-const tableHeader = [
-  {
-    name: "Boat IMG",
-  },
-  {
-    name: "Booking ID",
-  },
-  {
-    name: "Boat Name",
-  },
-  {
-    name: "Trip Start",
-  },
-
-  {
-    name: "Start Base",
-  },
-
-  {
-    name: "Payment Status",
-  },
-];
 
 // Dummy data
 const dummyBookings = [
@@ -93,40 +62,63 @@ export type Offer = {
 const BookingsTable: React.FC = () => {
   const [search, setSearch] = useState<string>("");
   const [results, setResults] = useState(dummyBookings);
-  const [detailsModalIsOpen, setdetailsModalIsOpen] = useState(false);
 
   const { Moralis, isInitialized, user } = useMoralis();
 
   const [bookings, setBookings] = useState<Offer[]>([]);
   const [yachtImages, setYachtImages] = useState({});
 
-  const [name, setName] = useState("");
-  const [surName, setSurName] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [emailAddress, setEmailAddress] = useState("");
-  const [telegram, setTelegram] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [tableHeader, setTableHeader] = useState([
+    {
+      name: "Boat IMG",
+    },
+    {
+      name: "Booking ID",
+    },
+    {
+      name: "Boat Name",
+    },
+    {
+      name: "Trip Start",
+    },
 
-  async function fetchUserSavedInfo() {
-    setName(user?.get("name"));
-    setSurName(user?.get("surname"));
-    setAddress(user?.get("address"));
-    setCity(user?.get("city"));
-    setEmailAddress(user?.get("email"));
-    setTelegram(user?.get("telegram"));
-    setPhoneNumber(user?.get("phone"));
+    {
+      name: "Start Base",
+    },
+
+    {
+      name: "Payment Status",
+    },
+  ]);
+
+  function appendItemInArrayAtPosition(array: any[], item: any, position: number) {
+    // If already exists, return the array
+    if (array.some((el) => el.name === item.name)) return array;
+    return [...array.slice(0, position), item, ...array.slice(position)];
   }
 
   async function getBookings() {
-    const query = new Moralis.Query("Order");
-    query.equalTo("user", user);
-    query.include("offer");
-    query.include("quote");
-    query.descending("createdAt");
-    const results = await query.find();
-    const resultsJson = results.map((result) => result.toJSON());
-    setBookings(resultsJson);
+    const theadBuffer = [...tableHeader];
+    const isAdmin = user?.get("isAdmin");
+
+    let resultsJson = [];
+
+    if (isAdmin) {
+      const newArray = appendItemInArrayAtPosition(theadBuffer, { name: "Name" }, 1);
+      setTableHeader(newArray);
+      const bookingsBuffer = await Moralis.Cloud.run("getAllOrders");
+      resultsJson = bookingsBuffer;
+      setBookings(bookingsBuffer);
+    } else {
+      const query = new Moralis.Query("Order");
+      query.equalTo("user", user);
+      query.include("offer");
+      query.include("quote");
+      query.descending("createdAt");
+      const results = await query.find();
+      resultsJson = results.map((result) => result.toJSON());
+      setBookings(resultsJson);
+    }
 
     // Fetch yacht images for all bookings
     const images = {};
@@ -150,9 +142,7 @@ const BookingsTable: React.FC = () => {
       const yacht = await query.first();
       if (yacht) {
         const images = yacht.get("images");
-        const mainImage = images.find(
-          (img) => img.description === "Main image"
-        );
+        const mainImage = images.find((img) => img.description === "Main image");
         // Strip spaces from the URL
 
         const url = mainImage?.url.replace(/\s/g, "%20");
@@ -180,7 +170,6 @@ const BookingsTable: React.FC = () => {
   useEffect(() => {
     if (isInitialized && user) {
       getBookings();
-      fetchUserSavedInfo();
     }
   }, [isInitialized, user]);
 
@@ -247,10 +236,7 @@ const BookingsTable: React.FC = () => {
                     <div className="py-4">
                       <PreviewImage src="/images/top-boats/boat-eight.jpg">
                         <Image
-                          src={
-                            yachtImages[booking.objectId] ||
-                            "/images/top-boats/boat-eight.jpg"
-                          }
+                          src={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
                           width={80}
                           height={80}
                           className="rounded-full mx-auto aspect-square"
@@ -259,6 +245,26 @@ const BookingsTable: React.FC = () => {
                       </PreviewImage>
                     </div>
                   </Td>
+                  {user?.get("isAdmin") && (
+                    <Td
+                      textAlign="center"
+                      color="black"
+                      fontWeight={500}
+                      p={0}
+                      fontSize="1.2rem"
+                      border="2px solid #cccccc"
+                    >
+                      <BookingsDetailsModal
+                        id={booking.objectId}
+                        offer={booking}
+                        image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
+                      >
+                        <p className="font-semibold text-sm mb-0 py-4">
+                          {booking?.user?.get("name")} {booking?.user?.get("surname")}
+                        </p>
+                      </BookingsDetailsModal>
+                    </Td>
+                  )}
                   <Td
                     textAlign="center"
                     color="black"
@@ -270,14 +276,9 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={
-                        yachtImages[booking.objectId] ||
-                        "/images/top-boats/boat-eight.jpg"
-                      }
+                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.objectId}
-                      </p>
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.objectId}</p>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -291,14 +292,9 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={
-                        yachtImages[booking.objectId] ||
-                        "/images/top-boats/boat-eight.jpg"
-                      }
+                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.offer?.yacht}
-                      </p>
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.yacht}</p>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -312,14 +308,9 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={
-                        yachtImages[booking.objectId] ||
-                        "/images/top-boats/boat-eight.jpg"
-                      }
+                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.offer?.dateFrom}
-                      </p>
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.dateFrom}</p>
                     </BookingsDetailsModal>
                   </Td>
                   {/* <Td
@@ -345,14 +336,9 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={
-                        yachtImages[booking.objectId] ||
-                        "/images/top-boats/boat-eight.jpg"
-                      }
+                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.offer?.startBase}
-                      </p>
+                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.startBase}</p>
                     </BookingsDetailsModal>
                   </Td>
                   {/* <Td
@@ -378,10 +364,7 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={
-                        yachtImages[booking.objectId] ||
-                        "/images/top-boats/boat-eight.jpg"
-                      }
+                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
                     >
                       {/* format should be Awaiting Admin Validation from awaiting_admin_validation */}
                       <p
@@ -397,11 +380,7 @@ const BookingsTable: React.FC = () => {
             </Tbody>
           </Table>
         </TableContainer>
-        {bookings.length < 1 && (
-          <p className="mx-auto text-3xl w-fit py-16 text-black">
-            No Existing Bookings
-          </p>
-        )}
+        {bookings.length < 1 && <p className="mx-auto text-3xl w-fit py-16 text-black">No Existing Bookings</p>}
       </motion.div>
     </motion.div>
   );

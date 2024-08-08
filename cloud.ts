@@ -899,3 +899,22 @@ Parse.Cloud.define("signWertPaymentRequest", async (request: any) => {
 
   return signedData;
 });
+
+Parse.Cloud.define("getAllOrders", async (request: any) => {
+  const user = request.user;
+
+  // Check if the user is admin
+  const isAdmin = user.get("isAdmin");
+
+  if (!isAdmin) {
+    throw new Error("Unauthorized");
+  }
+
+  const query = new Parse.Query("Order");
+  query.include("user");
+  query.include("quote");
+  query.descending("createdAt");
+  const bookings = await query.find({ useMasterKey: true });
+
+  return bookings.map((booking: any) => booking.toJSON());
+});
