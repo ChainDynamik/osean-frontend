@@ -206,19 +206,21 @@ const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
                     fontSize="1.2rem"
                     border="2px solid #cccccc"
                   >
-                    <div className="py-4">
-                      <PreviewImage src="/images/top-boats/boat-eight.jpg">
-                        <Image
-                          src={
-                            yachtImages[booking.objectId] ||
-                            "/images/top-boats/boat-eight.jpg"
-                          }
-                          width={80}
-                          height={80}
-                          className="rounded-full mx-auto aspect-square"
-                          alt="boat"
-                        />
-                      </PreviewImage>
+                    <div className="flex h-[130px] justify-center items-center px-3">
+                      <div className="py-4 ">
+                        <PreviewImage src="/images/top-boats/boat-eight.jpg">
+                          <Image
+                            src={
+                              yachtImages[booking.objectId] ||
+                              "/images/top-boats/boat-eight.jpg"
+                            }
+                            width={80}
+                            height={80}
+                            className="rounded-full mx-auto aspect-square"
+                            alt="boat"
+                          />
+                        </PreviewImage>
+                      </div>
                     </div>
                   </Td>
                   {user?.get("isAdmin") && (
@@ -238,10 +240,12 @@ const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
                           "/images/top-boats/boat-eight.jpg"
                         }
                       >
-                        <p className="font-semibold text-sm mb-0 py-4">
-                          {booking?.user?.get("name")}{" "}
-                          {booking?.user?.get("surname")}
-                        </p>
+                        <div className="flex h-[130px] justify-center items-center px-3">
+                          <p className="font-semibold text-sm mb-0 py-4 ">
+                            {booking?.user?.get("name")}{" "}
+                            {booking?.user?.get("surname")}
+                          </p>
+                        </div>
                       </BookingsDetailsModal>
                     </Td>
                   )}
@@ -261,9 +265,11 @@ const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
                         "/images/top-boats/boat-eight.jpg"
                       }
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.objectId}
-                      </p>
+                      <div className="flex h-[130px] justify-center items-center px-3">
+                        <p className="font-semibold text-sm mb-0 py-4 ">
+                          {booking.objectId}
+                        </p>
+                      </div>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -282,9 +288,11 @@ const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
                         "/images/top-boats/boat-eight.jpg"
                       }
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.offer?.yacht}
-                      </p>
+                      <div className="flex h-[130px] justify-center items-center px-3">
+                        <p className="font-semibold text-sm mb-0 py-4 ">
+                          {booking.offer?.yacht}
+                        </p>
+                      </div>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -303,9 +311,11 @@ const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
                         "/images/top-boats/boat-eight.jpg"
                       }
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.offer?.dateFrom}
-                      </p>
+                      <div className="flex h-[130px] justify-center items-center px-3">
+                        <p className="font-semibold text-sm mb-0 py-4 ">
+                          {booking.offer?.dateFrom}
+                        </p>
+                      </div>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -324,9 +334,11 @@ const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
                         "/images/top-boats/boat-eight.jpg"
                       }
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">
-                        {booking.offer?.startBase}
-                      </p>
+                      <div className="flex h-[130px] justify-center items-center px-3">
+                        <p className="font-semibold text-sm mb-0 py-4 ">
+                          {booking.offer?.startBase}
+                        </p>
+                      </div>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -345,12 +357,11 @@ const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
                         "/images/top-boats/boat-eight.jpg"
                       }
                     >
-                      <p
-                        className="font-semibold text-sm mb-0 py-4 text-capitalize
-                      "
-                      >
-                        {booking.status.replace(/_/g, " ")}
-                      </p>
+                      <div className="flex h-[130px] justify-center items-center px-3">
+                        <p className="font-semibold text-sm mb-0 py-4  text-capitalize">
+                          {booking.status.replace(/_/g, " ")}
+                        </p>
+                      </div>
                     </BookingsDetailsModal>
                   </Td>
                 </Tr>
