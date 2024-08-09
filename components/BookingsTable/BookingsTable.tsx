@@ -143,6 +143,10 @@ const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
     }
   };
 
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [imagePreviewIsOpen, setImagePreviewIsOpen] = useState(false);
+  const [currentTrIndex, setCurrentTrIndex] = useState<null | number>(null);
+
   return (
     <motion.div
       id={tableId}
@@ -193,8 +197,19 @@ const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
             </Thead>
 
             <Tbody>
-              {filteredBookings.map((booking) => (
+              {filteredBookings.map((booking, index) => (
                 <Tr
+                  onClick={() => {
+                    setCurrentTrIndex(index);
+                    setDetailsOpen(true);
+                    // setImagePreviewIsOpen(false);
+                    // console.log(
+                    //   currentTrIndex,
+                    //   index,
+                    //   detailsOpen && currentTrIndex === index,
+                    //   "settings"
+                    // );
+                  }}
                   key={booking.objectId}
                   className="hover:bg-primary/20 transition-all duration-200 ease-in cursor-pointer"
                 >
@@ -208,18 +223,45 @@ const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
                   >
                     <div className="flex h-[130px] justify-center items-center px-3">
                       <div className="py-4 ">
-                        <PreviewImage src="/images/top-boats/boat-eight.jpg">
-                          <Image
-                            src={
-                              yachtImages[booking.objectId] ||
-                              "/images/top-boats/boat-eight.jpg"
-                            }
-                            width={80}
-                            height={80}
-                            className="rounded-full mx-auto aspect-square"
-                            alt="boat"
-                          />
-                        </PreviewImage>
+                        {/* <BookingsDetailsModal
+                          id={booking.objectId}
+                          offer={booking}
+                          image={
+                            yachtImages[booking.objectId] ||
+                            "/images/top-boats/boat-eight.jpg"
+                          }
+                          isOpen={detailsOpen && currentTrIndex === index}
+                          onOpenChange={setDetailsOpen}
+                        /> */}
+                        <div className="relative z-50">
+                          <PreviewImage src="/images/top-boats/boat-eight.jpg">
+                            <Image
+                              src={
+                                yachtImages[booking.objectId] ||
+                                "/images/top-boats/boat-eight.jpg"
+                              }
+                              onClick={() => {
+                                setCurrentTrIndex(index);
+                                setImagePreviewIsOpen(true);
+                                setDetailsOpen(false);
+                                console.log(
+                                  currentTrIndex,
+                                  index,
+                                  detailsOpen,
+                                  imagePreviewIsOpen,
+                                  !detailsOpen &&
+                                    imagePreviewIsOpen &&
+                                    currentTrIndex === index,
+                                  "settings 2"
+                                );
+                              }}
+                              width={80}
+                              height={80}
+                              className="relative z-50 rounded-full mx-auto aspect-square"
+                              alt="boat"
+                            />
+                          </PreviewImage>
+                        </div>
                       </div>
                     </div>
                   </Td>
