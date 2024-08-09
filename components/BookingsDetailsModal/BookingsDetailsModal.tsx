@@ -220,17 +220,6 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({
         <div className="px-8 w-full">
           <Button>Click here to fill crew list</Button>
         </div>
-        {/* <div className="flex gap-2 w-full mx-3">
-          <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">
-            Booking Confirmation
-          </Button>
-          <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">
-            Click to fill Crew list
-          </Button>
-          <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">
-            Base Information
-          </Button>
-        </div> */}
       </Modal.Content>
     </Modal.Root>
   );
