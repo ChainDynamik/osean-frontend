@@ -1,28 +1,47 @@
 import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
 import Modal from "../Modal/Modal";
 import Image from "next/image";
-import { useMoralis } from "react-moralis";
-import Moralis from "moralis-v1";
 import Icon from "../icon-selector/icon-selector";
 import { Offer } from "../BookingsTable/BookingsTable";
 import { generateBlockExplorerLink, truncateAddress } from "../../helpers";
-import { IS_TESTNET } from "../../const/contractAddresses";
 import Button from "../Button/Button";
+import Link from "next/link";
 
 type DetailsComponentProps = {
   children: ReactNode;
   id: string;
   offer: Offer;
   image: string;
+  isOpen?: boolean;
+  onOpenChange?: Dispatch<SetStateAction<boolean>>;
 };
 
-const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, offer, image }) => {
-  console.log(offer);
+const bookingsInvoice = [
+  {
+    name: "Booking One",
+    url: "link.com",
+  },
+  {
+    name: "Booking Two",
+    url: "link.com",
+  },
+];
 
+const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({
+  children,
+  isOpen,
+  onOpenChange,
+  id,
+  offer,
+  image,
+}) => {
   return (
-    <Modal.Root>
+    <Modal.Root
+      open={isOpen}
+      onOpenChange={onOpenChange}
+    >
       <Modal.Trigger asChild>{children}</Modal.Trigger>
-      <Modal.Content className="w-full max-w-[90%] lg:max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl">
+      <Modal.Content className="w-full max-w-[90%] lg:max-w-4xl mx-auto rounded-lg overflow-y-scroll pb-8 shadow-2xl">
         <div className="relative bg-white w-full">
           <div className="relative h-80 bg-blue-600 w-full">
             <Modal.Close>
@@ -161,11 +180,26 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, o
               </div>
             </div>
           </div>
+          {/*  */}
+          <div className="p-8">
+            <h2 className="text-xl font-semibold mb-4 text-blue-600 uppercase">DOCUMENTS</h2>
+            <div>
+              <span className="divst-disc font-bold text-gray-600">Invoice</span>
+            </div>
+            <ol>
+              {bookingsInvoice.map((invoice, index) => (
+                <li
+                  key={index}
+                  className="ml-4 list-disc"
+                >
+                  <span>{invoice.name}:</span> <Link href={invoice.url}>{invoice.name.toLowerCase()}</Link>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
-        <div className="flex gap-2 w-full mx-3">
-          <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">Booking Confirmation</Button>
-          <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">Click to fill Crew list</Button>
-          <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">Base Information</Button>
+        <div className="px-8 w-full">
+          <Button>Click here to fill crew list</Button>
         </div>
       </Modal.Content>
     </Modal.Root>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useState } from "react";
+import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import Modal from "../Modal/Modal";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -11,11 +11,18 @@ const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 interface PreviewImageProps {
   children?: ReactNode;
   src: string;
+  isOpen?: boolean;
+  onOpenChange?: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function PreviewImage({ children, src }: PreviewImageProps) {
+export default function PreviewImage({
+  children,
+  src,
+  isOpen,
+  onOpenChange,
+}: PreviewImageProps) {
   return (
-    <Modal.Root>
+    <Modal.Root open={isOpen} onOpenChange={onOpenChange}>
       <Modal.Trigger>{children}</Modal.Trigger>
 
       <Modal.Content className={`!min-w-[0] !w-fit`}>
