@@ -916,5 +916,17 @@ Parse.Cloud.define("getAllOrders", async (request: any) => {
   query.descending("createdAt");
   const bookings = await query.find({ useMasterKey: true });
 
-  return bookings.map((booking: any) => booking.toJSON());
+  let orders = [];
+
+  for (const booking of bookings) {
+    const quoteJson = booking.get("quote").toJSON();
+
+    orders.push({
+      ...booking.toJSON(),
+      quote: quoteJson,
+      user: booking.get("user"),
+    });
+  }
+
+  return orders;
 });

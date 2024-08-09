@@ -17,6 +17,8 @@ type DetailsComponentProps = {
 };
 
 const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, offer, image }) => {
+  console.log(offer);
+
   return (
     <Modal.Root>
       <Modal.Trigger asChild>{children}</Modal.Trigger>
@@ -76,7 +78,7 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({ children, id, o
                   <>
                     <InfoItem
                       label="Paid Amount"
-                      value={`${offer?.quote?.amountInQuote?.toFixed(5)} ${offer?.quote?.currency}`}
+                      value={`${offer?.quote?.amountInQuote.toFixed(5)} ${offer?.quote?.currency}`}
                     />
                     <InfoItem
                       label="Exchange Rate"

@@ -254,7 +254,7 @@ export default function ProfilePage({ listing }: Props) {
       >
         <PersonalInfoForm />
         <CardPayment isMakingPayment={false} />
-        <BookingsTable tableId="user-bookings-table" />
+        <BookingsTable tableId="user-bookings-table" isOnAdminPage={false} />
       </div>
     </Container>
   );

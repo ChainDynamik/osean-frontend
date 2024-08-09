@@ -1,3 +1,14 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -1426,7 +1437,7 @@ Parse.Cloud.define("signWertPaymentRequest", function (request) { return __await
     });
 }); });
 Parse.Cloud.define("getAllOrders", function (request) { return __awaiter(_this, void 0, void 0, function () {
-    var user, isAdmin, query, bookings;
+    var user, isAdmin, query, bookings, orders, _i, bookings_1, booking, quoteJson;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -1442,7 +1453,13 @@ Parse.Cloud.define("getAllOrders", function (request) { return __awaiter(_this, 
                 return [4 /*yield*/, query.find({ useMasterKey: true })];
             case 1:
                 bookings = _a.sent();
-                return [2 /*return*/, bookings.map(function (booking) { return booking.toJSON(); })];
+                orders = [];
+                for (_i = 0, bookings_1 = bookings; _i < bookings_1.length; _i++) {
+                    booking = bookings_1[_i];
+                    quoteJson = booking.get("quote").toJSON();
+                    orders.push(__assign(__assign({}, booking.toJSON()), { quote: quoteJson, user: booking.get("user") }));
+                }
+                return [2 /*return*/, orders];
         }
     });
 }); });
