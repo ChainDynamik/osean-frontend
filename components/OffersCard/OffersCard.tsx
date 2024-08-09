@@ -36,22 +36,16 @@ const OffersCard: React.FC<OffersCardProps> = ({
   const { Moralis, isInitialized } = useMoralis();
   const [boatData, setBoatData] = useState<any>(null);
 
-  const mainImage = boatData?.images.find(
-    (image) => image.description === "Main image"
-  );
+  const mainImage = boatData?.images.find((image) => image.description === "Main image");
 
   const { setSelectedOffer } = useSelectedOfferStore();
-  const { currency: userSelectedCurrency } = useOfferApiFilterState(
-    (state) => state
-  );
+  const { currency: userSelectedCurrency } = useOfferApiFilterState((state) => state);
 
   const { convertEurToCurrency } = useCurrencyConverter();
 
   const boatModels = useOfferApiFilterState((state) => state.boatModels);
 
-  const imageUrl = mainImage
-    ? mainImage.url
-    : boatData?.images[0]?.url || "/images/placeholder-yacht.jpg";
+  const imageUrl = mainImage ? mainImage.url : boatData?.images[0]?.url || "/images/placeholder-yacht.jpg";
 
   useEffect(() => {
     async function fetchData() {
@@ -64,10 +58,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
     fetchData();
   }, [id, isInitialized, Moralis]);
 
-  const calculateDiscountPercentage = (
-    startPrice: number,
-    price: number
-  ): number => {
+  const calculateDiscountPercentage = (startPrice: number, price: number): number => {
     return Math.round(((startPrice - price) / startPrice) * 100);
   };
 
@@ -107,29 +98,23 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     className="w-4 -translate-y-[1px] text-black"
                   />
                   <p className="mb-0 text-black text-xs">
-                    <span className="font-bold">Base:</span> {startBase} (
-                    {getBaseCountryFromBaseId(startBaseId)})
+                    <span className="font-bold">Base:</span> {startBase} ({getBaseCountryFromBaseId(startBaseId)})
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2 ml-1 mt-2">
                 <div className="flex gap-1 items-center">
                   <span className="bg-black/70 rounded-full size-1.5"></span>
-                  <p className="mb-0 text-black text-xs">
-                    {boatData?.cabins} cab
-                  </p>
+                  <p className="mb-0 text-black text-xs">{boatData?.cabins} cab</p>
                 </div>
                 <div className="flex gap-1 items-center">
                   <span className="bg-black/70 rounded-full size-1.5"></span>
                   <p className="mb-0 text-black text-xs">{boatData?.wc} WCs</p>
                 </div>
                 <div className="flex gap-1 items-center">
-                  {boatData?.maxPeopleOnBoard && (
-                    <span className="bg-black/70 rounded-full size-1.5"></span>
-                  )}
+                  {boatData?.maxPeopleOnBoard && <span className="bg-black/70 rounded-full size-1.5"></span>}
                   <p className="mb-0 text-black text-xs">
-                    {boatData?.maxPeopleOnBoard &&
-                      `${boatData?.maxPeopleOnBoard} people`}
+                    {boatData?.maxPeopleOnBoard && `${boatData?.maxPeopleOnBoard} people`}
                   </p>
                 </div>
               </div>
@@ -187,7 +172,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                     <span className="text-green-500">
                       {convertEurToCurrency({
                         eurPrice: startPrice,
-                        currency: userSelectedCurrency,
+                        currency: userSelectedCurrency.toLowerCase(),
                       })?.toLocaleString()}
                       {userSelectedCurrency === "eur"
                         ? "€"
@@ -204,10 +189,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                   </p>
 
                   <p className="mb-0 text-sm text-black ">
-                    Discount -{" "}
-                    <span className="text-green-500">
-                      {discountPercentage}%
-                    </span>
+                    Discount - <span className="text-green-500">{discountPercentage}%</span>
                   </p>
                 </>
               )}
@@ -216,7 +198,7 @@ const OffersCard: React.FC<OffersCardProps> = ({
                 <span className="text-green-500">
                   {convertEurToCurrency({
                     eurPrice: price,
-                    currency: userSelectedCurrency,
+                    currency: userSelectedCurrency.toLowerCase(),
                   })?.toLocaleString()}
                   {userSelectedCurrency === "eur"
                     ? "€"

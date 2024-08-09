@@ -81,12 +81,14 @@ export const useCurrencyConverter = () => {
     maxDecimal,
   }: {
     eurPrice: number;
-    currency: "eth" | "bnb" | "osean" | "usd";
+    currency: "eth" | "bnb" | "osean" | "usd" | "eur";
     maxDecimal?: number;
   }) {
     console.log(`eurPrice: ${eurPrice}`);
     console.log(`currency: ${currency}`);
     console.log(`maxDecimal: ${maxDecimal}`);
+
+    if (currency === "eur") return eurPrice;
 
     let conversionOutput = 0;
 

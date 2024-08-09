@@ -3,12 +3,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Swiper,
-  SwiperSlide,
-  Navigation,
-  Pagination,
-} from "../../util/libs/slider";
+import { Swiper, SwiperSlide, Navigation, Pagination } from "../../util/libs/slider";
 import AddToWishlist from "../../assets/icons-components/add-to-wishlist";
 import { ChevronLeftIcon } from "../../assets/icons-components/chevronLeft";
 import { ChevronRightIcon } from "../../assets/icons-components/chevronRight";
@@ -52,9 +47,7 @@ export default function YachtCard({
   name,
   length,
 }: ListingItemTypes) {
-  const { currency: userSelectedCurrency } = useOfferApiFilterState(
-    (state) => state
-  );
+  const { currency: userSelectedCurrency } = useOfferApiFilterState((state) => state);
   const { convertEurToCurrency } = useCurrencyConverter();
 
   return (
@@ -133,9 +126,7 @@ export default function YachtCard({
       <Link href={`/yacht-details/${id}`}>
         <div className="content pt-3 text-black">
           <div className="text-blue-800 text-lg mb-0.5">
-            <span className="font-bold">
-              {`${caption} (${boatManufacturingDate})`}
-            </span>
+            <span className="font-bold">{`${caption} (${boatManufacturingDate})`}</span>
           </div>
           <div className="flex flex-col gap-1 my-2">
             <div className="flex items-center gap-0.5">
@@ -144,8 +135,7 @@ export default function YachtCard({
                 className="w-4 -translate-y-[1px] text-black"
               />
               <p className="mb-0 text-black text-xs">
-                <span className="font-bold">Base:</span> {base} (
-                {getBaseCountryFromBaseId(baseId)})
+                <span className="font-bold">Base:</span> {base} ({getBaseCountryFromBaseId(baseId)})
               </p>
             </div>
           </div>
@@ -162,7 +152,7 @@ export default function YachtCard({
               <span className="font-bold text-black xl:text-xl 3xl:text-xl">
                 {convertEurToCurrency({
                   eurPrice: Number(price.replace("€", "")),
-                  currency: userSelectedCurrency,
+                  currency: userSelectedCurrency.toLowerCase(),
                 })?.toLocaleString()}
                 {userSelectedCurrency === "eur"
                   ? "€"

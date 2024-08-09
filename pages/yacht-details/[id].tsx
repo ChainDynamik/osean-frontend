@@ -12,6 +12,7 @@ import { fetchBoatDataFromDb } from "../../helpers";
 import axios from "axios";
 import { Reservation } from "../offers";
 import { useTripStore } from "../../util/store/tripStore";
+import { RandomBoatsGrid } from "../club";
 
 const YachtDetailsPage: FC = () => {
   const router = useRouter();
@@ -145,7 +146,7 @@ const YachtDetailsPage: FC = () => {
           loading={isLoading}
           offer={offer}
         />
-        <SimilarYacht />
+        <RandomBoatsGrid itemsPerPage={3} />
         {/* {yacht?.images && (
           <GridLayout images={yacht?.images.map((image: any) => image.url)} />
         )} */}

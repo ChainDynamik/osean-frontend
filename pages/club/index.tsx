@@ -18,18 +18,48 @@ import { WertOseanTopUp } from "../../components/WertOseanTopUp/WertOseanTopUp";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-const ITEMS_PER_PAGE = 12; // Number of items per page
-
-function RandomBoatsGrid() {
+export function RandomBoatsGrid({ itemsPerPage }: { itemsPerPage: number }) {
   const { yachts } = useYachts();
   const [currentPage, setCurrentPage] = useState(1);
   const { isMobile } = useScreenSize();
 
+  function getRandomWeekInterval(): { dateFrom: string; dateTo: string } {
+    const today = new Date();
+    const endOfYear = new Date(today.getFullYear(), 11, 31); // December 31st of the current year
+
+    // Find the next Saturday
+    const nextSaturday = new Date(today);
+    nextSaturday.setDate(today.getDate() + ((6 - today.getDay() + 7) % 7));
+
+    // Calculate the maximum number of weeks between nextSaturday and endOfYear
+    const maxWeeks = Math.floor((endOfYear.getTime() - nextSaturday.getTime()) / (7 * 24 * 60 * 60 * 1000));
+
+    // Generate a random number of weeks (0 to maxWeeks)
+    const randomWeeks = Math.floor(Math.random() * (maxWeeks + 1));
+
+    // Calculate the start date (dateFrom)
+    const dateFrom = new Date(nextSaturday);
+    dateFrom.setDate(dateFrom.getDate() + randomWeeks * 7);
+
+    // Calculate the end date (dateTo)
+    const dateTo = new Date(dateFrom);
+    dateTo.setDate(dateTo.getDate() + 7);
+
+    // Format dates as YYYY-MM-DD
+    const formatDate = (date: Date): string => {
+      return date.toISOString().split("T")[0];
+    };
+
+    return {
+      dateFrom: formatDate(dateFrom),
+      dateTo: formatDate(dateTo),
+    };
+  }
+
   const [offersWithBoats, setOffersWithBoats] = useState<OfferWithBoat[]>([]);
 
   async function fetchOffers() {
-    const dateFrom = "2024-11-17";
-    const dateTo = "2024-11-24";
+    const { dateFrom, dateTo } = getRandomWeekInterval();
 
     let queryString = `/api/fetchOffers?dateFrom=${dateFrom}T00%3A00%3A00&dateTo=${dateTo}T00%3A00%3A00`;
 
@@ -41,6 +71,14 @@ function RandomBoatsGrid() {
       });
       const offers: Reservation[] = request.data;
       offers.sort(() => Math.random() - 0.5);
+
+      // Generate the discount percentage for all the offers
+      offers.forEach((offer) => {
+        offer.discount = Math.round(((offer.startPrice - offer.price) / offer.startPrice) * 100);
+      });
+
+      // Sort them by discount percentage
+      offers.sort((a, b) => b.discount - a.discount);
 
       // Only take the first 9 offers
       offers.splice(9);
@@ -87,7 +125,7 @@ function RandomBoatsGrid() {
     setCurrentPage(page);
   };
 
-  const currentPageData = offersWithBoats?.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const currentPageData = offersWithBoats?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   // Function to customize the pagination item rendering
   const itemRender = (_: number, type: "page" | "prev" | "next", originalElement: React.ReactNode) => {
@@ -165,13 +203,13 @@ function RandomBoatsGrid() {
               />
             );
           })}
-      </div>
+      </div>{" "}
       {currentPageData.length > 0 && (
         <div className="flex justify-center pt-8 items-center">
           <Pagination
             current={currentPage}
             total={offersWithBoats.length}
-            pageSize={ITEMS_PER_PAGE}
+            pageSize={itemsPerPage}
             onChange={handlePageChange}
             showSizeChanger={false}
             itemRender={itemRender} // Use the custom item render function
@@ -212,7 +250,7 @@ export default function TopBoatsPage() {
           </div>
           <CurrencyDropdown />
         </div>
-        <RandomBoatsGrid />
+        <RandomBoatsGrid itemsPerPage={12} />
       </section>
     </main>
   );
