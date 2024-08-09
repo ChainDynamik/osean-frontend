@@ -1090,7 +1090,7 @@ Parse.Cloud.define("generateQuote", function (request) { return __awaiter(_this,
             case 1:
                 existingQuote = _d.sent();
                 if (existingQuote) {
-                    // return existingQuote.toJSON();
+                    return [2 /*return*/, existingQuote.toJSON()];
                 }
                 amountUsd = request.params.amountUsd;
                 user = request.user;

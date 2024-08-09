@@ -6,7 +6,7 @@ export const useCurrencyConverter = () => {
   const [bnbUnitPrice, setBnbUnitPrice] = useState<number>(0);
   const [oseanUnitPrice, setOseanUnitPrice] = useState<number>(0);
   const [eurUnitUsdPrice, setEurUnitUsdPrice] = useState<number>(0);
-  const [usdUnitPrice, setUsdUnitPrice] = useState<number>(0);
+  const [usdUnitPrice, setUsdUnitPrice] = useState<number>(1);
 
   // console.log(`ethUnitPrice: ${ethUnitPrice}`);
   // console.log(`bnbUnitPrice: ${bnbUnitPrice}`);
@@ -84,6 +84,10 @@ export const useCurrencyConverter = () => {
     currency: "eth" | "bnb" | "osean" | "usd";
     maxDecimal?: number;
   }) {
+    console.log(`eurPrice: ${eurPrice}`);
+    console.log(`currency: ${currency}`);
+    console.log(`maxDecimal: ${maxDecimal}`);
+
     let conversionOutput = 0;
 
     if (currency === "usd") {
@@ -98,6 +102,8 @@ export const useCurrencyConverter = () => {
       const usdPrice = eurPrice * eurUnitUsdPrice;
       conversionOutput = usdPrice / oseanUnitPrice;
     }
+
+    console.log(`conversionOutput: ${conversionOutput}`);
 
     if (conversionOutput === 0) {
       return "failed";

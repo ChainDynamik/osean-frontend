@@ -519,7 +519,7 @@ Parse.Cloud.define("generateQuote", async (request: any) => {
     const existingQuote = await query.first({ useMasterKey: true });
 
     if (existingQuote) {
-      // return existingQuote.toJSON();
+      return existingQuote.toJSON();
     }
   }
 
