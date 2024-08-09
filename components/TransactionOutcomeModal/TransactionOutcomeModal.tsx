@@ -11,6 +11,7 @@ import { OSMQuote } from "../OseanModal/OseanModal";
 import { truncateAddress } from "../../helpers";
 import Link from "next/link";
 import { useAddress } from "@thirdweb-dev/react";
+import { useProfileTabsStore } from "../../util/store/profileTabsStore";
 
 // Dynamically import Lottie
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -34,6 +35,8 @@ export default function TransactionOutcomeModal({
   discount,
 }: TransactionOutcomeModalProps) {
   const address = useAddress();
+  const setTab = useProfileTabsStore((state) => state.setTab);
+  const tab = useProfileTabsStore((state) => state.tab);
 
   return (
     <Modal.Root open={isOpen} onOpenChange={onOpenChange}>
@@ -140,15 +143,17 @@ export default function TransactionOutcomeModal({
             </div>
             <div className="flex ">
               {/* <button className="bg-gray-200 text-gray-700 rounded-md px-4 py-2">Download invoice</button> */}
-              <Button
-                className="text-white rounded-md w-full mx-3"
-                onClick={() => {
-                  console.log("test");
-                  window.location.href = `/profilegov/${address}`;
-                }}
-              >
-                View reservation
-              </Button>
+              <Link href={`/profilegov/${address}/#user-bookings-table`}>
+                <Button
+                  className="text-white rounded-md w-full mx-3"
+                  onClick={() => {
+                    console.log("test", tab);
+                    setTab("bookings");
+                  }}
+                >
+                  View reservation
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

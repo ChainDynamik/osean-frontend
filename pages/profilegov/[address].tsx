@@ -1,3 +1,6 @@
+import { useProfileTabsStore } from "../../util/store/profileTabsStore";
+// Update the import path to match your file structure
+// util/store/profileTabsStore.ts
 import {
   useContract,
   useContractRead,
@@ -36,10 +39,10 @@ const [randomColor1, randomColor2, randomColor3, randomColor4] = [
 type Props = {
   listing: EnglishAuction;
 };
-
 export default function ProfilePage({ listing }: Props) {
   const router = useRouter();
-  const [tab, setTab] = useState<"nfts" | "listings" | "auctions">("nfts");
+  const tab = useProfileTabsStore((state) => state.tab);
+  const setTab = useProfileTabsStore((state) => state.setTab);
   const user = useAddress();
   const { contract: nftCollection } = useContract(GOV_NFT);
 
