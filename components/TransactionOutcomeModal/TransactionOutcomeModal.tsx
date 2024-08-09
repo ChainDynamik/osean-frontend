@@ -36,26 +36,23 @@ export default function TransactionOutcomeModal({
   const address = useAddress();
 
   return (
-    <Modal.Root
-      open={isOpen}
-      onOpenChange={onOpenChange}
-    >
+    <Modal.Root open={isOpen} onOpenChange={onOpenChange}>
       <Modal.Trigger>
         {/* Optional: Trigger element can be placed here if needed */}
         <div style={{ display: "none" }}></div>
       </Modal.Trigger>
 
       <Modal.Content
-        className={cn("max-[500px]:w-[90%] max-[500px]:max-w-none w-fit max-w-fit !min-w-[500px] rounded-lg", {
-          // "!hidden": isLoading,
-        })}
+        className={cn(
+          "max-[500px]:w-[90%] max-[500px]:max-w-none w-fit max-w-fit !min-w-[500px] rounded-lg",
+          {
+            // "!hidden": isLoading,
+          }
+        )}
       >
         <div className="relative bg-white pt-4 pb-10 px-8 rounded-md shadow-lg w-full">
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-16">
-            <Lottie
-              animationData={CheckAnimation}
-              loop={false}
-            />
+            <Lottie animationData={CheckAnimation} loop={false} />
           </div>
           <Modal.Close className="z-[99] absolute right-4 top-3 text-white hover:text-primary bg-secondary p-2 rounded-md">
             <svg
@@ -73,9 +70,12 @@ export default function TransactionOutcomeModal({
             </svg>
           </Modal.Close>
           <div className="flex flex-col items-center gap-5 mt-12">
-            <h1 className="text-[1.4rem] !mb-0  text-black font-bold uppercase text-center">Payment was successful</h1>
+            <h1 className="text-[1.4rem] !mb-0  text-black font-bold uppercase text-center">
+              Payment was successful
+            </h1>
             <p className="text-sm text-center !mb-0  text-gray-700">
-              Payment has been received successfully. Thank you for your payment.
+              Payment has been received successfully. Thank you for your
+              payment.
             </p>
             <div className="flex items-center bg-gray-100 rounded-full px-4 py-1 text-gray-800">
               <Image
@@ -93,13 +93,19 @@ export default function TransactionOutcomeModal({
                 <span>{amountEur?.toLocaleString()} EUR</span>
               )}
             </div>
-            <p className="text-green-600 !mb-0 font-semibold ">Discount: {discount}%</p>
+            <p className="text-green-600 !mb-0 font-semibold ">
+              Discount: {discount}%
+            </p>
             <div className="mt-6 w-full">
               {quote && (
                 <>
                   <div className="flex justify-between text-gray-700 mb-2">
                     <span>Payment</span>
-                    <span>{quote?.chain === "eth" ? "Ethereum" : "Binance Smart Chain"}</span>
+                    <span>
+                      {quote?.chain === "eth"
+                        ? "Ethereum"
+                        : "Binance Smart Chain"}
+                    </span>
                   </div>
                   <div className="flex justify-between text-gray-700 mb-2">
                     <span>Paid with</span>
@@ -125,7 +131,9 @@ export default function TransactionOutcomeModal({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <span className="text-indigo-600">{txHash && truncateAddress(txHash)}</span>
+                    <span className="text-indigo-600">
+                      {txHash && truncateAddress(txHash)}
+                    </span>
                   </Link>
                 </div>
               )}

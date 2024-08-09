@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Table, Thead, Tbody, Tr, Th, Td, TableContainer } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+} from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { cn } from "../../util";
 import BookingsDetailsModal from "../BookingsDetailsModal/BookingsDetailsModal";
@@ -8,46 +16,7 @@ import { Reservation } from "../../pages/offers";
 import Moralis from "moralis-v1";
 import PreviewImage from "../PreviewImage/PreviewImage";
 import Image from "next/image";
-
-// Dummy data
-const dummyBookings = [
-  {
-    boatId: "BKG001",
-    courseName: "React for Beginners",
-    courseDate: "2024-08-01",
-    status: "Paid",
-  },
-  {
-    boatId: "BKG001",
-    courseName: "React for Beginners",
-    courseDate: "2024-08-01",
-    status: "Paid",
-  },
-  {
-    boatId: "BKG002",
-    courseName: "Advanced JavaScript",
-    courseDate: "2024-08-10",
-    status: "Awaiting payment...",
-  },
-  {
-    boatId: "BKG003",
-    courseName: "UI/UX Design Essentials",
-    courseDate: "2024-08-15",
-    status: "Paid",
-  },
-  {
-    boatId: "BKG004",
-    courseName: "Python Data Science",
-    courseDate: "2024-09-01",
-    status: "Paid",
-  },
-  {
-    boatId: "BKG005",
-    courseName: "Full-Stack Development",
-    courseDate: "2024-09-10",
-    status: "Awaiting payment...",
-  },
-];
+import Fuse from "fuse.js";
 
 export type Offer = {
   objectId: string;
@@ -59,12 +28,10 @@ export type Offer = {
   updatedAt: Date;
 };
 
-const BookingsTable: React.FC = () => {
+const BookingsTable: React.FC = ({ tableId }: { tableId?: string }) => {
   const [search, setSearch] = useState<string>("");
-  const [results, setResults] = useState(dummyBookings);
-
+  const [filteredBookings, setFilteredBookings] = useState<Offer[]>([]);
   const { Moralis, isInitialized, user } = useMoralis();
-
   const [bookings, setBookings] = useState<Offer[]>([]);
   const [yachtImages, setYachtImages] = useState({});
 
@@ -81,21 +48,19 @@ const BookingsTable: React.FC = () => {
     {
       name: "Trip Start",
     },
-
     {
       name: "Start Base",
     },
-
     {
       name: "Payment Status",
     },
   ]);
 
-  function appendItemInArrayAtPosition(array: any[], item: any, position: number) {
-    // If already exists, return the array
-    if (array.some((el) => el.name === item.name)) return array;
-    return [...array.slice(0, position), item, ...array.slice(position)];
-  }
+  useEffect(() => {
+    if (isInitialized && user) {
+      getBookings();
+    }
+  }, [isInitialized, user]);
 
   async function getBookings() {
     const theadBuffer = [...tableHeader];
@@ -104,7 +69,11 @@ const BookingsTable: React.FC = () => {
     let resultsJson = [];
 
     if (isAdmin) {
-      const newArray = appendItemInArrayAtPosition(theadBuffer, { name: "Name" }, 1);
+      const newArray = appendItemInArrayAtPosition(
+        theadBuffer,
+        { name: "Name" },
+        1
+      );
       setTableHeader(newArray);
       const bookingsBuffer = await Moralis.Cloud.run("getAllOrders");
       resultsJson = bookingsBuffer;
@@ -129,6 +98,7 @@ const BookingsTable: React.FC = () => {
       }
     }
     setYachtImages(images);
+    setFilteredBookings(resultsJson);
   }
 
   const fetchYachtImage = async (booking: any) => {
@@ -142,13 +112,10 @@ const BookingsTable: React.FC = () => {
       const yacht = await query.first();
       if (yacht) {
         const images = yacht.get("images");
-        const mainImage = images.find((img) => img.description === "Main image");
-        // Strip spaces from the URL
-
+        const mainImage = images.find(
+          (img) => img.description === "Main image"
+        );
         const url = mainImage?.url.replace(/\s/g, "%20");
-
-        console.log("Yacht image URL:", url);
-
         return url;
       }
     } catch (error) {
@@ -157,24 +124,30 @@ const BookingsTable: React.FC = () => {
 
     return null;
   };
-  console.log(bookings);
 
   const handleSearch = (text: string) => {
-    const filteredResults = dummyBookings.filter((booking) =>
-      booking.courseName.toLowerCase().includes(text.toLowerCase())
-    );
     setSearch(text);
-    setResults(filteredResults);
+
+    if (text.trim() === "") {
+      // If the search input is empty, reset to show all bookings
+      setFilteredBookings(bookings);
+    } else {
+      const fuse = new Fuse(bookings, {
+        keys: ["objectId", "offer.yacht", "offer.startBase", "status"],
+        threshold: 0, // Adjust this value to fine-tune the search sensitivity
+      });
+
+      const results = fuse.search(text);
+      const filteredResults = results.map((result) => result.item);
+      setFilteredBookings(filteredResults);
+    }
   };
 
-  useEffect(() => {
-    if (isInitialized && user) {
-      getBookings();
-    }
-  }, [isInitialized, user]);
-
   return (
-    <motion.div className="w-full min-h-full mt-10 scroll-container">
+    <motion.div
+      id={tableId}
+      className="w-full min-h-full mt-10 scroll-container"
+    >
       <motion.div className="relative w-fit mb-4">
         <input
           type="text"
@@ -187,14 +160,14 @@ const BookingsTable: React.FC = () => {
       </motion.div>
 
       <motion.div className="w-full relative">
-        {results.length === 0 && (
+        {filteredBookings.length === 0 && (
           <div className="text-black font-bold absolute text-2xl top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2">
             <p>{!search ? "No Previous Booking(s)" : "No search result(s)"}</p>
           </div>
         )}
         <TableContainer
           className={cn("w-full border-2 border-[#cccccc] overflow-y-scroll", {
-            "h-[250px]": results.length === 0,
+            "h-[250px]": filteredBookings.length === 0,
           })}
         >
           <Table colorScheme="white">
@@ -211,7 +184,7 @@ const BookingsTable: React.FC = () => {
                     fontWeight={500}
                     minWidth="100px"
                     py={8}
-                    className="bg-primary "
+                    className="bg-primary"
                   >
                     {name}
                   </Th>
@@ -220,7 +193,7 @@ const BookingsTable: React.FC = () => {
             </Thead>
 
             <Tbody>
-              {bookings.map((booking) => (
+              {filteredBookings.map((booking) => (
                 <Tr
                   key={booking.objectId}
                   className="hover:bg-primary/20 transition-all duration-200 ease-in cursor-pointer"
@@ -236,7 +209,10 @@ const BookingsTable: React.FC = () => {
                     <div className="py-4">
                       <PreviewImage src="/images/top-boats/boat-eight.jpg">
                         <Image
-                          src={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
+                          src={
+                            yachtImages[booking.objectId] ||
+                            "/images/top-boats/boat-eight.jpg"
+                          }
                           width={80}
                           height={80}
                           className="rounded-full mx-auto aspect-square"
@@ -257,10 +233,14 @@ const BookingsTable: React.FC = () => {
                       <BookingsDetailsModal
                         id={booking.objectId}
                         offer={booking}
-                        image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
+                        image={
+                          yachtImages[booking.objectId] ||
+                          "/images/top-boats/boat-eight.jpg"
+                        }
                       >
                         <p className="font-semibold text-sm mb-0 py-4">
-                          {booking?.user?.get("name")} {booking?.user?.get("surname")}
+                          {booking?.user?.get("name")}{" "}
+                          {booking?.user?.get("surname")}
                         </p>
                       </BookingsDetailsModal>
                     </Td>
@@ -276,9 +256,14 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
+                      image={
+                        yachtImages[booking.objectId] ||
+                        "/images/top-boats/boat-eight.jpg"
+                      }
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.objectId}</p>
+                      <p className="font-semibold text-sm mb-0 py-4">
+                        {booking.objectId}
+                      </p>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -292,9 +277,14 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
+                      image={
+                        yachtImages[booking.objectId] ||
+                        "/images/top-boats/boat-eight.jpg"
+                      }
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.yacht}</p>
+                      <p className="font-semibold text-sm mb-0 py-4">
+                        {booking.offer?.yacht}
+                      </p>
                     </BookingsDetailsModal>
                   </Td>
                   <Td
@@ -308,23 +298,16 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
+                      image={
+                        yachtImages[booking.objectId] ||
+                        "/images/top-boats/boat-eight.jpg"
+                      }
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.dateFrom}</p>
+                      <p className="font-semibold text-sm mb-0 py-4">
+                        {booking.offer?.dateFrom}
+                      </p>
                     </BookingsDetailsModal>
                   </Td>
-                  {/* <Td
-                    textAlign="center"
-                    color="black"
-                    fontWeight={500}
-                    p={0}
-                    fontSize="1.2rem"
-                    border="2px solid #cccccc"
-                  >
-                    <BookingsDetailsModal id={booking.objectId}>
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer.dateTo}</p>
-                    </BookingsDetailsModal>
-                  </Td> */}
                   <Td
                     textAlign="center"
                     color="black"
@@ -336,23 +319,16 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
+                      image={
+                        yachtImages[booking.objectId] ||
+                        "/images/top-boats/boat-eight.jpg"
+                      }
                     >
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer?.startBase}</p>
+                      <p className="font-semibold text-sm mb-0 py-4">
+                        {booking.offer?.startBase}
+                      </p>
                     </BookingsDetailsModal>
                   </Td>
-                  {/* <Td
-                    textAlign="center"
-                    color="black"
-                    fontWeight={500}
-                    p={0}
-                    border="2px solid #cccccc"
-                    minWidth="200px"
-                  >
-                    <BookingsDetailsModal id={booking.objectId}>
-                      <p className="font-semibold text-sm mb-0 py-4">{booking.offer.endBase}</p>
-                    </BookingsDetailsModal>
-                  </Td> */}
                   <Td
                     textAlign="center"
                     color="black"
@@ -364,9 +340,11 @@ const BookingsTable: React.FC = () => {
                     <BookingsDetailsModal
                       id={booking.objectId}
                       offer={booking}
-                      image={yachtImages[booking.objectId] || "/images/top-boats/boat-eight.jpg"}
+                      image={
+                        yachtImages[booking.objectId] ||
+                        "/images/top-boats/boat-eight.jpg"
+                      }
                     >
-                      {/* format should be Awaiting Admin Validation from awaiting_admin_validation */}
                       <p
                         className="font-semibold text-sm mb-0 py-4 text-capitalize
                       "
@@ -380,7 +358,11 @@ const BookingsTable: React.FC = () => {
             </Tbody>
           </Table>
         </TableContainer>
-        {bookings.length < 1 && <p className="mx-auto text-3xl w-fit py-16 text-black">No Existing Bookings</p>}
+        {bookings.length < 1 && (
+          <p className="mx-auto text-3xl w-fit py-16 text-black">
+            No Existing Bookings
+          </p>
+        )}
       </motion.div>
     </motion.div>
   );
