@@ -11,6 +11,7 @@ import Icon from "../icon-selector/icon-selector";
 import { Offer } from "../BookingsTable/BookingsTable";
 import { generateBlockExplorerLink, truncateAddress } from "../../helpers";
 import Button from "../Button/Button";
+import Link from "next/link";
 
 type DetailsComponentProps = {
   children: ReactNode;
@@ -20,6 +21,17 @@ type DetailsComponentProps = {
   isOpen?: boolean;
   onOpenChange?: Dispatch<SetStateAction<boolean>>;
 };
+
+const bookingsInvoice = [
+  {
+    name: "Booking One",
+    url: "link.com",
+  },
+  {
+    name: "Booking Two",
+    url: "link.com",
+  },
+];
 
 const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({
   children,
@@ -32,7 +44,7 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({
   return (
     <Modal.Root open={isOpen} onOpenChange={onOpenChange}>
       <Modal.Trigger asChild>{children}</Modal.Trigger>
-      <Modal.Content className="w-full max-w-[90%] lg:max-w-4xl mx-auto rounded-lg overflow-hidden shadow-2xl">
+      <Modal.Content className="w-full max-w-[90%] lg:max-w-4xl mx-auto rounded-lg overflow-y-scroll pb-8 shadow-2xl">
         <div className="relative bg-white w-full">
           <div className="relative h-80 bg-blue-600 w-full">
             <Modal.Close>
@@ -185,8 +197,30 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({
               </div>
             </div>
           </div>
+          {/*  */}
+          <div className="p-8">
+            <h2 className="text-xl font-semibold mb-4 text-blue-600 uppercase">
+              DOCUMENTS
+            </h2>
+            <div>
+              <span className="divst-disc font-bold text-gray-600">
+                Invoice
+              </span>
+            </div>
+            <ol>
+              {bookingsInvoice.map((invoice, index) => (
+                <li key={index} className="ml-4 list-disc">
+                  <span>{invoice.name}:</span>{" "}
+                  <Link href={invoice.url}>{invoice.name.toLowerCase()}</Link>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
-        <div className="flex gap-2 w-full mx-3">
+        <div className="px-8 w-full">
+          <Button>Click here to fill crew list</Button>
+        </div>
+        {/* <div className="flex gap-2 w-full mx-3">
           <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">
             Booking Confirmation
           </Button>
@@ -196,7 +230,7 @@ const BookingsDetailsModal: React.FC<DetailsComponentProps> = ({
           <Button className="w-full bg-blue-600 text-white rounded-b-lg py-3 font-bold">
             Base Information
           </Button>
-        </div>
+        </div> */}
       </Modal.Content>
     </Modal.Root>
   );
